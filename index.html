@@ -168,6 +168,23 @@ section{padding:clamp(56px,6.5vw,92px) 0}
 .loc-row{display:flex;gap:10px;font-size:14px;color:var(--muted);line-height:1.5}
 .loc-row svg{flex:0 0 auto;margin-top:2px;color:var(--brand)}
 
+/* app / phone showcase */
+.appwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(30px,4vw,56px);align-items:center}
+.appwrap.rev .app-copy{order:2}
+.app-copy .steps{max-width:430px}
+.stores{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.store{display:inline-flex;transition:transform .15s}
+.store:hover{transform:translateY(-2px)}
+.badge{height:50px;width:auto;display:block}
+.store-note{margin-top:20px;font-size:14px;font-weight:600;color:var(--muted)}
+.phones{display:flex;justify-content:center;align-items:center;position:relative;min-height:420px}
+.phone{width:min(248px,66vw);border-radius:38px;background:#0b1220;padding:9px;box-shadow:0 30px 60px -22px rgba(15,23,42,.5),0 0 0 1px rgba(15,23,42,.05);position:relative}
+.phone::before{content:"";position:absolute;top:15px;left:50%;transform:translateX(-50%);width:34%;height:18px;background:#0b1220;border-radius:0 0 12px 12px;z-index:2}
+.phone img{border-radius:30px;width:100%;display:block}
+.phone.back{width:min(210px,56vw);transform:rotate(-6deg);position:absolute;left:6%;z-index:0;opacity:.97}
+.phone.front{z-index:1;transform:rotate(2deg)}
+@media(max-width:900px){.appwrap,.appwrap.rev{grid-template-columns:minmax(0,1fr)}.appwrap.rev .app-copy{order:0}.phones{min-height:0;margin-top:10px}.phone.back{display:none}.phone.front{transform:none}}
+
 /* cta strip */
 .cta{background:var(--ink);color:#fff;padding:clamp(48px,5.5vw,76px) 0}
 .cta .wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
@@ -221,6 +238,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
     <a href="#tests">Tests &amp; packages</a>
     <a href="#journey">How it works</a>
     <a href="#reports">Reports</a>
+    <a href="#app">App</a>
     <a href="#why">Why us</a>
     <a href="#locations">Centers</a>
   </div>
@@ -228,6 +246,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
     <a href="#platform">Platform</a>
     <a href="#flow">How it works</a>
     <a href="#doctors">For doctors</a>
+    <a href="#apps">Apps</a>
     <a href="#security">Security</a>
   </div>
   <a href="#book" class="btn btn-pri" data-aud="patients">Book a test</a>
@@ -277,7 +296,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
 <div class="stats"><div class="wrap">
   <div><div class="stat-n">Same day</div><div class="stat-l">Turnaround on most reports</div></div>
   <div><div class="stat-n">WhatsApp</div><div class="stat-l">Reports delivered where you are</div></div>
-  <div><div class="stat-n">2 centers</div><div class="stat-l">Bihar Sharif &amp; Rajgir, Nalanda</div></div>
+  <div><div class="stat-n">4 centers</div><div class="stat-l">Nalanda &amp; Madhubani, Bihar</div></div>
   <div><div class="stat-n">UPI · Card · Cash</div><div class="stat-l">Pay in full or in part</div></div>
 </div></div>
 
@@ -372,11 +391,38 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
 </div></section>
 
 <section class="alt" id="locations"><div class="wrap">
-  <div class="head"><div class="eyebrow">Collection centers</div><h2>Find us in Nalanda.</h2><p class="lede">Walk in without an appointment, or book a slot to skip the queue — or have a phlebotomist come to your home.</p></div>
+  <div class="head"><div class="eyebrow">Collection centers</div><h2>Find us across Bihar.</h2><p class="lede">Walk in without an appointment, or book a slot to skip the queue — or have a phlebotomist come to your home.</p></div>
   <div class="grid g3">
     <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Bihar Sharif</h3><span class="pill pill-ok"><span class="dot"></span>Main center</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>50 m North of Bhainsasur Chowk, Opp. Sudha Dairy, Bihar Sharif (Nalanda) — 803101</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556 · 061124 53327</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>hi@medrelief.co.in</span></div></article>
     <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Rajgir</h3><span class="pill pill-ok"><span class="dot"></span>Open</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Rajgir, Nalanda district, Bihar</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Same reports, same WhatsApp delivery.</span></div></article>
+    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Ekangarsarai</h3><span class="pill pill-ok"><span class="dot"></span>Open</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Ekangarsarai, Nalanda district, Bihar</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Same reports, same WhatsApp delivery.</span></div></article>
+    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Madhubani</h3><span class="pill pill-ok"><span class="dot"></span>Open</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Madhubani, Bihar</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Same reports, same WhatsApp delivery.</span></div></article>
     <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Home collection</h3><span class="pill pill-brand">Across Nalanda</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg><span>Can't come in? A trained phlebotomist collects your sample at home.</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span>Call <b class="mono">+91 92638 40556</b> to book a slot</span></div></article>
+  </div>
+</div></section>
+
+<section id="app"><div class="wrap">
+  <div class="appwrap">
+    <div class="app-copy">
+      <div class="eyebrow">MedRelief patient app</div>
+      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">Your reports, in your pocket.</h2>
+      <p class="lede">Every report you've done, in one place — open the app, read your report, download the PDF, or share it with your doctor. Free for MedRelief patients.</p>
+      <div class="steps" style="margin-top:26px">
+        <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span><span class="step-label">Open the app<span class="step-sub">Sign in with your mobile number</span></span></div>
+        <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg></span><span class="step-label">Tap your report<span class="step-sub">It appears the moment a pathologist signs it</span></span></div>
+        <div class="step now"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></span><span class="step-label">View, download or share<span class="step-sub">Send the PDF to your doctor in a tap</span></span></div>
+      </div>
+      <p class="store-note">Available on iOS and Android</p>
+      <div class="stores">
+        <!-- Replace href="#" with the real App Store / Play Store links once the apps are published. -->
+        <a class="store" href="#" aria-label="Download on the App Store"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Download on the App Store"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M31.6 26.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-1.9-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3.9-4.1 2.5-1.8 3.1-.5 7.7 1.2 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3 0 1.7-.8 3.3-.8s1.9.8 3.2.8 2.2-1.2 3-2.4c.6-.9.9-1.4 1.4-2.5-3.7-1.4-3.8-6.6 0-8.6zm-2.5-7c.7-.9 1.2-2 1-3.2-1 0-2.2.7-2.9 1.5-.7.8-1.3 2-1.1 3.2 1.1.1 2.2-.6 3-1.5z"/><text x="46" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">Download on the</text><text x="45" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">App Store</text></svg></a>
+        <a class="store" href="#" aria-label="Get it on Google Play"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Get it on Google Play"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M18 15.4v19.2c0 .7.7 1.1 1.3.7l15.6-9.6c.5-.3.5-1.1 0-1.4L19.3 14.7c-.6-.4-1.3 0-1.3.7z"/><text x="43" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">GET IT ON</text><text x="42" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">Google Play</text></svg></a>
+      </div>
+    </div>
+    <div class="phones">
+      <div class="phone back"><img src="assets/app-patient-share.png" alt="Sharing a report from the MedRelief patient app" loading="lazy"></div>
+      <div class="phone front"><img src="assets/app-patient-home.png" alt="The MedRelief patient app home screen with a visit and receipt" loading="lazy"></div>
+    </div>
   </div>
 </div></section>
 
@@ -480,6 +526,29 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
     <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div><h3>Full audit trail</h3><p>Who did what, when — across bills, results and approvals, for accountability.</p></article>
     <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg></div><h3>Hosted in India</h3><p>Databases and files run in Indian regions (Mumbai), keeping patient data in-country.</p></article>
     <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Consent &amp; masking</h3><p>Patient consent is captured, and personal details are masked in AI prompts by default.</p></article>
+  </div>
+</div></section>
+
+<section id="apps"><div class="wrap">
+  <div class="appwrap rev">
+    <div class="app-copy">
+      <div class="eyebrow">Staff &amp; doctor apps</div>
+      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">The whole lab, on the phone in your hand.</h2>
+      <p class="lede">Reception, lab and finance run the same kiosk-simple app on Android or iOS — scan a prescription, bill, track samples and sign reports from the counter or a collection camp. Referring doctors get their own app for reports and referral statements.</p>
+      <div class="hero-chips" style="margin-top:22px">
+        <span class="pill pill-brand">Staff app</span><span class="pill pill-brand">Doctor app</span><span class="pill pill-brand">Patient app</span>
+      </div>
+      <p class="store-note">Available on iOS and Google Play</p>
+      <div class="stores">
+        <!-- Replace href="#" with the real App Store / Play Store links once the apps are published. -->
+        <a class="store" href="#" aria-label="Download on the App Store"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Download on the App Store"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M31.6 26.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-1.9-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3.9-4.1 2.5-1.8 3.1-.5 7.7 1.2 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3 0 1.7-.8 3.3-.8s1.9.8 3.2.8 2.2-1.2 3-2.4c.6-.9.9-1.4 1.4-2.5-3.7-1.4-3.8-6.6 0-8.6zm-2.5-7c.7-.9 1.2-2 1-3.2-1 0-2.2.7-2.9 1.5-.7.8-1.3 2-1.1 3.2 1.1.1 2.2-.6 3-1.5z"/><text x="46" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">Download on the</text><text x="45" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">App Store</text></svg></a>
+        <a class="store" href="#" aria-label="Get it on Google Play"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Get it on Google Play"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M18 15.4v19.2c0 .7.7 1.1 1.3.7l15.6-9.6c.5-.3.5-1.1 0-1.4L19.3 14.7c-.6-.4-1.3 0-1.3.7z"/><text x="43" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">GET IT ON</text><text x="42" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">Google Play</text></svg></a>
+      </div>
+    </div>
+    <div class="phones">
+      <div class="phone back"><img src="assets/app-staff-bill.png" alt="Bill detail in the MedRelief staff app" loading="lazy"></div>
+      <div class="phone front"><img src="assets/app-staff-home.png" alt="The MedRelief staff app home screen" loading="lazy"></div>
+    </div>
   </div>
 </div></section>
 
