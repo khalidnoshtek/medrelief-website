@@ -183,7 +183,39 @@ section{padding:clamp(56px,6.5vw,92px) 0}
 .phone img{border-radius:30px;width:100%;display:block}
 .phone.back{width:min(210px,56vw);transform:rotate(-6deg);position:absolute;left:6%;z-index:0;opacity:.97}
 .phone.front{z-index:1;transform:rotate(2deg)}
-@media(max-width:900px){.appwrap,.appwrap.rev{grid-template-columns:minmax(0,1fr)}.appwrap.rev .app-copy{order:0}.phones{min-height:0;margin-top:10px}.phone.back{display:none}.phone.front{transform:none}}
+/* rendered report preview card */
+.repcard{width:min(294px,78vw);background:#fff;border-radius:22px;box-shadow:0 34px 64px -24px rgba(15,23,42,.5),0 0 0 1px var(--line);overflow:hidden;position:relative;z-index:1;transform:rotate(1.5deg)}
+.rep-top{background:var(--ink);color:#fff;padding:13px 15px;display:flex;align-items:center;justify-content:space-between}
+.rep-top .rl{display:flex;align-items:center;gap:8px}
+.rep-top .rl img{width:24px;height:24px;border-radius:6px}
+.rep-top .rl b{font-size:12.5px;font-weight:700;line-height:1.1}
+.rep-top .rl small{display:block;font-size:8.5px;color:rgba(255,255,255,.6);letter-spacing:.12em;text-transform:uppercase;margin-top:1px}
+.rep-top .rtag{font-size:9px;font-weight:700;color:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 8px}
+.rep-body{padding:15px}
+.rep-pat{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--line)}
+.rep-pat b{color:var(--ink);font-weight:700}
+.rep-name{font-size:14px;font-weight:700;margin:11px 0 2px}
+.rep-sub{font-size:11px;color:var(--muted);margin-bottom:8px}
+table.rep{width:100%;border-collapse:collapse}
+table.rep th{text-align:left;color:var(--faint);font-weight:700;font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;padding-bottom:4px}
+table.rep th.n,table.rep td.n{text-align:right}
+table.rep td{padding:7px 0;border-top:1px solid var(--line);font-size:11px;vertical-align:middle}
+table.rep .an{font-weight:600;color:var(--ink)}
+table.rep .an small{display:block;color:var(--faint);font-weight:500;font-size:9px}
+table.rep .val{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--ink)}
+table.rep .rng{font-family:'JetBrains Mono',monospace;color:var(--faint);font-size:10px}
+.fl{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px}
+.fl-ok{background:var(--oksoft);color:var(--ok)}
+.fl-lo{background:var(--warnsoft);color:var(--warn)}
+.rep-sign{display:flex;align-items:center;gap:9px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+.rep-sign .chk{width:26px;height:26px;border-radius:50%;background:var(--oksoft);color:var(--ok);display:grid;place-items:center;flex:0 0 auto}
+.rep-sign div{font-size:10px;color:var(--muted);line-height:1.35}
+.rep-sign b{color:var(--ink);font-size:11px}
+.rep-actions{display:flex;gap:8px;margin-top:13px}
+.rep-actions span{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:11px;font-weight:600;padding:9px;border-radius:10px}
+.rep-actions .a1{background:var(--brand);color:#fff}
+.rep-actions .a2{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+@media(max-width:900px){.appwrap,.appwrap.rev{grid-template-columns:minmax(0,1fr)}.appwrap.rev .app-copy{order:0}.phones{min-height:0;margin-top:10px}.phone.back{display:none}.phone.front{transform:none}.repcard{transform:none;width:min(330px,88vw);margin:0 auto}}
 
 /* cta strip */
 .cta{background:var(--ink);color:#fff;padding:clamp(48px,5.5vw,76px) 0}
@@ -420,8 +452,29 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
       </div>
     </div>
     <div class="phones">
-      <div class="phone back"><img src="assets/app-patient-share.png" alt="Sharing a report from the MedRelief patient app" loading="lazy"></div>
-      <div class="phone front"><img src="assets/app-patient-home.png" alt="The MedRelief patient app home screen with a visit and receipt" loading="lazy"></div>
+      <div class="phone back"><img src="assets/app-patient-home.png" alt="The MedRelief patient app home screen with a visit and receipt" loading="lazy"></div>
+      <div class="repcard" role="img" aria-label="Sample MedRelief lab report: Complete Blood Count, pathologist verified">
+        <div class="rep-top">
+          <div class="rl"><img src="assets/mr-logo.png" alt=""><span><b>MedRelief</b><small>Lab Report</small></span></div>
+          <span class="rtag">Sample</span>
+        </div>
+        <div class="rep-body">
+          <div class="rep-pat"><span>Accession <b class="mono">A‑32144</b></span><span>08 Sep 2026</span></div>
+          <div class="rep-name">Complete Blood Count</div>
+          <div class="rep-sub">Ramesh Kumar · 34Y / Male</div>
+          <table class="rep">
+            <thead><tr><th>Analyte</th><th class="n">Result</th><th class="n">Reference</th><th class="n">Flag</th></tr></thead>
+            <tbody>
+              <tr><td class="an">Haemoglobin<small>g/dL</small></td><td class="n val">11.8</td><td class="n rng">13.0–17.0</td><td class="n"><span class="fl fl-lo">Low</span></td></tr>
+              <tr><td class="an">RBC count<small>10⁶/µL</small></td><td class="n val">4.6</td><td class="n rng">4.5–5.5</td><td class="n"><span class="fl fl-ok">Normal</span></td></tr>
+              <tr><td class="an">WBC (TLC)<small>10³/µL</small></td><td class="n val">7.2</td><td class="n rng">4.0–11.0</td><td class="n"><span class="fl fl-ok">Normal</span></td></tr>
+              <tr><td class="an">Platelets<small>10³/µL</small></td><td class="n val">240</td><td class="n rng">150–410</td><td class="n"><span class="fl fl-ok">Normal</span></td></tr>
+            </tbody>
+          </table>
+          <div class="rep-sign"><span class="chk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span><div><b>Verified &amp; signed</b><br>by the duty pathologist, MD Pathology</div></div>
+          <div class="rep-actions"><span class="a1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>PDF</span><span class="a2"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </div></section>
@@ -611,6 +664,26 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
   try{ if(localStorage.getItem('mr_view')) initial=localStorage.getItem('mr_view'); }catch(e){}
   if(b2bHashes.indexOf(location.hash)>=0) initial='b2b';
   apply(initial);
+
+  // ── APP STORE LINKS ───────────────────────────────────────────────────────
+  // Paste the real store URLs here once the apps are published, then re-deploy.
+  // Leave a value empty to keep that badge inert ("Coming soon"). The patient
+  // view badges point at the PATIENT app; the labs & doctors view badges at the
+  // STAFF/DOCTOR apps — fill whichever are live.
+  var STORE_LINKS = {
+    patients: { ios: "", play: "" },   // e.g. ios:"https://apps.apple.com/app/idXXXXXXXXXX", play:"https://play.google.com/store/apps/details?id=com.medrelief.patient"
+    b2b:      { ios: "", play: "" }    // e.g. the staff app's App Store / Play links
+  };
+  document.querySelectorAll('.store').forEach(function(a){
+    var host = a.closest('[data-aud]');
+    var view = host ? host.getAttribute('data-aud') : 'patients';
+    var set  = STORE_LINKS[view] || {};
+    var isPlay = (a.getAttribute('aria-label')||'').toLowerCase().indexOf('play') >= 0;
+    var url = isPlay ? set.play : set.ios;
+    if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; }
+    else { a.href = '#'; a.title = 'Coming soon'; a.style.cursor = 'default';
+           a.addEventListener('click', function(e){ e.preventDefault(); }); }
+  });
 })();
 </script>
 </body>
