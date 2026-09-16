@@ -217,6 +217,53 @@ table.rep .rng{font-family:'JetBrains Mono',monospace;color:var(--faint);font-si
 .rep-actions .a2{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
 @media(max-width:900px){.appwrap,.appwrap.rev{grid-template-columns:minmax(0,1fr)}.appwrap.rev .app-copy{order:0}.phones{min-height:0;margin-top:10px}.phone.back{display:none}.phone.front{transform:none}.repcard{transform:none;width:min(330px,88vw);margin:0 auto}}
 
+/* animated scan → autofill demo (B2B) */
+.demo{background:linear-gradient(180deg,var(--cool),var(--card));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.demowrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(30px,4vw,60px);align-items:center}
+@media(max-width:900px){.demowrap{grid-template-columns:1fr;gap:34px}}
+.dphone{width:min(286px,78vw);margin:0 auto;border-radius:42px;background:#0b1220;padding:9px;box-shadow:0 40px 74px -26px rgba(8,145,178,.55),0 0 0 1px rgba(15,23,42,.06);position:relative}
+.dphone::before{content:"";position:absolute;top:16px;left:50%;transform:translateX(-50%);width:30%;height:17px;background:#0b1220;border-radius:0 0 12px 12px;z-index:5}
+.dscreen{position:relative;border-radius:33px;overflow:hidden;background:#fff;aspect-ratio:9/18.2}
+.dlayer{position:absolute;inset:0;transition:opacity .45s ease}
+.dlayer.hide{opacity:0}
+.dcam{background:radial-gradient(120% 75% at 50% 0,#0e2b33,#0b1220)}
+.dcam .rx{position:absolute;top:19%;left:11%;right:11%;background:#faf8f2;border-radius:9px;padding:14px 14px 16px;transform:rotate(-2.5deg);box-shadow:0 24px 44px -16px rgba(0,0,0,.65)}
+.dcam .rx-h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #e6e0d3;padding-bottom:7px;margin-bottom:9px}
+.dcam .rx-h b{font-size:13px;color:#0e7490;font-weight:800}
+.dcam .rx-h i{font-size:7.5px;color:#a89f89;font-style:normal;letter-spacing:.06em}
+.dcam .rx .ln{height:5px;border-radius:3px;background:#e8e2d5;margin:8px 0}
+.dcam .rx .w80{width:80%}.dcam .rx .w60{width:60%}.dcam .rx .w45{width:45%}
+.dcam .rx .rxt{font-size:10.5px;color:#4a4433;font-weight:600;margin:7px 0 3px;font-family:'JetBrains Mono',monospace}
+.vf{position:absolute;inset:13px;pointer-events:none}
+.vf i{position:absolute;width:20px;height:20px;border:3px solid rgba(255,255,255,.9)}
+.vf .a{top:0;left:0;border-right:0;border-bottom:0;border-radius:7px 0 0 0}
+.vf .b{top:0;right:0;border-left:0;border-bottom:0;border-radius:0 7px 0 0}
+.vf .c{bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 7px}
+.vf .d{bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 7px 0}
+.scanline{position:absolute;left:9%;right:9%;height:3px;border-radius:3px;top:14%;background:linear-gradient(90deg,transparent,#22d3ee,transparent);box-shadow:0 0 18px 4px rgba(34,211,238,.65);opacity:0}
+.dcam.scanning .scanline{animation:sweep 2.2s ease-in-out infinite}
+@keyframes sweep{0%{top:14%;opacity:0}12%{opacity:1}88%{opacity:1}100%{top:82%;opacity:0}}
+.dcam-pill{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;background:rgba(8,145,178,.94);color:#fff;font-size:11px;font-weight:700;padding:8px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 20px -8px rgba(8,145,178,.8)}
+.dspin{width:12px;height:12px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dform{background:#fff;padding:16px 15px;display:flex;flex-direction:column}
+.dform-h{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.dform-h b{font-size:13.5px;font-weight:800;color:var(--ink)}
+.dform-h .tag{font-size:8px;font-weight:800;color:var(--brand-deep);background:var(--brandsoft);padding:3px 8px;border-radius:999px;margin-left:auto;display:inline-flex;align-items:center;gap:4px}
+.frow{border:1px solid var(--line);border-radius:12px;padding:8px 11px;margin-top:8px;position:relative;transition:border-color .3s,box-shadow .3s;background:#fff}
+.frow.in{border-color:#a5e8f2;box-shadow:0 0 0 3px rgba(8,145,178,.08)}
+.frow .fl{font-size:8px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+.frow .fv{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:2px;min-height:17px;opacity:0;transform:translateY(3px);transition:.3s ease}
+.frow.in .fv{opacity:1;transform:none}
+.frow .fchk{position:absolute;top:50%;right:10px;transform:translateY(-50%) scale(.5);color:var(--ok);opacity:0;transition:.25s ease}
+.frow.in .fchk{opacity:1;transform:translateY(-50%) scale(1)}
+.fchips{display:flex;flex-wrap:wrap;gap:4px}
+.fchips span{font-size:9.5px;font-weight:700;background:var(--brandsoft);color:var(--brand-deep);padding:2px 7px;border-radius:999px}
+.dform-ok{margin-top:auto;padding-top:12px}
+.dform-ok .bar{display:flex;align-items:center;gap:8px;background:var(--oksoft);color:var(--ok);font-size:11px;font-weight:800;padding:9px 12px;border-radius:11px;opacity:0;transform:translateY(4px);transition:.4s ease}
+.dform.done .dform-ok .bar{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.scanline,.dspin{animation:none!important}}
+
 /* cta strip */
 .cta{background:var(--ink);color:#fff;padding:clamp(48px,5.5vw,76px) 0}
 .cta .wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
@@ -529,6 +576,45 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
   <div><div class="stat-n">Manual fallback</div><div class="stat-l">On every screen — AI never blocks</div></div>
 </div></div>
 
+<section id="scan-demo" class="demo"><div class="wrap">
+  <div class="demowrap">
+    <div class="demo-copy">
+      <div class="eyebrow">AI-first · see it in action</div>
+      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">Scan the prescription. Watch it fill the form.</h2>
+      <p class="lede">Point the camera at a prescription and MedRelief's AI reads it — patient details and the ordered tests drop straight into the registration form. The desk just confirms and moves on. No typing, no re-keying.</p>
+      <div class="steps" style="margin-top:24px;max-width:430px">
+        <div class="step done"><span class="step-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></span><span class="step-label">Capture<span class="step-sub">Any prescription — printed or handwritten</span></span></div>
+        <div class="step done"><span class="step-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15v4M17 17h4M5 4v3M4 5.5h2"/></svg></span><span class="step-label">AI reads it<span class="step-sub">Patient, age/sex, mobile and the tests</span></span></div>
+        <div class="step now"><span class="step-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/><path d="m9 11 3 3 9-9"/></svg></span><span class="step-label">Autofilled<span class="step-sub">Confirm and continue — seconds, not minutes</span></span></div>
+      </div>
+    </div>
+    <div class="dphone">
+      <div class="dscreen">
+        <div class="dlayer dcam scanning">
+          <div class="rx">
+            <div class="rx-h"><b>Rx</b><i>MEDRELIEF · OPD</i></div>
+            <div class="rxt">Ramesh Kumar · 34/M</div>
+            <div class="ln w80"></div><div class="ln w45"></div>
+            <div class="rxt">Advised —</div>
+            <div class="ln w60"></div><div class="ln w80"></div><div class="ln w45"></div>
+          </div>
+          <div class="vf"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
+          <div class="scanline"></div>
+          <div class="dcam-pill"><span class="dspin"></span>Reading prescription…</div>
+        </div>
+        <div class="dlayer dform hide">
+          <div class="dform-h"><b>New patient</b><span class="tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m12 4 1.6 3.9L17.5 9.5l-3.9 1.6L12 15l-1.6-3.9L6.5 9.5l3.9-1.6z"/></svg>AI autofill</span></div>
+          <div class="frow"><div class="fl">Patient name</div><div class="fv">Ramesh Kumar</div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
+          <div class="frow"><div class="fl">Age / Sex</div><div class="fv">34 · Male</div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
+          <div class="frow"><div class="fl">Mobile</div><div class="fv">98••• •••••</div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
+          <div class="frow"><div class="fl">Tests ordered</div><div class="fv"><div class="fchips"><span>CBC</span><span>HbA1c</span><span>Lipid Profile</span><span>TSH</span></div></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
+          <div class="dform-ok"><div class="bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Autofilled from prescription</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
 <section id="platform"><div class="wrap">
   <div class="head"><div class="eyebrow">One platform</div><h2>Everything the front desk, lab and finance need.</h2><p class="lede">From registration to reconciliation — a single kiosk-simple app, built mobile-first for the counter.</p></div>
   <div class="grid g3">
@@ -626,7 +712,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
   </div>
   <div class="foot-bot">
     <span>© 2026 Med Relief Healthcare Pvt. Ltd. · Bihar Sharif, Nalanda, Bihar · CIN U85100BR2021PTC053162</span>
-    <span>Privacy policy · Terms · Patient charter</span>
+    <span><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a></span>
   </div>
 </div></footer>
 
@@ -684,6 +770,38 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
     else { a.href = '#'; a.title = 'Coming soon'; a.style.cursor = 'default';
            a.addEventListener('click', function(e){ e.preventDefault(); }); }
   });
+
+  // ── Animated scan → autofill demo: loops while the section is on screen ──
+  (function(){
+    var demo = document.getElementById('scan-demo'); if(!demo) return;
+    var cam  = demo.querySelector('.dcam');
+    var form = demo.querySelector('.dform');
+    var rows = [].slice.call(demo.querySelectorAll('.frow'));
+    var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    var timers = [], started = false;
+    function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
+    function clear(){ timers.forEach(clearTimeout); timers = []; }
+    function cycle(){
+      clear();
+      rows.forEach(function(r){ r.classList.remove('in'); });
+      form.classList.remove('done');
+      cam.classList.remove('hide'); cam.classList.add('scanning');
+      form.classList.add('hide');
+      if (reduce) {                                   // no motion: show the filled result
+        cam.classList.add('hide'); form.classList.remove('hide');
+        rows.forEach(function(r){ r.classList.add('in'); }); form.classList.add('done');
+        return;
+      }
+      at(3000, function(){ cam.classList.remove('scanning'); cam.classList.add('hide'); form.classList.remove('hide'); });
+      rows.forEach(function(r, i){ at(3350 + i*470, function(){ r.classList.add('in'); }); });
+      at(3350 + rows.length*470 + 250, function(){ form.classList.add('done'); });
+      at(3350 + rows.length*470 + 2900, cycle);        // loop
+    }
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting && !started){ started = true; cycle(); } });
+    }, { threshold: 0.35 });
+    io.observe(demo);
+  })();
 })();
 </script>
 </body>
