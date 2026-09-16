@@ -9,7 +9,7 @@
 <link rel="icon" href="assets/mr-logo.png" type="image/png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{--brand:#0891B2;--brand-deep:#0E7490;--brandsoft:#ECFEFF;--ok:#059669;--oksoft:#ECFDF5;--warn:#D97706;--warnsoft:#FFFBEB;--bg:#FAFAF8;--cool:#EDF4F6;--card:#FFFFFF;--line:#E2E8F0;--ink:#0F172A;--muted:#64748B;--faint:#94A3B8;--shadow:0 1px 2px rgba(15,23,42,.04),0 12px 26px -18px rgba(15,23,42,.20);--cta-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 24px -12px rgba(8,145,178,.45)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -231,9 +231,10 @@ table.rep .rng{font-family:'JetBrains Mono',monospace;color:var(--faint);font-si
 .dcam .rx-h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #e6e0d3;padding-bottom:7px;margin-bottom:9px}
 .dcam .rx-h b{font-size:13px;color:#0e7490;font-weight:800}
 .dcam .rx-h i{font-size:7.5px;color:#a89f89;font-style:normal;letter-spacing:.06em}
-.dcam .rx .ln{height:5px;border-radius:3px;background:#e8e2d5;margin:8px 0}
-.dcam .rx .w80{width:80%}.dcam .rx .w60{width:60%}.dcam .rx .w45{width:45%}
-.dcam .rx .rxt{font-size:10.5px;color:#4a4433;font-weight:600;margin:7px 0 3px;font-family:'JetBrains Mono',monospace}
+.dcam .rx .hw{font-family:'Caveat',cursive;font-size:17px;line-height:1.3;color:#26303a;margin:4px 0}
+.dcam .rx .hw.big{font-size:20px;font-weight:700;color:#161d24;margin-top:2px}
+.dcam .rx .hw.sec{color:#0e7490;font-weight:700;margin-top:9px;font-size:16px}
+.dcam .rx .hw.sign{margin-top:11px;padding-top:7px;border-top:1px dashed #d9d3c4;text-align:right;font-size:19px;color:#1e3a5f;transform:rotate(-2deg)}
 .vf{position:absolute;inset:13px;pointer-events:none}
 .vf i{position:absolute;width:20px;height:20px;border:3px solid rgba(255,255,255,.9)}
 .vf .a{top:0;left:0;border-right:0;border-bottom:0;border-radius:7px 0 0 0}
@@ -592,11 +593,13 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
       <div class="dscreen">
         <div class="dlayer dcam scanning">
           <div class="rx">
-            <div class="rx-h"><b>Rx</b><i>MEDRELIEF · OPD</i></div>
-            <div class="rxt">Ramesh Kumar · 34/M</div>
-            <div class="ln w80"></div><div class="ln w45"></div>
-            <div class="rxt">Advised —</div>
-            <div class="ln w60"></div><div class="ln w80"></div><div class="ln w45"></div>
+            <div class="rx-h"><b>MedRelief</b><i>OPD · Rx</i></div>
+            <div class="hw big">Ramesh Kumar, 34/M</div>
+            <div class="hw">c/o fever, fatigue — 5 days</div>
+            <div class="hw sec">Advised —</div>
+            <div class="hw">CBC, HbA1c</div>
+            <div class="hw">Lipid Profile, TSH</div>
+            <div class="hw sign">Dr. A. K. Verma</div>
           </div>
           <div class="vf"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
           <div class="scanline"></div>
@@ -783,15 +786,17 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
     function clear(){ timers.forEach(clearTimeout); timers = []; }
     function cycle(){
       clear();
-      rows.forEach(function(r){ r.classList.remove('in'); });
-      form.classList.remove('done');
+      // back to camera: fade the (still-filled) form out, bring the scanner in
       cam.classList.remove('hide'); cam.classList.add('scanning');
       form.classList.add('hide');
-      if (reduce) {                                   // no motion: show the filled result
-        cam.classList.add('hide'); form.classList.remove('hide');
-        rows.forEach(function(r){ r.classList.add('in'); }); form.classList.add('done');
+      if (reduce) {                                   // no motion: just show the filled result
+        rows.forEach(function(r){ r.classList.add('in'); });
+        cam.classList.add('hide'); form.classList.remove('hide'); form.classList.add('done');
         return;
       }
+      // reset the form only AFTER it has faded out, so the un-fill is never seen
+      at(540, function(){ rows.forEach(function(r){ r.classList.remove('in'); }); form.classList.remove('done'); });
+      // scan finished → reveal the empty form, then fill it field by field
       at(3000, function(){ cam.classList.remove('scanning'); cam.classList.add('hide'); form.classList.remove('hide'); });
       rows.forEach(function(r, i){ at(3350 + i*470, function(){ r.classList.add('in'); }); });
       at(3350 + rows.length*470 + 250, function(){ form.classList.add('done'); });
