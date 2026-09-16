@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MedRelief Diagnostics</title>
+<meta name="description" content="MedRelief Diagnostics, Bihar Sharif (Nalanda) — book a test, track your report live, get it on WhatsApp. Plus the AI-first lab platform behind it, for labs and doctors." />
+<meta name="theme-color" content="#0891B2" />
+<link rel="icon" href="assets/mr-logo.png" type="image/png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0891B2;--brand-deep:#0E7490;--brandsoft:#ECFEFF;--ok:#059669;--oksoft:#ECFDF5;--warn:#D97706;--warnsoft:#FFFBEB;--bg:#FAFAF8;--cool:#EDF4F6;--card:#FFFFFF;--line:#E2E8F0;--ink:#0F172A;--muted:#64748B;--faint:#94A3B8;--shadow:0 1px 2px rgba(15,23,42,.04),0 12px 26px -18px rgba(15,23,42,.20);--cta-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 24px -12px rgba(8,145,178,.45)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--card);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+h1,h2,h3,h4{letter-spacing:-.025em;line-height:1.08}
+img{display:block;max-width:100%}
+[hidden]{display:none!important}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+a{color:var(--brand-deep);text-decoration:none}
+a:hover{color:var(--brand)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand)}
+.lede{color:var(--muted);font-size:clamp(16px,1.15vw,18px);line-height:1.6}
+.btn{display:inline-flex;align-items:center;gap:9px;height:52px;padding:0 24px;border-radius:14px;font-size:16px;font-weight:600;border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.btn-pri{background:var(--brand);color:#fff;box-shadow:var(--cta-shadow)}
+.btn-pri:hover{background:var(--brand-deep);color:#fff}
+.btn-gho{background:var(--card);color:var(--ink);border-color:var(--line)}
+.btn-gho:hover{background:var(--bg);color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600}
+.pill-brand{background:var(--brandsoft);color:var(--brand-deep)}
+.pill-ok{background:var(--oksoft);color:var(--ok)}
+.pill-warn{background:var(--warnsoft);color:var(--warn)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(5,150,105,.55)}70%{box-shadow:0 0 0 8px rgba(5,150,105,0)}100%{box-shadow:0 0 0 0 rgba(5,150,105,0)}}
+.dot-live{animation:pulse 2s infinite}
+
+/* ---- top bar + nav ---- */
+.topbar{background:var(--ink);color:#fff}
+.topbar .wrap{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;justify-content:space-between;min-height:44px;font-size:13px}
+.topbar .tb-info{color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px}
+.topbar b{color:#fff;font-weight:600}
+.aud{display:inline-flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px}
+.aud-btn{appearance:none;background:none;border:0;color:rgba(255,255,255,.7);font:600 12.5px 'Inter',sans-serif;padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.aud-btn:hover{color:#fff}
+.aud-btn.active{background:#fff;color:var(--ink)}
+nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;min-height:78px}
+.logo{display:flex;align-items:center;gap:13px}
+.logo img{width:46px;height:46px;object-fit:contain}
+.logo-name{font-size:21px;font-weight:800}
+.logo-name span{color:var(--brand)}
+.logo-sub{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+.navlinks{display:flex;gap:6px;margin-left:auto;flex-wrap:nowrap;min-width:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{padding:10px 14px;border-radius:10px;font-size:15px;font-weight:500;color:var(--muted);white-space:nowrap;flex:0 0 auto}
+.navlinks a:hover{background:var(--bg);color:var(--ink)}
+
+/* ---- hero ---- */
+.hero{background:linear-gradient(180deg,var(--cool),var(--card));border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,4vw,64px);align-items:center;padding:clamp(48px,6vw,84px) 24px}
+.hero h1{font-size:clamp(34px,4.4vw,58px);margin:16px 0 18px}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0 22px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+
+/* track / console card */
+.track{padding:24px}
+.track-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.track-title{font-size:17px;font-weight:700}
+.field{display:flex;gap:10px}
+.field input{flex:1;min-width:0;height:52px;border:1px solid var(--line);border-radius:14px;padding:0 16px;font:600 16px/1 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg)}
+.field input:focus{outline:2px solid var(--brandsoft);border-color:var(--brand)}
+.field button{height:52px;padding:0 20px;border:none;border-radius:14px;background:var(--brand);color:#fff;font:600 15px 'Inter',sans-serif;cursor:pointer}
+.field button:hover{background:var(--brand-deep)}
+.steps{display:grid;gap:10px;margin-top:18px}
+.step{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid var(--line);border-radius:15px;background:var(--bg)}
+.step.done{background:var(--oksoft);border-color:rgba(5,150,105,.25)}
+.step.now{background:var(--brandsoft);border-color:rgba(8,145,178,.3)}
+.step-ico{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+.step.done .step-ico{background:var(--ok);border-color:var(--ok);color:#fff}
+.step.now .step-ico{background:var(--brand);border-color:var(--brand);color:#fff}
+.step-label{font-size:14.5px;font-weight:600;flex:1}
+.step-sub{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+.step-time{font-size:12.5px;font-weight:600;color:var(--muted)}
+
+/* ---- stats ---- */
+.stats{border-bottom:1px solid var(--line);background:var(--card)}
+.stats .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px 32px;padding:36px 24px}
+.stat-n{font-size:clamp(26px,2.6vw,36px);font-weight:800;letter-spacing:-.03em}
+.stat-l{font-size:14px;color:var(--muted);font-weight:500;margin-top:4px}
+
+/* ---- sections ---- */
+section{padding:clamp(56px,6.5vw,92px) 0}
+.alt{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.head{max-width:680px;margin-bottom:clamp(32px,4vw,48px)}
+.head h2{font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px}
+.grid{display:grid;gap:18px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+
+/* test cards */
+.test{padding:22px;display:flex;flex-direction:column;gap:14px}
+.test-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.test h3{font-size:19px}
+.test-inc{font-size:14px;color:var(--muted);line-height:1.55}
+.test-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.test-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.price{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.price small{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0}
+.link-go{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:var(--brand)}
+
+/* journey */
+.journey{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.jstep{padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--card);border-top:4px solid var(--c);box-shadow:var(--shadow)}
+.jnum{font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--c)}
+.jstep h4{font-size:17px;margin:10px 0 7px}
+.jstep p{font-size:14px;color:var(--muted);line-height:1.5}
+
+/* feature */
+.feat{padding:24px}
+.feat-ico{width:50px;height:50px;border-radius:14px;background:var(--brandsoft);color:var(--brand);display:grid;place-items:center;margin-bottom:16px}
+.feat h3{font-size:18px;margin-bottom:9px}
+.feat p{font-size:14.5px;color:var(--muted);line-height:1.6}
+
+/* band */
+.band{background:var(--brand);color:#fff;border-radius:28px;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:clamp(24px,3vw,48px);align-items:center;padding:clamp(28px,3.5vw,48px)}
+.band h2{font-size:clamp(26px,3vw,38px);color:#fff}
+.band p{color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:16px 0 26px;max-width:46ch}
+.band .btn-pri{background:#fff;color:var(--brand-deep);box-shadow:0 10px 24px -14px rgba(0,0,0,.4)}
+.band .btn-pri:hover{background:var(--brandsoft);color:var(--brand-deep)}
+.band-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.band-chips .pill{background:rgba(255,255,255,.16);color:#fff}
+.band-img{height:100%;min-height:260px;border-radius:20px;overflow:hidden;position:relative;background:rgba(255,255,255,.12);display:grid;place-items:center;text-align:center;padding:26px}
+.band-img .ph-ico{width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.18);display:grid;place-items:center;color:#fff;margin:0 auto 14px}
+.band-img .ph-cap{color:rgba(255,255,255,.9);font-size:14px;font-weight:600;line-height:1.5;max-width:24ch}
+.band-panel{display:grid;gap:2px;width:100%}
+.band-panel .bp{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.16)}
+.band-panel .bp:last-child{border-bottom:0}
+.band-panel .bp b{font-size:15px;font-weight:700}
+.band-panel .bp span{color:rgba(255,255,255,.8);font-size:13.5px}
+
+/* whatsapp */
+.wa-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(32px,4vw,56px);align-items:center}
+.chat{padding:22px;background:var(--bg);border:1px solid var(--line);border-radius:24px;display:grid;gap:12px}
+.bubble{background:var(--card);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:15px 17px;box-shadow:var(--shadow);max-width:90%}
+.bubble-me{background:var(--oksoft);border-color:rgba(5,150,105,.22);border-radius:18px 18px 6px 18px;margin-left:auto}
+.bubble-from{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.bubble-from img{width:28px;height:28px;object-fit:contain}
+.bubble-from b{font-size:13.5px;font-weight:700}
+.bubble p{font-size:14.5px;line-height:1.55;color:var(--ink)}
+.bubble .t{font:500 11px/1 'JetBrains Mono',monospace;color:var(--faint);margin-top:9px;text-align:right}
+.attach{display:flex;align-items:center;gap:11px;margin-top:11px;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--bg)}
+.attach-ico{width:34px;height:40px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font:700 9px 'Inter',sans-serif}
+.attach-n{font-size:13.5px;font-weight:600}
+.attach-s{font-size:11.5px;color:var(--muted);margin-top:2px}
+.checklist{display:grid;gap:14px;margin-top:24px;padding:0;list-style:none}
+.checklist li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;color:var(--muted);line-height:1.5}
+.checklist svg{flex:0 0 auto;margin-top:2px;color:var(--ok)}
+.checklist b{color:var(--ink);font-weight:600}
+
+/* locations */
+.loc{padding:22px;display:grid;gap:12px}
+.loc h3{font-size:18px}
+.loc-row{display:flex;gap:10px;font-size:14px;color:var(--muted);line-height:1.5}
+.loc-row svg{flex:0 0 auto;margin-top:2px;color:var(--brand)}
+
+/* cta strip */
+.cta{background:var(--ink);color:#fff;padding:clamp(48px,5.5vw,76px) 0}
+.cta .wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
+.cta h2{font-size:clamp(26px,3vw,38px);color:#fff}
+.cta p{color:rgba(255,255,255,.7);font-size:17px;margin-top:12px;max-width:52ch}
+.cta .btn-gho{background:transparent;color:#fff;border-color:rgba(255,255,255,.26)}
+.cta .btn-gho:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* footer */
+footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px;font-size:14.5px}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(auto-fit,minmax(150px,1fr));gap:36px}
+.foot-grid h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+.foot-links{display:grid;gap:11px}
+.foot-links a{color:var(--muted);font-weight:500;cursor:pointer}
+.foot-links a:hover{color:var(--brand)}
+.foot-about p{color:var(--muted);line-height:1.65;margin:16px 0 18px;max-width:38ch}
+.foot-bot{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:center;margin-top:44px;padding-top:24px;border-top:1px solid var(--line);color:var(--faint);font-size:13.5px}
+
+@media (max-width:1060px){
+  nav .wrap{flex-wrap:wrap;padding-bottom:12px;row-gap:0}
+  .navlinks{order:3;width:100%;margin:0 -24px;padding:0 24px 4px;border-top:1px solid var(--line);padding-top:10px}
+  nav .btn-pri{margin-left:auto}
+}
+@media (max-width:900px){
+  .hero .wrap,.band,.wa-grid{grid-template-columns:minmax(0,1fr)}
+  .band-img{min-height:220px}
+}
+</style>
+</head>
+<body data-view="patients">
+
+<div class="topbar"><div class="wrap">
+  <span class="tb-info" data-aud="patients"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg> Book by phone <b>+91 92638 40556</b> · Bihar Sharif, Nalanda</span>
+  <span class="tb-info" data-aud="b2b" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> Partner with us <b>hi@medrelief.co.in</b></span>
+  <div class="aud" role="tablist" aria-label="Choose audience">
+    <button class="aud-btn active" data-go="patients" role="tab" aria-selected="true">For patients</button>
+    <button class="aud-btn" data-go="b2b" role="tab" aria-selected="false">For labs &amp; doctors</button>
+  </div>
+</div></div>
+
+<nav><div class="wrap">
+  <a href="#top" class="logo">
+    <img src="assets/mr-logo.png" alt="MedRelief" />
+    <span>
+      <span class="logo-name">Med<span>Relief</span></span>
+      <span class="logo-sub" data-aud="patients">Diagnostics</span>
+      <span class="logo-sub" data-aud="b2b" hidden>Lab Platform</span>
+    </span>
+  </a>
+  <div class="navlinks" data-aud="patients">
+    <a href="#tests">Tests &amp; packages</a>
+    <a href="#journey">How it works</a>
+    <a href="#reports">Reports</a>
+    <a href="#why">Why us</a>
+    <a href="#locations">Centers</a>
+  </div>
+  <div class="navlinks" data-aud="b2b" hidden>
+    <a href="#platform">Platform</a>
+    <a href="#flow">How it works</a>
+    <a href="#doctors">For doctors</a>
+    <a href="#security">Security</a>
+  </div>
+  <a href="#book" class="btn btn-pri" data-aud="patients">Book a test</a>
+  <a href="#demo" class="btn btn-pri" data-aud="b2b" hidden>Request a demo</a>
+</div></nav>
+
+<!-- ============================ PATIENTS ============================ -->
+<div class="view" data-aud="patients">
+
+<header class="hero" id="top"><div class="wrap">
+  <div>
+    <div class="eyebrow">Diagnostics · Bihar Sharif, Nalanda</div>
+    <h1>Pathology, without the <em>waiting room</em>.</h1>
+    <p class="lede">Book a test, get your sample collected, and watch your report move stage by stage — then receive it on WhatsApp. Most reports the same day.</p>
+    <div class="hero-cta">
+      <a href="#book" class="btn btn-pri">Book a test
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+      </a>
+      <a href="#track" class="btn btn-gho">Track my report</a>
+    </div>
+    <div class="hero-chips">
+      <span class="pill pill-brand">Home collection</span>
+      <span class="pill pill-brand">Wide test menu</span>
+      <span class="pill pill-ok">Reports on WhatsApp</span>
+      <span class="pill pill-brand">Pathologist verified</span>
+    </div>
+  </div>
+
+  <div class="card track" id="track">
+    <div class="track-head">
+      <span class="track-title">Track your report</span>
+      <span class="pill pill-ok"><span class="dot dot-live"></span>Live</span>
+    </div>
+    <div class="field">
+      <input value="T‑104" aria-label="Token number" />
+      <button type="button">Track</button>
+    </div>
+    <div class="steps">
+      <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span><span class="step-label">Sample collected</span><span class="step-time mono">9:12 AM</span></div>
+      <div class="step now"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v13a4 4 0 0 1-8 0zM8 11h8"/></svg></span><span class="step-label">In lab — processing</span><span class="step-time mono">ETA 38 min</span></div>
+      <div class="step"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c2 0 3-10 5-10s2 8 4 8 2-4 4-4 2 3 5 3"/></svg></span><span class="step-label">Pathologist sign‑off</span><span class="step-time">Pending</span></div>
+      <div class="step"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg></span><span class="step-label">Report on WhatsApp</span><span class="step-time">Pending</span></div>
+    </div>
+  </div>
+</div></header>
+
+<div class="stats"><div class="wrap">
+  <div><div class="stat-n">Same day</div><div class="stat-l">Turnaround on most reports</div></div>
+  <div><div class="stat-n">WhatsApp</div><div class="stat-l">Reports delivered where you are</div></div>
+  <div><div class="stat-n">2 centers</div><div class="stat-l">Bihar Sharif &amp; Rajgir, Nalanda</div></div>
+  <div><div class="stat-n">UPI · Card · Cash</div><div class="stat-l">Pay in full or in part</div></div>
+</div></div>
+
+<section id="tests"><div class="wrap">
+  <div class="head">
+    <div class="eyebrow">Tests &amp; packages</div>
+    <h2>The tests people book most.</h2>
+    <p class="lede">Transparent pricing and a stated turnaround. Fasting requirements are flagged before you book. Full menu and package prices are confirmed at the center or on call.</p>
+  </div>
+  <div class="grid g3">
+    <article class="card test"><div class="test-top"><h3>Complete Blood Count</h3><span class="pill pill-brand">Popular</span></div><p class="test-inc">Haemoglobin, WBC and differential, platelets and red-cell indices — a full haemogram.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-brand">No fasting</span></div><div class="test-foot"><span class="price">₹400</span><span class="link-go">Book →</span></div></article>
+    <article class="card test"><div class="test-top"><h3>HbA1c — Glycated Haemoglobin</h3><span class="pill pill-brand">Diabetes</span></div><p class="test-inc">Your average blood sugar over the last ~3 months — the standard check for diabetes control.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-brand">No fasting</span></div><div class="test-foot"><span class="price">₹600</span><span class="link-go">Book →</span></div></article>
+    <article class="card test"><div class="test-top"><h3>Blood Sugar (Random)</h3></div><p class="test-inc">A quick glucose check, any time of day — no appointment or fasting needed.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-brand">No fasting</span></div><div class="test-foot"><span class="price">₹50</span><span class="link-go">Book →</span></div></article>
+    <article class="card test"><div class="test-top"><h3>Liver Function Test</h3></div><p class="test-inc">Bilirubin, SGOT/SGPT, ALP and protein levels — a full check of liver health.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-warn">Fasting advised</span></div><div class="test-foot"><span class="price">₹800</span><span class="link-go">Book →</span></div></article>
+    <article class="card test"><div class="test-top"><h3>Kidney Function Test</h3></div><p class="test-inc">Urea, creatinine, uric acid and electrolytes — how well your kidneys are working.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-warn">Fasting advised</span></div><div class="test-foot"><span class="price">₹850</span><span class="link-go">Book →</span></div></article>
+    <article class="card test"><div class="test-top"><h3>Full Body Checkup</h3><span class="pill pill-brand">Package</span></div><p class="test-inc">CBC, Blood Sugar, HbA1c, Liver &amp; Kidney panels together — a complete health snapshot.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-warn">10 hrs fasting</span></div><div class="test-foot"><span class="price"><small>Package price at booking</small></span><span class="link-go">Book →</span></div></article>
+  </div>
+</div></section>
+
+<section class="alt" id="journey"><div class="wrap">
+  <div class="head">
+    <div class="eyebrow">How it works</div>
+    <h2>Five stages. You can see all of them.</h2>
+    <p class="lede">The same stages our staff work through are the ones you track against — so "where is my report" always has an answer.</p>
+  </div>
+  <div class="journey">
+    <div class="jstep" style="--c:#64748B"><div class="jnum">STAGE 01</div><h4>Registered</h4><p>Book on call or walk in. You get a token and an accession number — no forms to fill twice.</p></div>
+    <div class="jstep" style="--c:#0891B2"><div class="jnum">STAGE 02</div><h4>Billing done</h4><p>Pay by UPI, card or cash — in full or part now, the rest later. Your receipt is printed and shared.</p></div>
+    <div class="jstep" style="--c:#D97706"><div class="jnum">STAGE 03</div><h4>Sample collected</h4><p>At a center or at home, by a trained phlebotomist. Barcoded at the point of draw.</p></div>
+    <div class="jstep" style="--c:#0E7490"><div class="jnum">STAGE 04</div><h4>In lab</h4><p>Processed on connected analysers, with results feeding straight into your report.</p></div>
+    <div class="jstep" style="--c:#059669"><div class="jnum">STAGE 05</div><h4>Report ready</h4><p>Verified and signed by a pathologist, then sent to you on WhatsApp as a PDF.</p></div>
+  </div>
+</div></section>
+
+<section id="book"><div class="wrap">
+  <div class="band">
+    <div>
+      <div class="eyebrow" style="color:rgba(255,255,255,.75)">Home collection</div>
+      <h2>A phlebotomist at your door.</h2>
+      <p>Pick a convenient time slot and a trained collector comes to you. You get their name and a live ETA on WhatsApp before they arrive.</p>
+      <a href="tel:+919263840556" class="btn btn-pri">Book a home visit
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+      </a>
+      <div class="band-chips">
+        <span class="pill">Trained phlebotomists</span>
+        <span class="pill">Live ETA on WhatsApp</span>
+        <span class="pill">Sealed, barcoded vials</span>
+      </div>
+    </div>
+    <!-- Swap this placeholder for a real photo: <img src="assets/home-collection.jpg" alt="Home sample collection"> -->
+    <div class="band-img"><div>
+      <div class="ph-ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg></div>
+      <p class="ph-cap">Home sample collection by a trained phlebotomist</p>
+    </div></div>
+  </div>
+</div></section>
+
+<section class="alt" id="reports"><div class="wrap">
+  <div class="wa-grid">
+    <div class="chat">
+      <div class="bubble">
+        <div class="bubble-from"><img src="assets/mr-logo.png" alt="" /><b>MedRelief Diagnostics</b></div>
+        <p>Your report for <b>T‑104</b> is ready and has been verified and signed by our consultant pathologist.</p>
+        <div class="attach"><span class="attach-ico">PDF</span><span><span class="attach-n">CBC_Report_A‑32144.pdf</span><span class="attach-s">248 KB · 2 pages</span></span></div>
+        <div class="t">11:24 AM</div>
+      </div>
+      <div class="bubble bubble-me"><p>Thank you! Can I get my earlier report too?</p><div class="t">11:26 AM</div></div>
+      <div class="bubble"><p>Of course — your report history stays on this chat whenever you need it again.</p><div class="t">11:26 AM</div></div>
+    </div>
+    <div>
+      <div class="eyebrow">Your reports</div>
+      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">Delivered where you already are.</h2>
+      <p class="lede">No portal, no password, no app to install. Your report arrives on WhatsApp the moment a pathologist signs it off — and stays there when you need it again.</p>
+      <ul class="checklist">
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span><b>Signed by a pathologist</b>, never auto‑released straight from the analyser.</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span><b>Track every stage live</b>, from sample collected to report ready.</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span><b>Pay how you like</b> — UPI, card or cash, in full or part now and the rest later.</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Also available as a <b>printed report or a QR pickup</b> at the center.</span></li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section id="why"><div class="wrap">
+  <div class="head"><div class="eyebrow">Why MedRelief</div><h2>A careful process, plainly explained.</h2></div>
+  <div class="grid g4">
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><path d="m9.5 10.5 1.8 1.8 3.4-3.4"/></svg></div><h3>Pathologist verified</h3><p>Every result is reviewed and signed by a qualified pathologist before it reaches you — never released straight from the machine.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div><h3>Track it live</h3><p>Follow your report from collection to sign-off. "Where is my report" always has a clear answer.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg></div><h3>Private by default</h3><p>Display screens show only token numbers, and your report goes to your own WhatsApp — your name never appears on a public screen.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5m0 14h16"/><path d="m7 15 3.5-4 3 2.5L20 7"/></svg></div><h3>Priced up front</h3><p>The price you're quoted is the price you pay — and you can pay in full or part now and clear the rest later.</p></article>
+  </div>
+</div></section>
+
+<section class="alt" id="locations"><div class="wrap">
+  <div class="head"><div class="eyebrow">Collection centers</div><h2>Find us in Nalanda.</h2><p class="lede">Walk in without an appointment, or book a slot to skip the queue — or have a phlebotomist come to your home.</p></div>
+  <div class="grid g3">
+    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Bihar Sharif</h3><span class="pill pill-ok"><span class="dot"></span>Main center</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>50 m North of Bhainsasur Chowk, Opp. Sudha Dairy, Bihar Sharif (Nalanda) — 803101</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556 · 061124 53327</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>hi@medrelief.co.in</span></div></article>
+    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Rajgir</h3><span class="pill pill-ok"><span class="dot"></span>Open</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Rajgir, Nalanda district, Bihar</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Same reports, same WhatsApp delivery.</span></div></article>
+    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Home collection</h3><span class="pill pill-brand">Across Nalanda</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg><span>Can't come in? A trained phlebotomist collects your sample at home.</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span>Call <b class="mono">+91 92638 40556</b> to book a slot</span></div></article>
+  </div>
+</div></section>
+
+<div class="cta"><div class="wrap">
+  <div><h2>Book a test in under two minutes.</h2><p>Choose a test, pick a home‑collection slot or a center, and pay when the sample is taken.</p></div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="tel:+919263840556" class="btn btn-pri">Call to book</a><a href="#locations" class="btn btn-gho">Find a center</a></div>
+</div></div>
+
+</div><!-- /view patients -->
+
+<!-- ============================ LABS & DOCTORS (B2B) ============================ -->
+<div class="view" data-aud="b2b" hidden>
+
+<header class="hero" id="top-b2b"><div class="wrap">
+  <div>
+    <div class="eyebrow">The platform behind MedRelief</div>
+    <h1>Run your lab by <em>scanning a prescription</em>.</h1>
+    <p class="lede">MedRelief is an AI-first lab platform. Scan the prescription and AI handles the rest — registration, billing, sample tracking, result entry and instant report delivery on WhatsApp. Every step also works fully by hand, so the desk never waits on AI.</p>
+    <div class="hero-cta">
+      <a href="#demo" class="btn btn-pri">Request a demo
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+      </a>
+      <a href="#flow" class="btn btn-gho">See how it works</a>
+    </div>
+    <div class="hero-chips">
+      <span class="pill pill-brand">AI prescription scan</span>
+      <span class="pill pill-brand">Voice assistant</span>
+      <span class="pill pill-ok">Analyzer HL7 · ASTM</span>
+      <span class="pill pill-brand">Multi-center</span>
+    </div>
+  </div>
+
+  <div class="card track">
+    <div class="track-head">
+      <span class="track-title">New patient visit</span>
+      <span class="pill pill-ok"><span class="dot dot-live"></span>One flow</span>
+    </div>
+    <div class="steps">
+      <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></span><span class="step-label">Scan prescription<span class="step-sub">AI reads tests &amp; patient</span></span><span class="step-time mono">2s</span></div>
+      <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span><span class="step-label">Bill &amp; collect<span class="step-sub">UPI, card, cash · part payments</span></span><span class="step-time mono">✓</span></div>
+      <div class="step now"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-3 7a4 4 0 0 0 4 5h4a4 4 0 0 0 4-5l-3-7V2"/><path d="M8 2h8"/></svg></span><span class="step-label">In lab<span class="step-sub">Worklist + analyzer auto-feed</span></span><span class="step-time mono">live</span></div>
+      <div class="step"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="step-label">Deliver on WhatsApp<span class="step-sub">The moment it's signed</span></span><span class="step-time">Auto</span></div>
+    </div>
+  </div>
+</div></header>
+
+<div class="stats"><div class="wrap">
+  <div><div class="stat-n">Scan-first</div><div class="stat-l">AI reads the prescription</div></div>
+  <div><div class="stat-n">Speak &amp; dictate</div><div class="stat-l">Voice fills forms &amp; results</div></div>
+  <div><div class="stat-n">HL7 · ASTM</div><div class="stat-l">Analyzers feed results in</div></div>
+  <div><div class="stat-n">Manual fallback</div><div class="stat-l">On every screen — AI never blocks</div></div>
+</div></div>
+
+<section id="platform"><div class="wrap">
+  <div class="head"><div class="eyebrow">One platform</div><h2>Everything the front desk, lab and finance need.</h2><p class="lede">From registration to reconciliation — a single kiosk-simple app, built mobile-first for the counter.</p></div>
+  <div class="grid g3">
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></div><h3>AI prescription scan</h3><p>Reception scans the prescription; AI vision extracts the patient and the ordered tests, ready to confirm — no re-typing.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></div><h3>Voice assistant</h3><p>Every role can complete tasks by speaking. The transcript is shown before anything is saved.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div><h3>Smart billing &amp; payments</h3><p>Rate plans, discounts with approvals, coupons and packages. UPI, card or cash — including part-payments and split tender.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-3 7a4 4 0 0 0 4 5h4a4 4 0 0 0 4-5l-3-7V2"/><path d="M8 2h8"/></svg></div><h3>Sample &amp; worklist tracking</h3><p>Accessioning, barcoded specimens, collection lists and a live worklist — every sample tracked from draw to result.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h8M8 14h5"/></svg></div><h3>Analyzer integration</h3><p>Connect analyzers over HL7 and ASTM. Results match to the accession and land as a draft for the pathologist to verify.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg></div><h3>Finance &amp; reporting</h3><p>Daily close, reconciliation, per-mode collections and bills-by-staff — the numbers your center head needs, ready to export.</p></article>
+  </div>
+</div></section>
+
+<section class="alt" id="flow"><div class="wrap">
+  <div class="head"><div class="eyebrow">How it works</div><h2>Prescription to report, in one flow.</h2><p class="lede">The whole visit runs on one screen — no re-keying between a separate billing, LIMS and reporting tool.</p></div>
+  <div class="journey">
+    <div class="jstep" style="--c:#64748B"><div class="jnum">STEP 01</div><h4>Register</h4><p>Scan the prescription or look up by mobile. AI pre-fills the patient and tests.</p></div>
+    <div class="jstep" style="--c:#0891B2"><div class="jnum">STEP 02</div><h4>Bill &amp; pay</h4><p>Apply the rate plan; take full or part payment by UPI, card or cash.</p></div>
+    <div class="jstep" style="--c:#D97706"><div class="jnum">STEP 03</div><h4>Collect</h4><p>Barcoded samples and a collection list keep every specimen tracked.</p></div>
+    <div class="jstep" style="--c:#0E7490"><div class="jnum">STEP 04</div><h4>Process &amp; sign</h4><p>Analyzer or dictated results, verified and signed by the pathologist.</p></div>
+    <div class="jstep" style="--c:#059669"><div class="jnum">STEP 05</div><h4>Deliver</h4><p>The report goes to the patient on WhatsApp, with a secure view link.</p></div>
+  </div>
+</div></section>
+
+<section id="doctors"><div class="wrap">
+  <div class="band">
+    <div>
+      <div class="eyebrow" style="color:rgba(255,255,255,.75)">For referring doctors</div>
+      <h2>A portal for the doctors who send you patients.</h2>
+      <p>Give referring doctors their own secure app to follow their patients' reports and track referrals — no phone calls, no spreadsheets.</p>
+      <a href="#demo" class="btn btn-pri">Request a demo
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+      </a>
+      <div class="band-chips"><span class="pill">Patient reports</span><span class="pill">Referral statements</span><span class="pill">AI summaries</span></div>
+    </div>
+    <div class="band-img"><div class="band-panel">
+      <div class="bp"><b>Patient reports</b><span>as soon as signed</span></div>
+      <div class="bp"><b>Referral statements</b><span>date-filtered, per patient</span></div>
+      <div class="bp"><b>AI summaries</b><span>plain-language on each report</span></div>
+      <div class="bp"><b>Self sign-up</b><span>admin approves in a tap</span></div>
+    </div></div>
+  </div>
+</div></section>
+
+<section class="alt" id="security"><div class="wrap">
+  <div class="head"><div class="eyebrow">Security &amp; data</div><h2>Patient data, handled with care.</h2><p class="lede">Built privacy-first for India, with your data hosted in-region.</p></div>
+  <div class="grid g4">
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div><h3>Role-based access</h3><p>Every user sees only what their role and center allow — enforced on the server.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div><h3>Full audit trail</h3><p>Who did what, when — across bills, results and approvals, for accountability.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg></div><h3>Hosted in India</h3><p>Databases and files run in Indian regions (Mumbai), keeping patient data in-country.</p></article>
+    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Consent &amp; masking</h3><p>Patient consent is captured, and personal details are masked in AI prompts by default.</p></article>
+  </div>
+</div></section>
+
+<div class="cta" id="demo"><div class="wrap">
+  <div><h2>See MedRelief on your own prescriptions.</h2><p>We'll walk you through a live visit — scan to report — on your lab's real workflow, and talk through rollout for your centers.</p></div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="mailto:hi@medrelief.co.in?subject=MedRelief%20platform%20demo" class="btn btn-pri">Request a demo</a><a href="mailto:hi@medrelief.co.in?subject=MedRelief%20enquiry" class="btn btn-gho">Email us</a></div>
+</div></div>
+
+</div><!-- /view b2b -->
+
+<!-- ============================ SHARED FOOTER ============================ -->
+<footer><div class="wrap">
+  <div class="foot-grid">
+    <div class="foot-about">
+      <div class="logo"><img src="assets/mr-logo.png" alt="MedRelief" /><span><span class="logo-name">Med<span>Relief</span></span><span class="logo-sub">Diagnostics</span></span></div>
+      <p>A diagnostic laboratory serving Bihar Sharif and Nalanda — and the AI-first platform that runs it. Reports verified and signed by qualified pathologists, every time.</p>
+      <span class="pill pill-brand">A unit of Med Relief Healthcare Pvt Ltd</span>
+    </div>
+    <div><h4>Patients</h4><div class="foot-links"><a data-go="patients" href="#tests">Tests &amp; prices</a><a data-go="patients" href="#track">Track a report</a><a data-go="patients" href="#book">Home collection</a><a data-go="patients" href="#locations">Centers</a></div></div>
+    <div><h4>Labs &amp; doctors</h4><div class="foot-links"><a data-go="b2b" href="#platform">The platform</a><a data-go="b2b" href="#doctors">Doctor portal</a><a data-go="b2b" href="#security">Security</a><a data-go="b2b" href="#demo">Request a demo</a></div></div>
+    <div><h4>Contact</h4><div class="foot-links"><a href="tel:+919263840556">+91 92638 40556</a><a href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a><a href="mailto:hi@medrelief.co.in">Partnerships</a></div></div>
+  </div>
+  <div class="foot-bot">
+    <span>© 2026 Med Relief Healthcare Pvt. Ltd. · Bihar Sharif, Nalanda, Bihar · CIN U85100BR2021PTC053162</span>
+    <span>Privacy policy · Terms · Patient charter</span>
+  </div>
+</div></footer>
+
+<script>
+(function(){
+  var VIEWS = ['patients','b2b'];
+  function apply(view){
+    if(VIEWS.indexOf(view)<0) view='patients';
+    document.body.setAttribute('data-view',view);
+    // Toggle every element tagged with a data-aud to match the active view.
+    document.querySelectorAll('[data-aud]').forEach(function(el){
+      el.hidden = (el.getAttribute('data-aud')!==view);
+    });
+    document.querySelectorAll('.aud-btn').forEach(function(b){
+      var on = b.getAttribute('data-go')===view;
+      b.classList.toggle('active',on); b.setAttribute('aria-selected',on?'true':'false');
+    });
+    try{ localStorage.setItem('mr_view',view); }catch(e){}
+  }
+  function go(view,scrollTop){
+    apply(view);
+    if(scrollTop){ window.scrollTo({top:0,behavior:'smooth'}); }
+  }
+  // Audience toggle buttons
+  document.querySelectorAll('.aud-btn').forEach(function(b){
+    b.addEventListener('click',function(){ go(b.getAttribute('data-go'),true); });
+  });
+  // Footer cross-links that also switch view before jumping to the anchor
+  document.querySelectorAll('a[data-go]').forEach(function(a){
+    a.addEventListener('click',function(){ apply(a.getAttribute('data-go')); });
+  });
+  // Initial view: URL hash (#b2b / #platform / #doctors / #demo / #flow / #security) → b2b, else stored, else patients
+  var b2bHashes=['#b2b','#platform','#flow','#doctors','#security','#demo','#top-b2b'];
+  var initial='patients';
+  try{ if(localStorage.getItem('mr_view')) initial=localStorage.getItem('mr_view'); }catch(e){}
+  if(b2bHashes.indexOf(location.hash)>=0) initial='b2b';
+  apply(initial);
+})();
+</script>
+</body>
+</html>
