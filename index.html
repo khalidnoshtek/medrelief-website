@@ -178,8 +178,7 @@ section{padding:clamp(56px,6.5vw,92px) 0}
 .badge{height:50px;width:auto;display:block}
 .store-note{margin-top:20px;font-size:14px;font-weight:600;color:var(--muted)}
 .phones{display:flex;justify-content:center;align-items:center;position:relative;min-height:420px}
-.phone{width:min(248px,66vw);border-radius:38px;background:#0b1220;padding:9px;box-shadow:0 30px 60px -22px rgba(15,23,42,.5),0 0 0 1px rgba(15,23,42,.05);position:relative}
-.phone::before{content:"";position:absolute;top:15px;left:50%;transform:translateX(-50%);width:34%;height:18px;background:#0b1220;border-radius:0 0 12px 12px;z-index:2}
+.phone{width:min(248px,66vw);border-radius:38px;background:#0b1220;padding:9px;box-shadow:0 30px 60px -22px rgba(15,23,42,.5),0 0 0 1px rgba(15,23,42,.05);position:relative;overflow:hidden}
 .phone img{border-radius:30px;width:100%;display:block}
 .phone.back{width:min(210px,56vw);transform:rotate(-6deg);position:absolute;left:6%;z-index:0;opacity:.97}
 .phone.front{z-index:1;transform:rotate(2deg)}
@@ -222,9 +221,9 @@ table.rep .rng{font-family:'JetBrains Mono',monospace;color:var(--faint);font-si
 .demowrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(30px,4vw,60px);align-items:center}
 @media(max-width:900px){.demowrap{grid-template-columns:1fr;gap:34px}}
 .dphone{width:min(286px,78vw);margin:0 auto;border-radius:42px;background:#0b1220;padding:9px;box-shadow:0 40px 74px -26px rgba(8,145,178,.55),0 0 0 1px rgba(15,23,42,.06);position:relative}
-.dphone::before{content:"";position:absolute;top:16px;left:50%;transform:translateX(-50%);width:30%;height:17px;background:#0b1220;border-radius:0 0 12px 12px;z-index:5}
-.dscreen{position:relative;border-radius:33px;overflow:hidden;background:#fff;aspect-ratio:9/18.2}
-.dlayer{position:absolute;inset:0;transition:opacity .45s ease}
+.dphone::before{content:"";position:absolute;top:19px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#05070c;box-shadow:inset 0 0 0 1.5px rgba(140,175,195,.4);z-index:6}
+.dscreen{position:relative;border-radius:33px;overflow:hidden;background:#fff;aspect-ratio:9/18.2;transform:translateZ(0);isolation:isolate}
+.dlayer{position:absolute;inset:0;transition:opacity .45s ease;will-change:opacity;backface-visibility:hidden;transform:translateZ(0)}
 .dlayer.hide{opacity:0}
 .dcam{background:radial-gradient(120% 75% at 50% 0,#0e2b33,#0b1220)}
 .dcam .rx{position:absolute;top:19%;left:11%;right:11%;background:#faf8f2;border-radius:9px;padding:14px 14px 16px;transform:rotate(-2.5deg);box-shadow:0 24px 44px -16px rgba(0,0,0,.65)}
@@ -252,10 +251,13 @@ table.rep .rng{font-family:'JetBrains Mono',monospace;color:var(--faint);font-si
 .dform-h b{font-size:13.5px;font-weight:800;color:var(--ink)}
 .dform-h .tag{font-size:8px;font-weight:800;color:var(--brand-deep);background:var(--brandsoft);padding:3px 8px;border-radius:999px;margin-left:auto;display:inline-flex;align-items:center;gap:4px}
 .frow{border:1px solid var(--line);border-radius:12px;padding:8px 11px;margin-top:8px;position:relative;transition:border-color .3s,box-shadow .3s;background:#fff}
-.frow.in{border-color:#a5e8f2;box-shadow:0 0 0 3px rgba(8,145,178,.08)}
+.frow.in{border-color:#a5e8f2;background:#f2fbfd}
 .frow .fl{font-size:8px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
 .frow .fv{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:2px;min-height:17px;opacity:0;transform:translateY(3px);transition:.3s ease}
 .frow.in .fv{opacity:1;transform:none}
+.frow .fv .cur{display:none;width:2px;height:14px;background:var(--brand);margin-left:2px;vertical-align:-2px;border-radius:1px}
+.frow.typing .fv .cur{display:inline-block;animation:blink .85s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
 .frow .fchk{position:absolute;top:50%;right:10px;transform:translateY(-50%) scale(.5);color:var(--ok);opacity:0;transition:.25s ease}
 .frow.in .fchk{opacity:1;transform:translateY(-50%) scale(1)}
 .fchips{display:flex;flex-wrap:wrap;gap:4px}
@@ -607,9 +609,9 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
         </div>
         <div class="dlayer dform hide">
           <div class="dform-h"><b>New patient</b><span class="tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m12 4 1.6 3.9L17.5 9.5l-3.9 1.6L12 15l-1.6-3.9L6.5 9.5l3.9-1.6z"/></svg>AI autofill</span></div>
-          <div class="frow"><div class="fl">Patient name</div><div class="fv">Ramesh Kumar</div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
-          <div class="frow"><div class="fl">Age / Sex</div><div class="fv">34 · Male</div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
-          <div class="frow"><div class="fl">Mobile</div><div class="fv">98••• •••••</div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
+          <div class="frow"><div class="fl">Patient name</div><div class="fv">Ramesh Kumar<span class="cur"></span></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
+          <div class="frow"><div class="fl">Age / Sex</div><div class="fv">34 · Male<span class="cur"></span></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
+          <div class="frow"><div class="fl">Mobile</div><div class="fv">98••• •••••<span class="cur"></span></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
           <div class="frow"><div class="fl">Tests ordered</div><div class="fv"><div class="fchips"><span>CBC</span><span>HbA1c</span><span>Lipid Profile</span><span>TSH</span></div></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
           <div class="dform-ok"><div class="bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Autofilled from prescription</div></div>
         </div>
@@ -795,11 +797,14 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
         return;
       }
       // reset the form only AFTER it has faded out, so the un-fill is never seen
-      at(540, function(){ rows.forEach(function(r){ r.classList.remove('in'); }); form.classList.remove('done'); });
-      // scan finished → reveal the empty form, then fill it field by field
+      at(540, function(){ rows.forEach(function(r){ r.classList.remove('in'); r.classList.remove('typing'); }); form.classList.remove('done'); });
+      // scan finished → reveal the empty form, then fill it field by field (cursor moves down)
       at(3000, function(){ cam.classList.remove('scanning'); cam.classList.add('hide'); form.classList.remove('hide'); });
-      rows.forEach(function(r, i){ at(3350 + i*470, function(){ r.classList.add('in'); }); });
-      at(3350 + rows.length*470 + 250, function(){ form.classList.add('done'); });
+      rows.forEach(function(r, i){ at(3350 + i*470, function(){
+        if (i > 0) rows[i-1].classList.remove('typing');
+        r.classList.add('in'); r.classList.add('typing');
+      }); });
+      at(3350 + rows.length*470 + 250, function(){ rows.forEach(function(r){ r.classList.remove('typing'); }); form.classList.add('done'); });
       at(3350 + rows.length*470 + 2900, cycle);        // loop
     }
     var io = new IntersectionObserver(function(es){
