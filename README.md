@@ -1,52 +1,59 @@
 # MedRelief — website
 
-One website, two audiences, switchable from a toggle in the top bar:
+One page, chat-first. Patients land, pick an action, and the always-open assistant takes
+them through it — no sub-pages.
 
-- **For patients** (default) — MedRelief Diagnostics, Bihar Sharif (Nalanda): book a
-  test, live report tracking, WhatsApp delivery, tests & prices, centers.
-- **For labs & doctors** — the AI-first lab **platform** behind MedRelief: prescription
-  scan, voice, analyzer integration, part-payments, doctor portal, reporting.
-
-**Design** follows the Claude Design handoff (`Medrelief-handoff.zip` → `MedRelief
-Website.html`): cyan brand, Inter + JetBrains Mono, card system, top bar, sticky nav,
-track-card, colour-topped journey steps, WhatsApp chat mock.
-**Content** is written fresh and grounded in the real business — Bihar Sharif, real
-address/phone/prices from the lab receipt — with no invented accreditation, stats, or
-locations.
+- **Patients** (default): four actions — *Home sample collection · Schedule a centre visit ·
+  Track my report · Get the patient app (QR)* — a campaign ticker, centres. Every action
+  opens the assistant at that step.
+- **Labs, doctors & partners** (top-bar switch, or `#partners`): refer patients, send
+  samples, use our collection agents, become a collection agent, track submissions
+  (partner portal). API / website integration is set up by our team, not self-service.
+- **Assistant** (`chat.js`): docked on the right on desktop (≥1080px), a bottom sheet on
+  phones. Predefined options at every step plus free text; a **Chat | Call an agent**
+  switch is always in the header. Offer details (included tests, standard price, savings,
+  home collection / centre visit) open as cards inside the chat.
 
 ## Files
 ```
-index.html                 the site (inline CSS + JS, no build step, no dependencies)
-artifact.html              generated build with the logo inlined — the shareable Artifact
-assets/mr-logo.png         brand mark
-index-platform-saas.html   earlier standalone B2B-only draft (kept for reference)
+index.html     the page (inline CSS + small page script)
+chat.js        the assistant — flows, validation, hand-off / API adapter
+config.js      EVERYTHING editable: phone, centres, slots, tests, campaigns, app links, API
+privacy.html / terms.html
+assets/        logo, patient-app QR (qr-patient-app.svg → install.html?app=patient&auto=1)
 ```
-Only external request: the Inter / JetBrains Mono web fonts (Google Fonts); degrades to
-system fonts offline. The audience choice is remembered per browser (localStorage), and
-`#platform` / `#doctors` / `#demo` etc. deep-link straight into the labs & doctors view.
+The end-to-end workflow spec (website order → proposed bill → desk → agent → payment) and
+the API contract live outside this repo — this repo is public and served as-is.
+No build step, no dependencies. Only external request: Google Fonts.
+
+## Two modes (set in `config.js → api.baseUrl`)
+| Mode | When | What "Confirm booking" does |
+|---|---|---|
+| **Hand-off** (`''`, current) | until the medlab public API ships | Shows the booking summary with **Call to confirm** + **Copy summary** (+ **Send on WhatsApp** only if `whatsapp` is a human-read number). Nothing leaves the browser. |
+| **API** | once `/public/*` exists in medlab | Mobile is OTP-verified, then `POST /public/home-collection-orders` / `centre-bookings` / `partner-leads`; tracking via `GET /public/track`. Falls back to hand-off on any error. |
+
+Contract: workflow spec §7. API mode was exercised against a local
+mock (OTP → order → reference); it has **not** run against a real backend (none exists yet).
+
+## Campaigns
+`config.js → campaigns[]`: `code` = `mdm_packages.code`, `price` = offer price, `tests` =
+`[name, MRP]` pairs (standard price and savings are computed from them). Set
+`active:false` to pull one. Current five = the Nirogyam packages (offer prices from the
+package master, MRPs from the current test list).
 
 ## Preview locally
 ```bash
-cd medrelief-website
-python3 -m http.server 8791
-# open http://localhost:8791
+python3 -m http.server 8791   # then open http://localhost:8791
 ```
 
-## Deploy (any static host)
-Plain static files — Render Static Site (no build command), S3 + CloudFront, or
-Vercel/Netlify/GitHub Pages. Point a domain (e.g. `medrelief.in`) at it.
+## Deploy
+GitHub Pages serves `main` → pushing to `main` publishes publicly. Work on a branch.
 
-## Confirm before going live (real facts I need from you)
-I grounded everything I could verify and **left out anything I couldn't** — please confirm/replace:
-- **Test menu & prices** — I used the five real prices from the lab receipt (CBC ₹400,
-  HbA1c ₹600, Blood Sugar ₹50, LFT ₹800, KFT ₹850); the Full Body package price is "at
-  booking". Swap in the authoritative price list for the full menu.
-- **Accreditation** — the mockup claimed "NABL / ISO 15189 M-4821"; I **removed** it. Add
-  it back only if MedRelief actually holds it (with the real certificate number).
-- **Centers & timings** — real: Bihar Sharif (full address + phone) and Rajgir (city
-  only — add its street/phone if it has its own). Opening hours are not stated anywhere —
-  add them if you want them shown.
-- **Home collection** — kept as an offered service; confirm coverage and whether it's free.
-- **Entity/contact** — used "Med Relief Healthcare Pvt Ltd", CIN U85100BR2021PTC053162,
-  hi@medrelief.co.in, +91 92638 40556 (from the receipt). Note the App Store legal
-  entity is Collab Cubicles Private Limited — confirm which should appear publicly.
+## Confirm before going live
+- **Slots / hours** — `config.slots` are placeholders; the centres' real windows are not stated anywhere.
+- **Home-collection charge and coverage pincodes** — `config.homeCollection` (unset = "confirmed by our team").
+- **WhatsApp hand-off number** — leave `whatsapp: ''` unless a person reads that number; a WhatsApp Business API number has no human inbox.
+- **Prices** — check the five campaigns and the test list against the live rate plan.
+- **Entity** — confirm the legal entity shown in the footer.
+- **iPhone patient app** — shown as "coming soon"; set `apps.patientIos` when it's live.
+- **Hindi** — the assistant is English-only today; Bihar patients will likely want Hindi.

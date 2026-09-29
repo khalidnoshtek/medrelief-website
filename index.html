@@ -2,718 +2,460 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>MedRelief Diagnostics</title>
-<meta name="description" content="MedRelief Diagnostics, Bihar Sharif (Nalanda) — book a test, track your report live, get it on WhatsApp. Plus the AI-first lab platform behind it, for labs and doctors." />
+<meta name="description" content="MedRelief Diagnostics, Bihar Sharif (Nalanda) — book home sample collection or a centre visit in a chat, track your report, and get it on WhatsApp." />
 <meta name="theme-color" content="#0891B2" />
 <link rel="icon" href="assets/mr-logo.png" type="image/png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root{--brand:#0891B2;--brand-deep:#0E7490;--brandsoft:#ECFEFF;--ok:#059669;--oksoft:#ECFDF5;--warn:#D97706;--warnsoft:#FFFBEB;--bg:#FAFAF8;--cool:#EDF4F6;--card:#FFFFFF;--line:#E2E8F0;--ink:#0F172A;--muted:#64748B;--faint:#94A3B8;--shadow:0 1px 2px rgba(15,23,42,.04),0 12px 26px -18px rgba(15,23,42,.20);--cta-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 24px -12px rgba(8,145,178,.45)}
+:root{--brand:#0891B2;--brand-deep:#0E7490;--brandsoft:#ECFEFF;--ok:#059669;--oksoft:#ECFDF5;--warn:#B45309;--warnsoft:#FFFBEB;--bg:#FAFAF8;--cool:#EDF4F6;--card:#FFFFFF;--line:#E2E8F0;--ink:#0F172A;--muted:#64748B;--faint:#94A3B8;--shadow:0 1px 2px rgba(15,23,42,.04),0 12px 26px -18px rgba(15,23,42,.20);--chat-w:400px}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--card);-webkit-font-smoothing:antialiased;text-wrap:pretty}
-h1,h2,h3,h4{letter-spacing:-.025em;line-height:1.08}
+h1,h2,h3,h4{letter-spacing:-.025em;line-height:1.1}
 img{display:block;max-width:100%}
 [hidden]{display:none!important}
-.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+button{font:inherit;color:inherit}
 a{color:var(--brand-deep);text-decoration:none}
 a:hover{color:var(--brand)}
-.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+:focus-visible{outline:3px solid rgba(8,145,178,.45);outline-offset:2px}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand)}
-.lede{color:var(--muted);font-size:clamp(16px,1.15vw,18px);line-height:1.6}
-.btn{display:inline-flex;align-items:center;gap:9px;height:52px;padding:0 24px;border-radius:14px;font-size:16px;font-weight:600;border:1px solid transparent;cursor:pointer;white-space:nowrap}
-.btn-pri{background:var(--brand);color:#fff;box-shadow:var(--cta-shadow)}
+.lede{color:var(--muted);font-size:clamp(16px,1.2vw,18px);line-height:1.6}
+.btn{display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 22px;border-radius:14px;font-size:15.5px;font-weight:600;border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.btn-pri{background:var(--brand);color:#fff;box-shadow:0 10px 24px -12px rgba(8,145,178,.5)}
 .btn-pri:hover{background:var(--brand-deep);color:#fff}
 .btn-gho{background:var(--card);color:var(--ink);border-color:var(--line)}
 .btn-gho:hover{background:var(--bg);color:var(--ink)}
-.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600}
-.pill-brand{background:var(--brandsoft);color:var(--brand-deep)}
-.pill-ok{background:var(--oksoft);color:var(--ok)}
-.pill-warn{background:var(--warnsoft);color:var(--warn)}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--brandsoft);color:var(--brand-deep)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(5,150,105,.55)}70%{box-shadow:0 0 0 8px rgba(5,150,105,0)}100%{box-shadow:0 0 0 0 rgba(5,150,105,0)}}
-.dot-live{animation:pulse 2s infinite}
+
+/* ---- shell: page + always-open assistant ---- */
+.shell{min-height:100vh}
+@media(min-width:1080px){
+  .shell{display:grid;grid-template-columns:minmax(0,1fr) var(--chat-w)}
+}
 
 /* ---- top bar + nav ---- */
 .topbar{background:var(--ink);color:#fff}
-.topbar .wrap{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;justify-content:space-between;min-height:44px;font-size:13px}
-.topbar .tb-info{color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px}
-.topbar b{color:#fff;font-weight:600}
+.topbar .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;min-height:44px;font-size:13px;padding-top:6px;padding-bottom:6px}
+.tb-info{color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:8px}
+.tb-info b{color:#fff;font-weight:600}
 .aud{display:inline-flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px}
-.aud-btn{appearance:none;background:none;border:0;color:rgba(255,255,255,.7);font:600 12.5px 'Inter',sans-serif;padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.aud-btn{appearance:none;background:none;border:0;color:rgba(255,255,255,.72);font:600 12.5px 'Inter',sans-serif;padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
 .aud-btn:hover{color:#fff}
 .aud-btn.active{background:#fff;color:var(--ink)}
-nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;gap:20px;min-height:78px}
-.logo{display:flex;align-items:center;gap:13px}
-.logo img{width:46px;height:46px;object-fit:contain}
-.logo-name{font-size:21px;font-weight:800}
+nav{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:16px;min-height:72px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo img{width:42px;height:42px;object-fit:contain}
+.logo-name{font-size:20px;font-weight:800;color:var(--ink)}
 .logo-name span{color:var(--brand)}
-.logo-sub{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-top:2px}
-.navlinks{display:flex;gap:6px;margin-left:auto;flex-wrap:nowrap;min-width:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
-.navlinks::-webkit-scrollbar{display:none}
-.navlinks a{padding:10px 14px;border-radius:10px;font-size:15px;font-weight:500;color:var(--muted);white-space:nowrap;flex:0 0 auto}
-.navlinks a:hover{background:var(--bg);color:var(--ink)}
+.logo-sub{display:block;font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+.nav-call{margin-left:auto;height:44px;padding:0 16px;font-size:14.5px}
 
-/* ---- hero ---- */
+/* ---- hero + action tiles ---- */
 .hero{background:linear-gradient(180deg,var(--cool),var(--card));border-bottom:1px solid var(--line)}
-.hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,4vw,64px);align-items:center;padding:clamp(48px,6vw,84px) 24px}
-.hero h1{font-size:clamp(34px,4.4vw,58px);margin:16px 0 18px}
+.hero .wrap{padding-top:clamp(36px,5vw,64px);padding-bottom:clamp(36px,5vw,60px)}
+.hero h1{font-size:clamp(32px,4.2vw,52px);margin:14px 0 14px;max-width:18ch}
 .hero h1 em{font-style:normal;color:var(--brand)}
-.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0 22px}
-.hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+.hero .lede{max-width:56ch}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:30px}
+.tile{appearance:none;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:22px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);min-height:150px;transition:transform .15s,border-color .15s;color:var(--ink)}
+.tile:hover{transform:translateY(-2px);border-color:rgba(8,145,178,.45);color:var(--ink)}
+.tile-ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--brandsoft);color:var(--brand)}
+.tile b{font-size:18.5px;font-weight:700;letter-spacing:-.015em}
+.tile span.sub{font-size:14px;color:var(--muted);line-height:1.5}
+.tile .go{margin-top:auto;font-size:14px;font-weight:600;color:var(--brand);display:inline-flex;align-items:center;gap:6px}
+.tile.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.tile.pri .tile-ico{background:rgba(255,255,255,.18);color:#fff}
+.tile.pri span.sub{color:rgba(255,255,255,.86)}
+.tile.pri .go{color:#fff}
+.tile.pri:hover{color:#fff;border-color:var(--brand-deep)}
+.tile-app{flex-direction:row;align-items:center;gap:16px}
+.tile-app .tile-body{display:flex;flex-direction:column;gap:10px;flex:1;min-width:0;align-self:stretch}
+.tile-qr{width:104px;height:104px;border-radius:12px;border:1px solid var(--line);padding:6px;background:#fff;flex:0 0 auto}
+.only-touch{display:none}
+@media(hover:none) and (pointer:coarse){.only-touch{display:inline-flex}.no-touch{display:none!important}}
+.hero-foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 
-/* track / console card */
-.track{padding:24px}
-.track-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-.track-title{font-size:17px;font-weight:700}
-.field{display:flex;gap:10px}
-.field input{flex:1;min-width:0;height:52px;border:1px solid var(--line);border-radius:14px;padding:0 16px;font:600 16px/1 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg)}
-.field input:focus{outline:2px solid var(--brandsoft);border-color:var(--brand)}
-.field button{height:52px;padding:0 20px;border:none;border-radius:14px;background:var(--brand);color:#fff;font:600 15px 'Inter',sans-serif;cursor:pointer}
-.field button:hover{background:var(--brand-deep)}
-.steps{display:grid;gap:10px;margin-top:18px}
-.step{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid var(--line);border-radius:15px;background:var(--bg)}
-.step.done{background:var(--oksoft);border-color:rgba(5,150,105,.25)}
-.step.now{background:var(--brandsoft);border-color:rgba(8,145,178,.3)}
-.step-ico{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;background:var(--card);border:1px solid var(--line);color:var(--muted)}
-.step.done .step-ico{background:var(--ok);border-color:var(--ok);color:#fff}
-.step.now .step-ico{background:var(--brand);border-color:var(--brand);color:#fff}
-.step-label{font-size:14.5px;font-weight:600;flex:1}
-.step-sub{display:block;font-size:12px;font-weight:500;color:var(--muted)}
-.step-time{font-size:12.5px;font-weight:600;color:var(--muted)}
+/* ---- offers ticker ---- */
+.offers{padding:clamp(40px,5vw,64px) 0 clamp(28px,4vw,44px)}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px;margin-bottom:22px}
+.sec-head h2{font-size:clamp(24px,2.6vw,32px);margin-top:10px}
+.linkish{appearance:none;background:none;border:0;cursor:pointer;font-size:14.5px;font-weight:600;color:var(--brand);display:inline-flex;align-items:center;gap:6px}
+.ticker{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.ticker-track{display:flex;gap:14px;width:max-content;animation:tick 42s linear infinite;padding:4px 0 12px}
+.ticker:hover .ticker-track,.ticker:focus-within .ticker-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(calc(-50% - 7px))}}
+@media(prefers-reduced-motion:reduce){.ticker{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.ticker-track{animation:none}.ticker-track [aria-hidden="true"]{display:none}}
+.offer{appearance:none;cursor:pointer;text-align:left;width:250px;flex:0 0 auto;display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:20px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);color:var(--ink);transition:border-color .15s}
+.offer:hover{border-color:rgba(8,145,178,.45);color:var(--ink)}
+.offer-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-deep);background:var(--brandsoft);padding:4px 9px;border-radius:999px}
+.offer b.n{font-size:17px;font-weight:700}
+.offer small{font-size:13px;color:var(--muted)}
+.offer-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.offer-price b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.offer-price s{color:var(--faint);font-size:14px}
+.save{font-size:12px;font-weight:700;color:var(--ok);background:var(--oksoft);padding:3px 8px;border-radius:999px}
 
-/* ---- stats ---- */
-.stats{border-bottom:1px solid var(--line);background:var(--card)}
-.stats .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px 32px;padding:36px 24px}
-.stat-n{font-size:clamp(26px,2.6vw,36px);font-weight:800;letter-spacing:-.03em}
-.stat-l{font-size:14px;color:var(--muted);font-weight:500;margin-top:4px}
-
-/* ---- sections ---- */
-section{padding:clamp(56px,6.5vw,92px) 0}
-.alt{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.head{max-width:680px;margin-bottom:clamp(32px,4vw,48px)}
-.head h2{font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px}
-.grid{display:grid;gap:18px}
-.g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.g4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-
-/* test cards */
-.test{padding:22px;display:flex;flex-direction:column;gap:14px}
-.test-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.test h3{font-size:19px}
-.test-inc{font-size:14px;color:var(--muted);line-height:1.55}
-.test-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
-.test-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
-.price{font-size:26px;font-weight:800;letter-spacing:-.02em}
-.price small{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0}
-.link-go{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:var(--brand)}
-
-/* journey */
-.journey{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
-.jstep{padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--card);border-top:4px solid var(--c);box-shadow:var(--shadow)}
-.jnum{font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--c)}
-.jstep h4{font-size:17px;margin:10px 0 7px}
-.jstep p{font-size:14px;color:var(--muted);line-height:1.5}
-
-/* feature */
-.feat{padding:24px}
-.feat-ico{width:50px;height:50px;border-radius:14px;background:var(--brandsoft);color:var(--brand);display:grid;place-items:center;margin-bottom:16px}
-.feat h3{font-size:18px;margin-bottom:9px}
-.feat p{font-size:14.5px;color:var(--muted);line-height:1.6}
-
-/* band */
-.band{background:var(--brand);color:#fff;border-radius:28px;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:clamp(24px,3vw,48px);align-items:center;padding:clamp(28px,3.5vw,48px)}
-.band h2{font-size:clamp(26px,3vw,38px);color:#fff}
-.band p{color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:16px 0 26px;max-width:46ch}
-.band .btn-pri{background:#fff;color:var(--brand-deep);box-shadow:0 10px 24px -14px rgba(0,0,0,.4)}
-.band .btn-pri:hover{background:var(--brandsoft);color:var(--brand-deep)}
-.band-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-.band-chips .pill{background:rgba(255,255,255,.16);color:#fff}
-.band-img{height:100%;min-height:260px;border-radius:20px;overflow:hidden;position:relative;background:rgba(255,255,255,.12);display:grid;place-items:center;text-align:center;padding:26px}
-.band-img .ph-ico{width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.18);display:grid;place-items:center;color:#fff;margin:0 auto 14px}
-.band-img .ph-cap{color:rgba(255,255,255,.9);font-size:14px;font-weight:600;line-height:1.5;max-width:24ch}
-.band-panel{display:grid;gap:2px;width:100%}
-.band-panel .bp{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.16)}
-.band-panel .bp:last-child{border-bottom:0}
-.band-panel .bp b{font-size:15px;font-weight:700}
-.band-panel .bp span{color:rgba(255,255,255,.8);font-size:13.5px}
-
-/* whatsapp */
-.wa-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(32px,4vw,56px);align-items:center}
-.chat{padding:22px;background:var(--bg);border:1px solid var(--line);border-radius:24px;display:grid;gap:12px}
-.bubble{background:var(--card);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:15px 17px;box-shadow:var(--shadow);max-width:90%}
-.bubble-me{background:var(--oksoft);border-color:rgba(5,150,105,.22);border-radius:18px 18px 6px 18px;margin-left:auto}
-.bubble-from{display:flex;align-items:center;gap:9px;margin-bottom:9px}
-.bubble-from img{width:28px;height:28px;object-fit:contain}
-.bubble-from b{font-size:13.5px;font-weight:700}
-.bubble p{font-size:14.5px;line-height:1.55;color:var(--ink)}
-.bubble .t{font:500 11px/1 'JetBrains Mono',monospace;color:var(--faint);margin-top:9px;text-align:right}
-.attach{display:flex;align-items:center;gap:11px;margin-top:11px;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--bg)}
-.attach-ico{width:34px;height:40px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font:700 9px 'Inter',sans-serif}
-.attach-n{font-size:13.5px;font-weight:600}
-.attach-s{font-size:11.5px;color:var(--muted);margin-top:2px}
-.checklist{display:grid;gap:14px;margin-top:24px;padding:0;list-style:none}
-.checklist li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px;color:var(--muted);line-height:1.5}
-.checklist svg{flex:0 0 auto;margin-top:2px;color:var(--ok)}
-.checklist b{color:var(--ink);font-weight:600}
-
-/* locations */
-.loc{padding:22px;display:grid;gap:12px}
+/* ---- trust + centres ---- */
+.trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg)}
+.trust .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px 28px;padding-top:28px;padding-bottom:28px}
+.trust-i{display:flex;gap:12px;align-items:flex-start}
+.trust-i svg{flex:0 0 auto;color:var(--brand);margin-top:2px}
+.trust-i b{display:block;font-size:15px}
+.trust-i span{font-size:13.5px;color:var(--muted);line-height:1.5}
+section.block{padding:clamp(44px,5.5vw,76px) 0}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.loc{padding:20px;display:flex;flex-direction:column;gap:10px}
+.loc-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .loc h3{font-size:18px}
 .loc-row{display:flex;gap:10px;font-size:14px;color:var(--muted);line-height:1.5}
 .loc-row svg{flex:0 0 auto;margin-top:2px;color:var(--brand)}
+.loc-act{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.loc-act .btn{height:42px;padding:0 15px;font-size:14px}
 
-/* app / phone showcase */
-.appwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(30px,4vw,56px);align-items:center}
-.appwrap.rev .app-copy{order:2}
-.app-copy .steps{max-width:430px}
-.stores{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
-.store{display:inline-flex;transition:transform .15s}
-.store:hover{transform:translateY(-2px)}
-.badge{height:50px;width:auto;display:block}
-.store-note{margin-top:20px;font-size:14px;font-weight:600;color:var(--muted)}
-.phones{display:flex;justify-content:center;align-items:center;position:relative;min-height:420px}
-.phone{width:min(248px,66vw);border-radius:38px;background:#0b1220;padding:9px;box-shadow:0 30px 60px -22px rgba(15,23,42,.5),0 0 0 1px rgba(15,23,42,.05);position:relative;overflow:hidden}
-.phone img{border-radius:30px;width:100%;display:block}
-.phone.back{width:min(210px,56vw);transform:rotate(-6deg);position:absolute;left:6%;z-index:0;opacity:.97}
-.phone.front{z-index:1;transform:rotate(2deg)}
-/* rendered report preview card */
-.repcard{width:min(294px,78vw);background:#fff;border-radius:22px;box-shadow:0 34px 64px -24px rgba(15,23,42,.5),0 0 0 1px var(--line);overflow:hidden;position:relative;z-index:1;transform:rotate(1.5deg)}
-.rep-top{background:var(--ink);color:#fff;padding:13px 15px;display:flex;align-items:center;justify-content:space-between}
-.rep-top .rl{display:flex;align-items:center;gap:8px}
-.rep-top .rl img{width:24px;height:24px;border-radius:6px}
-.rep-top .rl b{font-size:12.5px;font-weight:700;line-height:1.1}
-.rep-top .rl small{display:block;font-size:8.5px;color:rgba(255,255,255,.6);letter-spacing:.12em;text-transform:uppercase;margin-top:1px}
-.rep-top .rtag{font-size:9px;font-weight:700;color:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 8px}
-.rep-body{padding:15px}
-.rep-pat{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--line)}
-.rep-pat b{color:var(--ink);font-weight:700}
-.rep-name{font-size:14px;font-weight:700;margin:11px 0 2px}
-.rep-sub{font-size:11px;color:var(--muted);margin-bottom:8px}
-table.rep{width:100%;border-collapse:collapse}
-table.rep th{text-align:left;color:var(--faint);font-weight:700;font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;padding-bottom:4px}
-table.rep th.n,table.rep td.n{text-align:right}
-table.rep td{padding:7px 0;border-top:1px solid var(--line);font-size:11px;vertical-align:middle}
-table.rep .an{font-weight:600;color:var(--ink)}
-table.rep .an small{display:block;color:var(--faint);font-weight:500;font-size:9px}
-table.rep .val{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--ink)}
-table.rep .rng{font-family:'JetBrains Mono',monospace;color:var(--faint);font-size:10px}
-.fl{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px}
-.fl-ok{background:var(--oksoft);color:var(--ok)}
-.fl-lo{background:var(--warnsoft);color:var(--warn)}
-.rep-sign{display:flex;align-items:center;gap:9px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
-.rep-sign .chk{width:26px;height:26px;border-radius:50%;background:var(--oksoft);color:var(--ok);display:grid;place-items:center;flex:0 0 auto}
-.rep-sign div{font-size:10px;color:var(--muted);line-height:1.35}
-.rep-sign b{color:var(--ink);font-size:11px}
-.rep-actions{display:flex;gap:8px;margin-top:13px}
-.rep-actions span{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:11px;font-weight:600;padding:9px;border-radius:10px}
-.rep-actions .a1{background:var(--brand);color:#fff}
-.rep-actions .a2{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
-@media(max-width:900px){.appwrap,.appwrap.rev{grid-template-columns:minmax(0,1fr)}.appwrap.rev .app-copy{order:0}.phones{min-height:0;margin-top:10px}.phone.back{display:none}.phone.front{transform:none}.repcard{transform:none;width:min(330px,88vw);margin:0 auto}}
+/* ---- partners view ---- */
+.p-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.p-card{padding:22px;display:flex;flex-direction:column;gap:10px}
+.p-ico{width:48px;height:48px;border-radius:14px;background:var(--brandsoft);color:var(--brand);display:grid;place-items:center}
+.p-card h3{font-size:18px}
+.p-card p{font-size:14.5px;color:var(--muted);line-height:1.6}
+.p-card .linkish{margin-top:auto;padding-top:6px;align-self:flex-start}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.fstep{padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--card);border-top:4px solid var(--c)}
+.fnum{font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--c)}
+.fstep h4{font-size:16.5px;margin:10px 0 6px}
+.fstep p{font-size:14px;color:var(--muted);line-height:1.5}
+.benefits{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.ben{display:flex;gap:12px;align-items:flex-start;padding:4px 0}
+.ben svg{flex:0 0 auto;color:var(--ok);margin-top:2px}
+.ben b{display:block;font-size:15.5px}
+.ben span{font-size:14px;color:var(--muted);line-height:1.55}
+.band{background:var(--brand);color:#fff;border-radius:26px;padding:clamp(24px,3.4vw,40px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:center}
+.band h2{font-size:clamp(24px,2.6vw,32px);color:#fff}
+.band p{color:rgba(255,255,255,.88);font-size:16px;line-height:1.6;margin-top:12px}
+.band .btn-pri{background:#fff;color:var(--brand-deep)}
+.band .btn-pri:hover{background:var(--brandsoft);color:var(--brand-deep)}
+.band-list{display:grid;gap:2px}
+.band-list div{display:flex;justify-content:space-between;gap:12px;padding:12px 2px;border-bottom:1px solid rgba(255,255,255,.18);font-size:14px}
+.band-list div:last-child{border-bottom:0}
+.band-list span{color:rgba(255,255,255,.8)}
+.note{display:flex;gap:14px;align-items:flex-start;padding:20px 22px;border:1px dashed rgba(8,145,178,.45);border-radius:18px;background:var(--brandsoft);margin-top:18px}
+.note svg{flex:0 0 auto;color:var(--brand-deep);margin-top:2px}
+.note b{display:block;font-size:15.5px}
+.note span{font-size:14px;color:var(--brand-deep);line-height:1.55}
+.head{max-width:640px;margin-bottom:26px}
+.head h2{font-size:clamp(24px,2.8vw,34px);margin:12px 0 10px}
+.alt{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 
-/* animated scan → autofill demo (B2B) */
-.demo{background:linear-gradient(180deg,var(--cool),var(--card));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.demowrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(30px,4vw,60px);align-items:center}
-@media(max-width:900px){.demowrap{grid-template-columns:1fr;gap:34px}}
-.dphone{width:min(286px,78vw);margin:0 auto;border-radius:42px;background:#0b1220;padding:9px;box-shadow:0 40px 74px -26px rgba(8,145,178,.55),0 0 0 1px rgba(15,23,42,.06);position:relative}
-.dphone::before{content:"";position:absolute;top:19px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#05070c;box-shadow:inset 0 0 0 1.5px rgba(140,175,195,.4);z-index:6}
-.dscreen{position:relative;border-radius:33px;overflow:hidden;background:#fff;aspect-ratio:9/18.2;transform:translateZ(0);isolation:isolate}
-.dlayer{position:absolute;inset:0;transition:opacity .45s ease;will-change:opacity;backface-visibility:hidden;transform:translateZ(0)}
-.dlayer.hide{opacity:0}
-.dcam{background:radial-gradient(120% 75% at 50% 0,#0e2b33,#0b1220)}
-.dcam .rx{position:absolute;top:19%;left:11%;right:11%;background:#faf8f2;border-radius:9px;padding:14px 14px 16px;transform:rotate(-2.5deg);box-shadow:0 24px 44px -16px rgba(0,0,0,.65)}
-.dcam .rx-h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #e6e0d3;padding-bottom:7px;margin-bottom:9px}
-.dcam .rx-h b{font-size:13px;color:#0e7490;font-weight:800}
-.dcam .rx-h i{font-size:7.5px;color:#a89f89;font-style:normal;letter-spacing:.06em}
-.dcam .rx .hw{font-family:'Caveat',cursive;font-size:17px;line-height:1.3;color:#26303a;margin:4px 0}
-.dcam .rx .hw.big{font-size:20px;font-weight:700;color:#161d24;margin-top:2px}
-.dcam .rx .hw.sec{color:#0e7490;font-weight:700;margin-top:9px;font-size:16px}
-.dcam .rx .hw.sign{margin-top:11px;padding-top:7px;border-top:1px dashed #d9d3c4;text-align:right;font-size:19px;color:#1e3a5f;transform:rotate(-2deg)}
-.vf{position:absolute;inset:13px;pointer-events:none}
-.vf i{position:absolute;width:20px;height:20px;border:3px solid rgba(255,255,255,.9)}
-.vf .a{top:0;left:0;border-right:0;border-bottom:0;border-radius:7px 0 0 0}
-.vf .b{top:0;right:0;border-left:0;border-bottom:0;border-radius:0 7px 0 0}
-.vf .c{bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 7px}
-.vf .d{bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 7px 0}
-.scanline{position:absolute;left:9%;right:9%;height:3px;border-radius:3px;top:14%;background:linear-gradient(90deg,transparent,#22d3ee,transparent);box-shadow:0 0 18px 4px rgba(34,211,238,.65);opacity:0}
-.dcam.scanning .scanline{animation:sweep 2.2s ease-in-out infinite}
-@keyframes sweep{0%{top:14%;opacity:0}12%{opacity:1}88%{opacity:1}100%{top:82%;opacity:0}}
-.dcam-pill{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;background:rgba(8,145,178,.94);color:#fff;font-size:11px;font-weight:700;padding:8px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 20px -8px rgba(8,145,178,.8)}
-.dspin{width:12px;height:12px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.dform{background:#fff;padding:16px 15px;display:flex;flex-direction:column}
-.dform-h{display:flex;align-items:center;gap:8px;margin-bottom:2px}
-.dform-h b{font-size:13.5px;font-weight:800;color:var(--ink)}
-.dform-h .tag{font-size:8px;font-weight:800;color:var(--brand-deep);background:var(--brandsoft);padding:3px 8px;border-radius:999px;margin-left:auto;display:inline-flex;align-items:center;gap:4px}
-.frow{border:1px solid var(--line);border-radius:12px;padding:8px 11px;margin-top:8px;position:relative;transition:border-color .3s,box-shadow .3s;background:#fff}
-.frow.in{border-color:#a5e8f2;background:#f2fbfd}
-.frow .fl{font-size:8px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
-.frow .fv{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:2px;min-height:17px;opacity:0;transform:translateY(3px);transition:.3s ease}
-.frow.in .fv{opacity:1;transform:none}
-.frow .fv .cur{display:none;width:2px;height:14px;background:var(--brand);margin-left:2px;vertical-align:-2px;border-radius:1px}
-.frow.typing .fv .cur{display:inline-block;animation:blink .85s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-.frow .fchk{position:absolute;top:50%;right:10px;transform:translateY(-50%) scale(.5);color:var(--ok);opacity:0;transition:.25s ease}
-.frow.in .fchk{opacity:1;transform:translateY(-50%) scale(1)}
-.fchips{display:flex;flex-wrap:wrap;gap:4px}
-.fchips span{font-size:9.5px;font-weight:700;background:var(--brandsoft);color:var(--brand-deep);padding:2px 7px;border-radius:999px}
-.dform-ok{margin-top:auto;padding-top:12px}
-.dform-ok .bar{display:flex;align-items:center;gap:8px;background:var(--oksoft);color:var(--ok);font-size:11px;font-weight:800;padding:9px 12px;border-radius:11px;opacity:0;transform:translateY(4px);transition:.4s ease}
-.dform.done .dform-ok .bar{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.scanline,.dspin{animation:none!important}}
+/* ---- footer ---- */
+footer{background:var(--bg);border-top:1px solid var(--line);padding:44px 0 28px;font-size:14px}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(auto-fit,minmax(140px,1fr));gap:28px}
+.foot-grid h4{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+.foot-links{display:grid;gap:10px}
+.foot-links a,.foot-links button{appearance:none;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--muted);font-weight:500;font-size:14px}
+.foot-links a:hover,.foot-links button:hover{color:var(--brand)}
+.foot-about p{color:var(--muted);line-height:1.65;margin:14px 0 0;max-width:40ch}
+.foot-bot{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;margin-top:34px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:13px}
 
-/* cta strip */
-.cta{background:var(--ink);color:#fff;padding:clamp(48px,5.5vw,76px) 0}
-.cta .wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
-.cta h2{font-size:clamp(26px,3vw,38px);color:#fff}
-.cta p{color:rgba(255,255,255,.7);font-size:17px;margin-top:12px;max-width:52ch}
-.cta .btn-gho{background:transparent;color:#fff;border-color:rgba(255,255,255,.26)}
-.cta .btn-gho:hover{background:rgba(255,255,255,.1);color:#fff}
-
-/* footer */
-footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px;font-size:14.5px}
-.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(auto-fit,minmax(150px,1fr));gap:36px}
-.foot-grid h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
-.foot-links{display:grid;gap:11px}
-.foot-links a{color:var(--muted);font-weight:500;cursor:pointer}
-.foot-links a:hover{color:var(--brand)}
-.foot-about p{color:var(--muted);line-height:1.65;margin:16px 0 18px;max-width:38ch}
-.foot-bot{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:center;margin-top:44px;padding-top:24px;border-top:1px solid var(--line);color:var(--faint);font-size:13.5px}
-
-@media (max-width:1060px){
-  nav .wrap{flex-wrap:wrap;padding-bottom:12px;row-gap:0}
-  .navlinks{order:3;width:100%;margin:0 -24px;padding:0 24px 4px;border-top:1px solid var(--line);padding-top:10px}
-  nav .btn-pri{margin-left:auto}
+/* ================= ASSISTANT ================= */
+.mc{--mc-h:100vh}
+.mc-panel{display:flex;flex-direction:column;background:var(--card);height:100%;min-height:0}
+@media(min-width:1080px){
+  .mc{position:sticky;top:0;height:100vh;height:100dvh;border-left:1px solid var(--line);box-shadow:-18px 0 40px -34px rgba(15,23,42,.35);z-index:35}
+  .mc-launch,.mc-close{display:none!important}
 }
-@media (max-width:900px){
-  .hero .wrap,.band,.wa-grid{grid-template-columns:minmax(0,1fr)}
-  .band-img{min-height:220px}
+@media(max-width:1079.98px){
+  body{padding-bottom:88px}
+  .mc-panel{position:fixed;inset:0;z-index:60;transform:translateY(102%);transition:transform .28s ease;visibility:hidden}
+  .mc.open .mc-panel{transform:none;visibility:visible}
+  html.mc-locked{overflow:hidden}
+  @media(prefers-reduced-motion:reduce){.mc-panel{transition:none}}
 }
+.mc-launch{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;gap:8px}
+.mc.open .mc-launch{display:none}
+.mc-launch-open{flex:1;min-width:0;appearance:none;border:0;cursor:pointer;display:flex;align-items:center;gap:12px;height:60px;padding:0 16px;border-radius:18px;background:var(--brand);color:#fff;box-shadow:0 16px 30px -14px rgba(8,145,178,.7);text-align:left}
+.mc-launch-open b{display:block;font-size:15.5px}
+.mc-launch-open small{display:block;font-size:12.5px;color:rgba(255,255,255,.82)}
+.mc-launch-call{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;background:var(--ink);color:#fff;flex:0 0 auto;box-shadow:0 16px 30px -14px rgba(15,23,42,.6)}
+.mc-launch-call:hover{color:#fff}
+.mc-head{padding:14px 16px 12px;border-bottom:1px solid var(--line);background:var(--card)}
+.mc-id{display:flex;align-items:center;gap:11px}
+.mc-id img{width:36px;height:36px;object-fit:contain}
+.mc-id b{display:block;font-size:15.5px}
+.mc-id small{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.mc-live{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.mc-icbtn{appearance:none;border:1px solid var(--line);background:var(--card);width:36px;height:36px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:0 0 auto}
+.mc-icbtn:hover{color:var(--ink);background:var(--bg)}
+.mc-id .sp{margin-left:auto;display:flex;gap:6px}
+.mc-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:12px;padding:4px;border-radius:13px;background:var(--bg);border:1px solid var(--line)}
+.mc-tab{appearance:none;border:0;background:none;cursor:pointer;height:36px;border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.mc-tab.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.1)}
+.mc-chatpane{flex:1;min-height:0;display:flex;flex-direction:column}
+.mc-log{flex:1;min-height:0;overflow-y:auto;padding:16px 14px 10px;display:flex;flex-direction:column;gap:9px;background:var(--bg);overscroll-behavior:contain}
+.mc-msg{max-width:88%;font-size:14.5px;line-height:1.5;padding:10px 13px;border-radius:16px}
+.mc-bot{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:6px}
+.mc-me{align-self:flex-end;background:var(--brand);color:#fff;border-bottom-right-radius:6px;white-space:pre-wrap;word-break:break-word}
+.mc-wide{max-width:100%;width:100%;padding:0;background:none;border:0}
+.mc-typing{display:flex;gap:4px;padding:13px 14px}
+.mc-typing span{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:mcdot 1s infinite}
+.mc-typing span:nth-child(2){animation-delay:.15s}.mc-typing span:nth-child(3){animation-delay:.3s}
+@keyframes mcdot{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-3px)}}
+.mc-chips{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 4px}
+.mc-chip{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 13px;border-radius:999px;border:1px solid rgba(8,145,178,.35);background:var(--card);color:var(--brand-deep);font-size:14px;font-weight:600;text-align:left;line-height:1.25}
+.mc-chip:hover{background:var(--brandsoft);color:var(--brand-deep)}
+.mc-chip-pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.mc-chip-pri:hover{background:var(--brand-deep);color:#fff}
+.mc-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.mc-actions{display:flex;flex-wrap:wrap;gap:8px}
+.mc-btn{appearance:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;font-weight:600}
+.mc-btn:hover{background:var(--bg);color:var(--ink)}
+.mc-btn-pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.mc-btn-pri:hover{background:var(--brand-deep);color:#fff}
+.mc-btn:disabled{opacity:.45;cursor:default}
+.mc-btn-sm{min-height:36px;padding:0 12px;font-size:13px}
+.mc-offer-top{display:flex;justify-content:space-between;align-items:center}
+.mc-tag{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-deep);background:var(--brandsoft);padding:3px 8px;border-radius:999px}
+.mc-offer-n{font-size:12px;color:var(--muted);font-weight:600}
+.mc-offer-name{font-size:16.5px;font-weight:700}
+.mc-offer-blurb{font-size:13.5px;color:var(--muted);line-height:1.5}
+.mc-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.mc-price b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.mc-price s,.mc-line s,.mc-total s{color:var(--faint);font-size:13px}
+.mc-save{font-size:12px;font-weight:700;color:var(--ok);background:var(--oksoft);padding:3px 8px;border-radius:999px}
+.mc-details summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--brand-deep)}
+.mc-inc{list-style:none;display:grid;gap:0;margin-top:6px}
+.mc-inc li,.mc-inc-total{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--line)}
+.mc-inc li:last-child{border-bottom:0}
+.mc-inc-total{border-top:1px solid var(--line);border-bottom:0;font-weight:700}
+.mc-inc-p{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.mc-note{font-size:12.5px;color:var(--warn);background:var(--warnsoft);border-radius:10px;padding:8px 10px;line-height:1.45}
+.mc-pick{display:grid;gap:8px}
+.mc-pick-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.mc-pick-row b{display:block;font-size:14.5px}
+.mc-pick-row small{font-size:12.5px;color:var(--muted)}
+.mc-checks{display:grid;max-height:280px;overflow-y:auto}
+.mc-check{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px;cursor:pointer}
+.mc-check span:nth-child(2){flex:1}
+.mc-check input{width:18px;height:18px;accent-color:var(--brand)}
+.mc-checks-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px}
+.mc-summary .mc-sum-h{font-size:15.5px;font-weight:700}
+.mc-row{display:flex;justify-content:space-between;gap:14px;font-size:13.5px}
+.mc-row span{color:var(--muted);flex:0 0 auto}
+.mc-row b{font-weight:600;text-align:right}
+.mc-lines{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mc-line{display:flex;justify-content:space-between;gap:10px;font-size:13.5px}
+.mc-total{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:600}
+.mc-total b{font-size:18px}
+.mc-muted{color:var(--muted);font-size:13px}
+.mc-consent{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--muted);line-height:1.45;cursor:pointer}
+.mc-consent input{width:18px;height:18px;flex:0 0 auto;margin-top:1px;accent-color:var(--brand)}
+.mc-pre{white-space:pre-wrap;font:500 12.5px/1.55 'JetBrains Mono',monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink)}
+.mc-step{display:flex;gap:10px;font-size:14px;line-height:1.5}
+.mc-num{width:24px;height:24px;border-radius:50%;background:var(--brandsoft);color:var(--brand-deep);display:grid;place-items:center;font-size:12px;font-weight:700;flex:0 0 auto}
+.mc-qr{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+.mc-qr img{width:120px;height:120px;border:1px solid var(--line);border-radius:10px;padding:5px;background:#fff}
+.mc-soon{align-self:center}
+.mc-mono{font-family:'JetBrains Mono',monospace}
+.mc-form{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
+.mc-input{flex:1;min-width:0;height:46px;border:1px solid var(--line);border-radius:13px;padding:0 14px;font:500 15px 'Inter',sans-serif;color:var(--ink);background:var(--bg)}
+.mc-input:focus{outline:2px solid var(--brandsoft);border-color:var(--brand)}
+.mc-send{appearance:none;border:0;cursor:pointer;width:46px;height:46px;border-radius:13px;background:var(--brand);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+.mc-send:hover{background:var(--brand-deep)}
+.mc-callpane{flex:1;min-height:0;overflow-y:auto;padding:26px 20px;display:flex;flex-direction:column;gap:16px;background:var(--bg)}
+.mc-callcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.mc-callcard .big{font:700 24px/1.2 'JetBrains Mono',monospace;letter-spacing:-.01em;color:var(--ink)}
+.mc-callcard p{font-size:14px;color:var(--muted);line-height:1.55}
+
+@media(max-width:560px){
+  .wrap{padding:0 16px}
+  .tiles{gap:10px}
+  .tile{padding:16px;min-height:0;border-radius:18px}
+  .tile b{font-size:16px}
+  .tile span.sub{font-size:13px}
+  .tile .go{display:none}
+  .tile-ico{width:40px;height:40px;border-radius:12px}
+  .tile-app{flex-direction:column;align-items:flex-start}
+  .tile-qr{display:none}
+  .band{grid-template-columns:1fr}
+  .topbar .tb-info{display:none}
+  .topbar .wrap{justify-content:center}
+  .nav-call span{display:none}
+  .nav-call{padding:0 13px}
+}
+@media(max-width:900px){.band{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-view="patients">
+<div class="shell">
+<div class="page">
 
 <div class="topbar"><div class="wrap">
-  <span class="tb-info" data-aud="patients"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg> Book by phone <b>+91 92638 40556</b> · Bihar Sharif, Nalanda</span>
-  <span class="tb-info" data-aud="b2b" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> Partner with us <b>hi@medrelief.co.in</b></span>
+  <span class="tb-info" data-aud="patients"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg> Call to book <b class="cfg-phone">+91 92638 40556</b> · Bihar Sharif, Nalanda</span>
+  <span class="tb-info" data-aud="b2b" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> Partnerships <b class="cfg-email">hi@medrelief.co.in</b></span>
   <div class="aud" role="tablist" aria-label="Choose audience">
     <button class="aud-btn active" data-go="patients" role="tab" aria-selected="true">For patients</button>
-    <button class="aud-btn" data-go="b2b" role="tab" aria-selected="false">For labs &amp; doctors</button>
+    <button class="aud-btn" data-go="b2b" role="tab" aria-selected="false">Labs, doctors &amp; partners</button>
   </div>
 </div></div>
 
 <nav><div class="wrap">
-  <a href="#top" class="logo">
-    <img src="assets/mr-logo.png" alt="MedRelief" />
-    <span>
-      <span class="logo-name">Med<span>Relief</span></span>
-      <span class="logo-sub" data-aud="patients">Diagnostics</span>
-      <span class="logo-sub" data-aud="b2b" hidden>Lab Platform</span>
-    </span>
+  <a href="#" class="logo" aria-label="MedRelief — back to top">
+    <img src="assets/mr-logo.png" alt="" />
+    <span><span class="logo-name">Med<span>Relief</span></span><span class="logo-sub" data-aud="patients">Diagnostics</span><span class="logo-sub" data-aud="b2b" hidden>Partners</span></span>
   </a>
-  <div class="navlinks" data-aud="patients">
-    <a href="#tests">Tests &amp; packages</a>
-    <a href="#journey">How it works</a>
-    <a href="#reports">Reports</a>
-    <a href="#app">App</a>
-    <a href="#why">Why us</a>
-    <a href="#locations">Centers</a>
-  </div>
-  <div class="navlinks" data-aud="b2b" hidden>
-    <a href="#platform">Platform</a>
-    <a href="#flow">How it works</a>
-    <a href="#doctors">For doctors</a>
-    <a href="#apps">Apps</a>
-    <a href="#security">Security</a>
-  </div>
-  <a href="#book" class="btn btn-pri" data-aud="patients">Book a test</a>
-  <a href="#demo" class="btn btn-pri" data-aud="b2b" hidden>Request a demo</a>
+  <a class="btn btn-gho nav-call cfg-tel" href="tel:+919263840556" aria-label="Call MedRelief"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="cfg-phone">+91 92638 40556</span></a>
 </div></nav>
 
 <!-- ============================ PATIENTS ============================ -->
-<div class="view" data-aud="patients">
+<main class="view" data-aud="patients">
 
-<header class="hero" id="top"><div class="wrap">
-  <div>
-    <div class="eyebrow">Diagnostics · Bihar Sharif, Nalanda</div>
-    <h1>Pathology, without the <em>waiting room</em>.</h1>
-    <p class="lede">Book a test, get your sample collected, and watch your report move stage by stage — then receive it on WhatsApp. Most reports the same day.</p>
-    <div class="hero-cta">
-      <a href="#book" class="btn btn-pri">Book a test
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
-      </a>
-      <a href="#track" class="btn btn-gho">Track my report</a>
-    </div>
-    <div class="hero-chips">
-      <span class="pill pill-brand">Home collection</span>
-      <span class="pill pill-brand">Wide test menu</span>
-      <span class="pill pill-ok">Reports on WhatsApp</span>
-      <span class="pill pill-brand">Pathologist verified</span>
-    </div>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Diagnostics · Bihar Sharif, Nalanda</div>
+  <h1>Book a lab test in <em>a few taps</em>.</h1>
+  <p class="lede">Home sample collection or a centre visit — our assistant books it with you in the chat, and your pathologist-verified report arrives on WhatsApp.</p>
+
+  <div class="tiles">
+    <button class="tile pri" data-chat="home">
+      <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg></span>
+      <b>Home sample collection</b>
+      <span class="sub">A trained agent collects at your door. Nothing to pay until the sample is taken.</span>
+      <span class="go">Book in chat <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+    </button>
+    <button class="tile" data-chat="visit">
+      <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 11h4M12 9v4"/></svg></span>
+      <b>Schedule a centre visit</b>
+      <span class="sub">Pick a time at one of our centres and skip the queue.</span>
+      <span class="go">Pick a slot <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+    </button>
+    <button class="tile" data-chat="track">
+      <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+      <b>Track my report</b>
+      <span class="sub">See where your report is, and get it on WhatsApp.</span>
+      <span class="go">Track <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+    </button>
+    <button class="tile tile-app" data-chat="app">
+      <span class="tile-body">
+        <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
+        <b>Get the patient app</b>
+        <span class="sub no-touch">Scan the code with your phone camera to install.</span>
+        <span class="sub only-touch">Every report in one place. Install on Android.</span>
+      </span>
+      <img class="tile-qr no-touch" src="assets/qr-patient-app.svg" alt="QR code: install the MedRelief patient app" width="104" height="104" />
+    </button>
   </div>
-
-  <div class="card track" id="track">
-    <div class="track-head">
-      <span class="track-title">Track your report</span>
-      <span class="pill pill-ok"><span class="dot dot-live"></span>Live</span>
-    </div>
-    <div class="field">
-      <input value="T‑104" aria-label="Token number" />
-      <button type="button">Track</button>
-    </div>
-    <div class="steps">
-      <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span><span class="step-label">Sample collected</span><span class="step-time mono">9:12 AM</span></div>
-      <div class="step now"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v13a4 4 0 0 1-8 0zM8 11h8"/></svg></span><span class="step-label">In lab — processing</span><span class="step-time mono">ETA 38 min</span></div>
-      <div class="step"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c2 0 3-10 5-10s2 8 4 8 2-4 4-4 2 3 5 3"/></svg></span><span class="step-label">Pathologist sign‑off</span><span class="step-time">Pending</span></div>
-      <div class="step"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg></span><span class="step-label">Report on WhatsApp</span><span class="step-time">Pending</span></div>
-    </div>
-  </div>
-</div></header>
-
-<div class="stats"><div class="wrap">
-  <div><div class="stat-n">Same day</div><div class="stat-l">Turnaround on most reports</div></div>
-  <div><div class="stat-n">WhatsApp</div><div class="stat-l">Reports delivered where you are</div></div>
-  <div><div class="stat-n">4 centers</div><div class="stat-l">Nalanda &amp; Madhubani, Bihar</div></div>
-  <div><div class="stat-n">UPI · Card · Cash</div><div class="stat-l">Pay in full or in part</div></div>
-</div></div>
-
-<section id="tests"><div class="wrap">
-  <div class="head">
-    <div class="eyebrow">Tests &amp; packages</div>
-    <h2>The tests people book most.</h2>
-    <p class="lede">Transparent pricing and a stated turnaround. Fasting requirements are flagged before you book. Full menu and package prices are confirmed at the center or on call.</p>
-  </div>
-  <div class="grid g3">
-    <article class="card test"><div class="test-top"><h3>Complete Blood Count</h3><span class="pill pill-brand">Popular</span></div><p class="test-inc">Haemoglobin, WBC and differential, platelets and red-cell indices — a full haemogram.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-brand">No fasting</span></div><div class="test-foot"><span class="price">₹400</span><span class="link-go">Book →</span></div></article>
-    <article class="card test"><div class="test-top"><h3>HbA1c — Glycated Haemoglobin</h3><span class="pill pill-brand">Diabetes</span></div><p class="test-inc">Your average blood sugar over the last ~3 months — the standard check for diabetes control.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-brand">No fasting</span></div><div class="test-foot"><span class="price">₹600</span><span class="link-go">Book →</span></div></article>
-    <article class="card test"><div class="test-top"><h3>Blood Sugar (Random)</h3></div><p class="test-inc">A quick glucose check, any time of day — no appointment or fasting needed.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-brand">No fasting</span></div><div class="test-foot"><span class="price">₹50</span><span class="link-go">Book →</span></div></article>
-    <article class="card test"><div class="test-top"><h3>Liver Function Test</h3></div><p class="test-inc">Bilirubin, SGOT/SGPT, ALP and protein levels — a full check of liver health.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-warn">Fasting advised</span></div><div class="test-foot"><span class="price">₹800</span><span class="link-go">Book →</span></div></article>
-    <article class="card test"><div class="test-top"><h3>Kidney Function Test</h3></div><p class="test-inc">Urea, creatinine, uric acid and electrolytes — how well your kidneys are working.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-warn">Fasting advised</span></div><div class="test-foot"><span class="price">₹850</span><span class="link-go">Book →</span></div></article>
-    <article class="card test"><div class="test-top"><h3>Full Body Checkup</h3><span class="pill pill-brand">Package</span></div><p class="test-inc">CBC, Blood Sugar, HbA1c, Liver &amp; Kidney panels together — a complete health snapshot.</p><div class="test-meta"><span class="pill pill-ok">Report same day</span><span class="pill pill-warn">10 hrs fasting</span></div><div class="test-foot"><span class="price"><small>Package price at booking</small></span><span class="link-go">Book →</span></div></article>
-  </div>
-</div></section>
-
-<section class="alt" id="journey"><div class="wrap">
-  <div class="head">
-    <div class="eyebrow">How it works</div>
-    <h2>Five stages. You can see all of them.</h2>
-    <p class="lede">The same stages our staff work through are the ones you track against — so "where is my report" always has an answer.</p>
-  </div>
-  <div class="journey">
-    <div class="jstep" style="--c:#64748B"><div class="jnum">STAGE 01</div><h4>Registered</h4><p>Book on call or walk in. You get a token and an accession number — no forms to fill twice.</p></div>
-    <div class="jstep" style="--c:#0891B2"><div class="jnum">STAGE 02</div><h4>Billing done</h4><p>Pay by UPI, card or cash — in full or part now, the rest later. Your receipt is printed and shared.</p></div>
-    <div class="jstep" style="--c:#D97706"><div class="jnum">STAGE 03</div><h4>Sample collected</h4><p>At a center or at home, by a trained phlebotomist. Barcoded at the point of draw.</p></div>
-    <div class="jstep" style="--c:#0E7490"><div class="jnum">STAGE 04</div><h4>In lab</h4><p>Processed on connected analysers, with results feeding straight into your report.</p></div>
-    <div class="jstep" style="--c:#059669"><div class="jnum">STAGE 05</div><h4>Report ready</h4><p>Verified and signed by a pathologist, then sent to you on WhatsApp as a PDF.</p></div>
-  </div>
-</div></section>
-
-<section id="book"><div class="wrap">
-  <div class="band">
-    <div>
-      <div class="eyebrow" style="color:rgba(255,255,255,.75)">Home collection</div>
-      <h2>A phlebotomist at your door.</h2>
-      <p>Pick a convenient time slot and a trained collector comes to you. You get their name and a live ETA on WhatsApp before they arrive.</p>
-      <a href="tel:+919263840556" class="btn btn-pri">Book a home visit
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
-      </a>
-      <div class="band-chips">
-        <span class="pill">Trained phlebotomists</span>
-        <span class="pill">Live ETA on WhatsApp</span>
-        <span class="pill">Sealed, barcoded vials</span>
-      </div>
-    </div>
-    <!-- Swap this placeholder for a real photo: <img src="assets/home-collection.jpg" alt="Home sample collection"> -->
-    <div class="band-img"><div>
-      <div class="ph-ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg></div>
-      <p class="ph-cap">Home sample collection by a trained phlebotomist</p>
-    </div></div>
-  </div>
-</div></section>
-
-<section class="alt" id="reports"><div class="wrap">
-  <div class="wa-grid">
-    <div class="chat">
-      <div class="bubble">
-        <div class="bubble-from"><img src="assets/mr-logo.png" alt="" /><b>MedRelief Diagnostics</b></div>
-        <p>Your report for <b>T‑104</b> is ready and has been verified and signed by our consultant pathologist.</p>
-        <div class="attach"><span class="attach-ico">PDF</span><span><span class="attach-n">CBC_Report_A‑32144.pdf</span><span class="attach-s">248 KB · 2 pages</span></span></div>
-        <div class="t">11:24 AM</div>
-      </div>
-      <div class="bubble bubble-me"><p>Thank you! Can I get my earlier report too?</p><div class="t">11:26 AM</div></div>
-      <div class="bubble"><p>Of course — your report history stays on this chat whenever you need it again.</p><div class="t">11:26 AM</div></div>
-    </div>
-    <div>
-      <div class="eyebrow">Your reports</div>
-      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">Delivered where you already are.</h2>
-      <p class="lede">No portal, no password, no app to install. Your report arrives on WhatsApp the moment a pathologist signs it off — and stays there when you need it again.</p>
-      <ul class="checklist">
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span><b>Signed by a pathologist</b>, never auto‑released straight from the analyser.</span></li>
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span><b>Track every stage live</b>, from sample collected to report ready.</span></li>
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span><b>Pay how you like</b> — UPI, card or cash, in full or part now and the rest later.</span></li>
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Also available as a <b>printed report or a QR pickup</b> at the center.</span></li>
-      </ul>
-    </div>
-  </div>
-</div></section>
-
-<section id="why"><div class="wrap">
-  <div class="head"><div class="eyebrow">Why MedRelief</div><h2>A careful process, plainly explained.</h2></div>
-  <div class="grid g4">
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><path d="m9.5 10.5 1.8 1.8 3.4-3.4"/></svg></div><h3>Pathologist verified</h3><p>Every result is reviewed and signed by a qualified pathologist before it reaches you — never released straight from the machine.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div><h3>Track it live</h3><p>Follow your report from collection to sign-off. "Where is my report" always has a clear answer.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg></div><h3>Private by default</h3><p>Display screens show only token numbers, and your report goes to your own WhatsApp — your name never appears on a public screen.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5m0 14h16"/><path d="m7 15 3.5-4 3 2.5L20 7"/></svg></div><h3>Priced up front</h3><p>The price you're quoted is the price you pay — and you can pay in full or part now and clear the rest later.</p></article>
-  </div>
-</div></section>
-
-<section class="alt" id="locations"><div class="wrap">
-  <div class="head"><div class="eyebrow">Collection centers</div><h2>Find us across Bihar.</h2><p class="lede">Walk in without an appointment, or book a slot to skip the queue — or have a phlebotomist come to your home.</p></div>
-  <div class="grid g3">
-    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Bihar Sharif</h3><span class="pill pill-ok"><span class="dot"></span>Main center</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>50 m North of Bhainsasur Chowk, Opp. Sudha Dairy, Bihar Sharif (Nalanda) — 803101</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556 · 061124 53327</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>hi@medrelief.co.in</span></div></article>
-    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Rajgir</h3><span class="pill pill-ok"><span class="dot"></span>Open</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Rajgir, Nalanda district, Bihar</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Same reports, same WhatsApp delivery.</span></div></article>
-    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Ekangarsarai</h3><span class="pill pill-ok"><span class="dot"></span>Open</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Ekangarsarai, Nalanda district, Bihar</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Same reports, same WhatsApp delivery.</span></div></article>
-    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Madhubani</h3><span class="pill pill-ok"><span class="dot"></span>Open</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Madhubani, Bihar</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="mono">+91 92638 40556</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span>Same reports, same WhatsApp delivery.</span></div></article>
-    <article class="card loc"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3>Home collection</h3><span class="pill pill-brand">Across Nalanda</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg><span>Can't come in? A trained phlebotomist collects your sample at home.</span></div><div class="loc-row"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span>Call <b class="mono">+91 92638 40556</b> to book a slot</span></div></article>
-  </div>
-</div></section>
-
-<section id="app"><div class="wrap">
-  <div class="appwrap">
-    <div class="app-copy">
-      <div class="eyebrow">MedRelief patient app</div>
-      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">Your reports, in your pocket.</h2>
-      <p class="lede">Every report you've done, in one place — open the app, read your report, download the PDF, or share it with your doctor. Free for MedRelief patients.</p>
-      <div class="steps" style="margin-top:26px">
-        <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span><span class="step-label">Open the app<span class="step-sub">Sign in with your mobile number</span></span></div>
-        <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg></span><span class="step-label">Tap your report<span class="step-sub">It appears the moment a pathologist signs it</span></span></div>
-        <div class="step now"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></span><span class="step-label">View, download or share<span class="step-sub">Send the PDF to your doctor in a tap</span></span></div>
-      </div>
-      <p class="store-note">Available on iOS and Android</p>
-      <div class="stores">
-        <!-- Replace href="#" with the real App Store / Play Store links once the apps are published. -->
-        <a class="store" href="#" aria-label="Download on the App Store"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Download on the App Store"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M31.6 26.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-1.9-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3.9-4.1 2.5-1.8 3.1-.5 7.7 1.2 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3 0 1.7-.8 3.3-.8s1.9.8 3.2.8 2.2-1.2 3-2.4c.6-.9.9-1.4 1.4-2.5-3.7-1.4-3.8-6.6 0-8.6zm-2.5-7c.7-.9 1.2-2 1-3.2-1 0-2.2.7-2.9 1.5-.7.8-1.3 2-1.1 3.2 1.1.1 2.2-.6 3-1.5z"/><text x="46" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">Download on the</text><text x="45" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">App Store</text></svg></a>
-        <a class="store" href="#" aria-label="Get it on Google Play"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Get it on Google Play"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M18 15.4v19.2c0 .7.7 1.1 1.3.7l15.6-9.6c.5-.3.5-1.1 0-1.4L19.3 14.7c-.6-.4-1.3 0-1.3.7z"/><text x="43" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">GET IT ON</text><text x="42" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">Google Play</text></svg></a>
-      </div>
-    </div>
-    <div class="phones">
-      <div class="phone back"><img src="assets/app-patient-home.png" alt="The MedRelief patient app home screen with a visit and receipt" loading="lazy"></div>
-      <div class="repcard" role="img" aria-label="Sample MedRelief lab report: Complete Blood Count, pathologist verified">
-        <div class="rep-top">
-          <div class="rl"><img src="assets/mr-logo.png" alt=""><span><b>MedRelief</b><small>Lab Report</small></span></div>
-          <span class="rtag">Sample</span>
-        </div>
-        <div class="rep-body">
-          <div class="rep-pat"><span>Accession <b class="mono">A‑32144</b></span><span>08 Sep 2026</span></div>
-          <div class="rep-name">Complete Blood Count</div>
-          <div class="rep-sub">Ramesh Kumar · 34Y / Male</div>
-          <table class="rep">
-            <thead><tr><th>Analyte</th><th class="n">Result</th><th class="n">Reference</th><th class="n">Flag</th></tr></thead>
-            <tbody>
-              <tr><td class="an">Haemoglobin<small>g/dL</small></td><td class="n val">11.8</td><td class="n rng">13.0–17.0</td><td class="n"><span class="fl fl-lo">Low</span></td></tr>
-              <tr><td class="an">RBC count<small>10⁶/µL</small></td><td class="n val">4.6</td><td class="n rng">4.5–5.5</td><td class="n"><span class="fl fl-ok">Normal</span></td></tr>
-              <tr><td class="an">WBC (TLC)<small>10³/µL</small></td><td class="n val">7.2</td><td class="n rng">4.0–11.0</td><td class="n"><span class="fl fl-ok">Normal</span></td></tr>
-              <tr><td class="an">Platelets<small>10³/µL</small></td><td class="n val">240</td><td class="n rng">150–410</td><td class="n"><span class="fl fl-ok">Normal</span></td></tr>
-            </tbody>
-          </table>
-          <div class="rep-sign"><span class="chk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span><div><b>Verified &amp; signed</b><br>by the duty pathologist, MD Pathology</div></div>
-          <div class="rep-actions"><span class="a1"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>PDF</span><span class="a2"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div></section>
-
-<div class="cta"><div class="wrap">
-  <div><h2>Book a test in under two minutes.</h2><p>Choose a test, pick a home‑collection slot or a center, and pay when the sample is taken.</p></div>
-  <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="tel:+919263840556" class="btn btn-pri">Call to book</a><a href="#locations" class="btn btn-gho">Find a center</a></div>
-</div></div>
-
-</div><!-- /view patients -->
-
-<!-- ============================ LABS & DOCTORS (B2B) ============================ -->
-<div class="view" data-aud="b2b" hidden>
-
-<header class="hero" id="top-b2b"><div class="wrap">
-  <div>
-    <div class="eyebrow">The platform behind MedRelief</div>
-    <h1>Run your lab by <em>scanning a prescription</em>.</h1>
-    <p class="lede">MedRelief is an AI-first lab platform. Scan the prescription and AI handles the rest — registration, billing, sample tracking, result entry and instant report delivery on WhatsApp. Every step also works fully by hand, so the desk never waits on AI.</p>
-    <div class="hero-cta">
-      <a href="#demo" class="btn btn-pri">Request a demo
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
-      </a>
-      <a href="#flow" class="btn btn-gho">See how it works</a>
-    </div>
-    <div class="hero-chips">
-      <span class="pill pill-brand">AI prescription scan</span>
-      <span class="pill pill-brand">Voice assistant</span>
-      <span class="pill pill-ok">Analyzer HL7 · ASTM</span>
-      <span class="pill pill-brand">Multi-center</span>
-    </div>
-  </div>
-
-  <div class="card track">
-    <div class="track-head">
-      <span class="track-title">New patient visit</span>
-      <span class="pill pill-ok"><span class="dot dot-live"></span>One flow</span>
-    </div>
-    <div class="steps">
-      <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></span><span class="step-label">Scan prescription<span class="step-sub">AI reads tests &amp; patient</span></span><span class="step-time mono">2s</span></div>
-      <div class="step done"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span><span class="step-label">Bill &amp; collect<span class="step-sub">UPI, card, cash · part payments</span></span><span class="step-time mono">✓</span></div>
-      <div class="step now"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-3 7a4 4 0 0 0 4 5h4a4 4 0 0 0 4-5l-3-7V2"/><path d="M8 2h8"/></svg></span><span class="step-label">In lab<span class="step-sub">Worklist + analyzer auto-feed</span></span><span class="step-time mono">live</span></div>
-      <div class="step"><span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="step-label">Deliver on WhatsApp<span class="step-sub">The moment it's signed</span></span><span class="step-time">Auto</span></div>
-    </div>
+  <div class="hero-foot">
+    <span class="pill">Pathologist verified</span>
+    <span class="pill">Reports on WhatsApp</span>
+    <span class="pill">UPI · card · cash</span>
   </div>
 </div></header>
 
-<div class="stats"><div class="wrap">
-  <div><div class="stat-n">Scan-first</div><div class="stat-l">AI reads the prescription</div></div>
-  <div><div class="stat-n">Speak &amp; dictate</div><div class="stat-l">Voice fills forms &amp; results</div></div>
-  <div><div class="stat-n">HL7 · ASTM</div><div class="stat-l">Analyzers feed results in</div></div>
-  <div><div class="stat-n">Manual fallback</div><div class="stat-l">On every screen — AI never blocks</div></div>
+<section class="offers" aria-labelledby="offers-h"><div class="wrap">
+  <div class="sec-head">
+    <div><div class="eyebrow">Health packages</div><h2 id="offers-h">Current offers</h2></div>
+    <button class="linkish" data-chat="offers">Compare all in chat <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+  </div>
+  <div class="ticker"><div class="ticker-track" id="ticker"></div></div>
+</div></section>
+
+<div class="trust"><div class="wrap">
+  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><path d="m9.5 10.5 1.8 1.8 3.4-3.4"/></svg><div><b>Pathologist verified</b><span>Every result reviewed and signed before it reaches you.</span></div></div>
+  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><b>Reports on WhatsApp</b><span>The PDF lands on your phone as soon as it's signed.</span></div></div>
+  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><div><b>Most reports same day</b><span>Routine blood tests are usually reported the same day.</span></div></div>
+  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg><div><b>Private by default</b><span>Your report goes only to your own number.</span></div></div>
 </div></div>
 
-<section id="scan-demo" class="demo"><div class="wrap">
-  <div class="demowrap">
-    <div class="demo-copy">
-      <div class="eyebrow">AI-first · see it in action</div>
-      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">Scan the prescription. Watch it fill the form.</h2>
-      <p class="lede">Point the camera at a prescription and MedRelief's AI reads it — patient details and the ordered tests drop straight into the registration form. The desk just confirms and moves on. No typing, no re-keying.</p>
-      <div class="steps" style="margin-top:24px;max-width:430px">
-        <div class="step done"><span class="step-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></span><span class="step-label">Capture<span class="step-sub">Any prescription — printed or handwritten</span></span></div>
-        <div class="step done"><span class="step-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15v4M17 17h4M5 4v3M4 5.5h2"/></svg></span><span class="step-label">AI reads it<span class="step-sub">Patient, age/sex, mobile and the tests</span></span></div>
-        <div class="step now"><span class="step-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/><path d="m9 11 3 3 9-9"/></svg></span><span class="step-label">Autofilled<span class="step-sub">Confirm and continue — seconds, not minutes</span></span></div>
-      </div>
-    </div>
-    <div class="dphone">
-      <div class="dscreen">
-        <div class="dlayer dcam scanning">
-          <div class="rx">
-            <div class="rx-h"><b>MedRelief</b><i>OPD · Rx</i></div>
-            <div class="hw big">Ramesh Kumar, 34/M</div>
-            <div class="hw">c/o fever, fatigue — 5 days</div>
-            <div class="hw sec">Advised —</div>
-            <div class="hw">CBC, HbA1c</div>
-            <div class="hw">Lipid Profile, TSH</div>
-            <div class="hw sign">Dr. A. K. Verma</div>
-          </div>
-          <div class="vf"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
-          <div class="scanline"></div>
-          <div class="dcam-pill"><span class="dspin"></span>Reading prescription…</div>
-        </div>
-        <div class="dlayer dform hide">
-          <div class="dform-h"><b>New patient</b><span class="tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m12 4 1.6 3.9L17.5 9.5l-3.9 1.6L12 15l-1.6-3.9L6.5 9.5l3.9-1.6z"/></svg>AI autofill</span></div>
-          <div class="frow"><div class="fl">Patient name</div><div class="fv">Ramesh Kumar<span class="cur"></span></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
-          <div class="frow"><div class="fl">Age / Sex</div><div class="fv">34 · Male<span class="cur"></span></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
-          <div class="frow"><div class="fl">Mobile</div><div class="fv">98••• •••••<span class="cur"></span></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
-          <div class="frow"><div class="fl">Tests ordered</div><div class="fv"><div class="fchips"><span>CBC</span><span>HbA1c</span><span>Lipid Profile</span><span>TSH</span></div></div><span class="fchk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span></div>
-          <div class="dform-ok"><div class="bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Autofilled from prescription</div></div>
-        </div>
-      </div>
-    </div>
+<section class="block" id="centres" aria-labelledby="centres-h"><div class="wrap">
+  <div class="head"><div class="eyebrow">Our centres</div><h2 id="centres-h">Walk in, or book a slot.</h2></div>
+  <div class="grid g2" id="centre-list"></div>
+</div></section>
+
+</main>
+
+<!-- ============================ LABS, DOCTORS & PARTNERS ============================ -->
+<main class="view" data-aud="b2b" hidden>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">For labs, doctors &amp; collection partners</div>
+  <h1>Partner with <em>MedRelief Diagnostics</em>.</h1>
+  <p class="lede">Refer patients, send us samples, or collect on our behalf. Every result is verified by a pathologist, the report comes back to you and your patient, and every submission can be tracked.</p>
+  <div class="hero-foot" style="margin-top:26px;gap:12px">
+    <button class="btn btn-pri" data-chat="partner">Become a partner <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    <a class="btn btn-gho cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener">Partner login</a>
+  </div>
+</div></header>
+
+<section class="block"><div class="wrap">
+  <div class="head"><div class="eyebrow">Ways to work with us</div><h2>Pick how you'd like to partner.</h2></div>
+  <div class="grid p-cards">
+    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h3>Refer patients</h3><p>Doctors and clinics refer patients for a centre visit or home collection. Verified reports reach you in the MedRelief doctor app, with a statement of every referral.</p><button class="linkish" data-chat="partner:refer">Talk to us →</button></article>
+    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-5 9a3 3 0 0 0 2.6 4.5h10.8A3 3 0 0 0 20 17l-5-9V2"/><path d="M8 2h8M7 14h10"/></svg></div><h3>Send samples to MedRelief</h3><p>Labs send us the tests they don't run in-house. We process them on connected analysers and return an integrated, pathologist-signed report.</p><button class="linkish" data-chat="partner:samples">Talk to us →</button></article>
+    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h2l3 11.5M5.5 17.5 9 10h6l-3 7.5"/></svg></div><h3>Use our collection agents</h3><p>Our trained agents pick up samples from your clinic or your patients' homes and bring them to our lab — barcoded and tracked.</p><button class="linkish" data-chat="partner:agents">Talk to us →</button></article>
+    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div><h3>Become a collection agent</h3><p>Collect samples on MedRelief's behalf — you don't run the tests. Get assignments and addresses in our app and hand samples over to our lab.</p><button class="linkish" data-chat="partner:collect">Talk to us →</button></article>
   </div>
 </div></section>
 
-<section id="platform"><div class="wrap">
-  <div class="head"><div class="eyebrow">One platform</div><h2>Everything the front desk, lab and finance need.</h2><p class="lede">From registration to reconciliation — a single kiosk-simple app, built mobile-first for the counter.</p></div>
-  <div class="grid g3">
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></div><h3>AI prescription scan</h3><p>Reception scans the prescription; AI vision extracts the patient and the ordered tests, ready to confirm — no re-typing.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></div><h3>Voice assistant</h3><p>Every role can complete tasks by speaking. The transcript is shown before anything is saved.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div><h3>Smart billing &amp; payments</h3><p>Rate plans, discounts with approvals, coupons and packages. UPI, card or cash — including part-payments and split tender.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-3 7a4 4 0 0 0 4 5h4a4 4 0 0 0 4-5l-3-7V2"/><path d="M8 2h8"/></svg></div><h3>Sample &amp; worklist tracking</h3><p>Accessioning, barcoded specimens, collection lists and a live worklist — every sample tracked from draw to result.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h8M8 14h5"/></svg></div><h3>Analyzer integration</h3><p>Connect analyzers over HL7 and ASTM. Results match to the accession and land as a draft for the pathologist to verify.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg></div><h3>Finance &amp; reporting</h3><p>Daily close, reconciliation, per-mode collections and bills-by-staff — the numbers your center head needs, ready to export.</p></article>
+<section class="block alt"><div class="wrap">
+  <div class="head"><div class="eyebrow">How it works</div><h2>From referral to report.</h2></div>
+  <div class="flow">
+    <div class="fstep" style="--c:#64748B"><div class="fnum">STEP 01</div><h4>Refer or collect</h4><p>Refer a patient, or hand over the samples you've collected.</p></div>
+    <div class="fstep" style="--c:#0891B2"><div class="fnum">STEP 02</div><h4>Reaches our lab</h4><p>Picked up by our collection agent or dropped at a centre — barcoded on the way in.</p></div>
+    <div class="fstep" style="--c:#D97706"><div class="fnum">STEP 03</div><h4>Tested &amp; verified</h4><p>Run on connected analysers; every result signed by a pathologist.</p></div>
+    <div class="fstep" style="--c:#059669"><div class="fnum">STEP 04</div><h4>Report to both</h4><p>An integrated report reaches you and your patient, and the submission is closed out.</p></div>
   </div>
 </div></section>
 
-<section class="alt" id="flow"><div class="wrap">
-  <div class="head"><div class="eyebrow">How it works</div><h2>Prescription to report, in one flow.</h2><p class="lede">The whole visit runs on one screen — no re-keying between a separate billing, LIMS and reporting tool.</p></div>
-  <div class="journey">
-    <div class="jstep" style="--c:#64748B"><div class="jnum">STEP 01</div><h4>Register</h4><p>Scan the prescription or look up by mobile. AI pre-fills the patient and tests.</p></div>
-    <div class="jstep" style="--c:#0891B2"><div class="jnum">STEP 02</div><h4>Bill &amp; pay</h4><p>Apply the rate plan; take full or part payment by UPI, card or cash.</p></div>
-    <div class="jstep" style="--c:#D97706"><div class="jnum">STEP 03</div><h4>Collect</h4><p>Barcoded samples and a collection list keep every specimen tracked.</p></div>
-    <div class="jstep" style="--c:#0E7490"><div class="jnum">STEP 04</div><h4>Process &amp; sign</h4><p>Analyzer or dictated results, verified and signed by the pathologist.</p></div>
-    <div class="jstep" style="--c:#059669"><div class="jnum">STEP 05</div><h4>Deliver</h4><p>The report goes to the patient on WhatsApp, with a secure view link.</p></div>
+<section class="block"><div class="wrap">
+  <div class="head"><div class="eyebrow">What you get</div><h2>Service you can build on.</h2></div>
+  <div class="grid benefits">
+    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Pathologist verified</b><span>Never auto-released from the analyser.</span></div></div>
+    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Connected analysers</b><span>Results flow straight from the machine into the report — no re-typing.</span></div></div>
+    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Digital reports</b><span>In the partner app and on the patient's WhatsApp.</span></div></div>
+    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Pickup by our agents</b><span>From your clinic or the patient's home.</span></div></div>
+    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Clear statements</b><span>Date-filtered statements of every referral.</span></div></div>
+    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Wide test menu</b><span>Routine to specialised tests and health packages.</span></div></div>
   </div>
 </div></section>
 
-<section id="doctors"><div class="wrap">
+<section class="block" style="padding-top:0"><div class="wrap">
   <div class="band">
     <div>
-      <div class="eyebrow" style="color:rgba(255,255,255,.75)">For referring doctors</div>
-      <h2>A portal for the doctors who send you patients.</h2>
-      <p>Give referring doctors their own secure app to follow their patients' reports and track referrals — no phone calls, no spreadsheets.</p>
-      <a href="#demo" class="btn btn-pri">Request a demo
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
-      </a>
-      <div class="band-chips"><span class="pill">Patient reports</span><span class="pill">Referral statements</span><span class="pill">AI summaries</span></div>
+      <h2>Track every submission.</h2>
+      <p>Doctors and corporate partners follow their referrals and reports in the MedRelief partner portal. Lab and collection partners get tracking access when they're onboarded.</p>
+      <a class="btn btn-pri cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener" style="margin-top:20px">Partner login</a>
     </div>
-    <div class="band-img"><div class="band-panel">
-      <div class="bp"><b>Patient reports</b><span>as soon as signed</span></div>
-      <div class="bp"><b>Referral statements</b><span>date-filtered, per patient</span></div>
-      <div class="bp"><b>AI summaries</b><span>plain-language on each report</span></div>
-      <div class="bp"><b>Self sign-up</b><span>admin approves in a tap</span></div>
-    </div></div>
+    <div class="band-list">
+      <div><b>Referred patients</b><span>with each report</span></div>
+      <div><b>Report status</b><span>as soon as it's signed</span></div>
+      <div><b>Statements</b><span>per patient, by date</span></div>
+    </div>
+  </div>
+  <div class="note">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M7 8h10v4a5 5 0 0 1-10 0zM12 17v5"/></svg>
+    <div><b>API or website integration</b><span>Integrations (results into your system, a booking link on your site) are set up by our team for approved partners — not self-service. <button class="linkish" data-chat="partner:api" style="font-size:14px">Tell us what you need →</button></span></div>
   </div>
 </div></section>
 
-<section class="alt" id="security"><div class="wrap">
-  <div class="head"><div class="eyebrow">Security &amp; data</div><h2>Patient data, handled with care.</h2><p class="lede">Built privacy-first for India, with your data hosted in-region.</p></div>
-  <div class="grid g4">
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div><h3>Role-based access</h3><p>Every user sees only what their role and center allow — enforced on the server.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div><h3>Full audit trail</h3><p>Who did what, when — across bills, results and approvals, for accountability.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg></div><h3>Hosted in India</h3><p>Databases and files run in Indian regions (Mumbai), keeping patient data in-country.</p></article>
-    <article class="card feat"><div class="feat-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Consent &amp; masking</h3><p>Patient consent is captured, and personal details are masked in AI prompts by default.</p></article>
-  </div>
-</div></section>
+</main>
 
-<section id="apps"><div class="wrap">
-  <div class="appwrap rev">
-    <div class="app-copy">
-      <div class="eyebrow">Staff &amp; doctor apps</div>
-      <h2 style="font-size:clamp(28px,3.2vw,40px);margin:14px 0 14px">The whole lab, on the phone in your hand.</h2>
-      <p class="lede">Reception, lab and finance run the same kiosk-simple app on Android or iOS — scan a prescription, bill, track samples and sign reports from the counter or a collection camp. Referring doctors get their own app for reports and referral statements.</p>
-      <div class="hero-chips" style="margin-top:22px">
-        <span class="pill pill-brand">Staff app</span><span class="pill pill-brand">Doctor app</span><span class="pill pill-brand">Patient app</span>
-      </div>
-      <p class="store-note">Available on iOS and Google Play</p>
-      <div class="stores">
-        <!-- Replace href="#" with the real App Store / Play Store links once the apps are published. -->
-        <a class="store" href="#" aria-label="Download on the App Store"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Download on the App Store"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M31.6 26.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-1.9-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.3.9-4.1 2.5-1.8 3.1-.5 7.7 1.2 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3 0 1.7-.8 3.3-.8s1.9.8 3.2.8 2.2-1.2 3-2.4c.6-.9.9-1.4 1.4-2.5-3.7-1.4-3.8-6.6 0-8.6zm-2.5-7c.7-.9 1.2-2 1-3.2-1 0-2.2.7-2.9 1.5-.7.8-1.3 2-1.1 3.2 1.1.1 2.2-.6 3-1.5z"/><text x="46" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">Download on the</text><text x="45" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">App Store</text></svg></a>
-        <a class="store" href="#" aria-label="Get it on Google Play"><svg class="badge" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Get it on Google Play"><rect width="150" height="50" rx="10" fill="#000"/><rect x=".5" y=".5" width="149" height="49" rx="9.5" fill="none" stroke="#374151"/><path fill="#fff" d="M18 15.4v19.2c0 .7.7 1.1 1.3.7l15.6-9.6c.5-.3.5-1.1 0-1.4L19.3 14.7c-.6-.4-1.3 0-1.3.7z"/><text x="43" y="21" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="500">GET IT ON</text><text x="42" y="38" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="16.5" font-weight="600" letter-spacing="-.02em">Google Play</text></svg></a>
-      </div>
-    </div>
-    <div class="phones">
-      <div class="phone back"><img src="assets/app-staff-bill.png" alt="Bill detail in the MedRelief staff app" loading="lazy"></div>
-      <div class="phone front"><img src="assets/app-staff-home.png" alt="The MedRelief staff app home screen" loading="lazy"></div>
-    </div>
-  </div>
-</div></section>
-
-<div class="cta" id="demo"><div class="wrap">
-  <div><h2>See MedRelief on your own prescriptions.</h2><p>We'll walk you through a live visit — scan to report — on your lab's real workflow, and talk through rollout for your centers.</p></div>
-  <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="mailto:hi@medrelief.co.in?subject=MedRelief%20platform%20demo" class="btn btn-pri">Request a demo</a><a href="mailto:hi@medrelief.co.in?subject=MedRelief%20enquiry" class="btn btn-gho">Email us</a></div>
-</div></div>
-
-</div><!-- /view b2b -->
-
-<!-- ============================ SHARED FOOTER ============================ -->
+<!-- ============================ FOOTER ============================ -->
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="foot-about">
-      <div class="logo"><img src="assets/mr-logo.png" alt="MedRelief" /><span><span class="logo-name">Med<span>Relief</span></span><span class="logo-sub">Diagnostics</span></span></div>
-      <p>A diagnostic laboratory serving Bihar Sharif and Nalanda — and the AI-first platform that runs it. Reports verified and signed by qualified pathologists, every time.</p>
-      <span class="pill pill-brand">A unit of Med Relief Healthcare Pvt Ltd</span>
+      <div class="logo"><img src="assets/mr-logo.png" alt="" /><span><span class="logo-name">Med<span>Relief</span></span><span class="logo-sub">Diagnostics</span></span></div>
+      <p>A diagnostic laboratory serving Bihar Sharif, Nalanda and Madhubani. Reports verified and signed by qualified pathologists, every time.</p>
     </div>
-    <div><h4>Patients</h4><div class="foot-links"><a data-go="patients" href="#tests">Tests &amp; prices</a><a data-go="patients" href="#track">Track a report</a><a data-go="patients" href="#book">Home collection</a><a data-go="patients" href="#locations">Centers</a></div></div>
-    <div><h4>Labs &amp; doctors</h4><div class="foot-links"><a data-go="b2b" href="#platform">The platform</a><a data-go="b2b" href="#doctors">Doctor portal</a><a data-go="b2b" href="#security">Security</a><a data-go="b2b" href="#demo">Request a demo</a></div></div>
-    <div><h4>Contact</h4><div class="foot-links"><a href="tel:+919263840556">+91 92638 40556</a><a href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a><a href="mailto:hi@medrelief.co.in">Partnerships</a></div></div>
+    <div><h4>Patients</h4><div class="foot-links"><button data-chat="home">Home collection</button><button data-chat="visit">Book a centre visit</button><button data-chat="track">Track a report</button><button data-chat="offers">Offers &amp; packages</button></div></div>
+    <div><h4>Partners</h4><div class="foot-links"><button data-go="b2b">Labs, doctors &amp; partners</button><button data-chat="partner:collect">Become a collection agent</button><a class="cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener">Partner login</a></div></div>
+    <div><h4>Contact</h4><div class="foot-links"><a class="cfg-tel cfg-phone" href="tel:+919263840556">+91 92638 40556</a><a class="cfg-mail cfg-email" href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a></div></div>
   </div>
   <div class="foot-bot">
     <span>© 2026 Med Relief Healthcare Pvt. Ltd. · Bihar Sharif, Nalanda, Bihar · CIN U85100BR2021PTC053162</span>
@@ -721,98 +463,120 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:56px 0 32px
   </div>
 </div></footer>
 
+</div><!-- /page -->
+
+<!-- ============================ ASSISTANT (always open) ============================ -->
+<aside id="mr-chat" class="mc" aria-label="MedRelief assistant">
+  <div class="mc-launch">
+    <button type="button" class="mc-launch-open">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span><b>Chat with MedRelief</b><small>Book a test, track a report, ask anything</small></span>
+    </button>
+    <a class="mc-launch-call cfg-tel" href="tel:+919263840556" aria-label="Call MedRelief"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg></a>
+  </div>
+  <div class="mc-panel">
+    <div class="mc-head">
+      <div class="mc-id">
+        <img src="assets/mr-logo.png" alt="" />
+        <div><b class="mc-title">MedRelief assistant</b><small><span class="mc-live"></span>Online · replies instantly</small></div>
+        <div class="sp">
+          <button type="button" class="mc-icbtn mc-restart" aria-label="Start over" title="Start over"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+          <button type="button" class="mc-icbtn mc-close" aria-label="Minimise chat" title="Minimise"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        </div>
+      </div>
+      <div class="mc-tabs" role="tablist" aria-label="Chat or call">
+        <button type="button" class="mc-tab on" data-tab="chat" role="tab" aria-selected="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</button>
+        <button type="button" class="mc-tab" data-tab="call" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg>Call an agent</button>
+      </div>
+    </div>
+    <div class="mc-chatpane">
+      <div class="mc-log" role="log" aria-live="polite" aria-label="Conversation"></div>
+      <form class="mc-form" autocomplete="off">
+        <input class="mc-input" type="text" enterkeyhint="send" placeholder="Type a message, or pick an option" aria-label="Message" maxlength="300" />
+        <button class="mc-send" type="submit" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+      </form>
+    </div>
+    <div class="mc-callpane" hidden>
+      <div class="mc-callcard">
+        <div class="eyebrow">Talk to our team</div>
+        <div class="big cfg-phone">+91 92638 40556</div>
+        <p>Book a home collection or a centre visit, ask about a report, or get help choosing tests.</p>
+        <a class="mc-btn mc-btn-pri cfg-tel" href="tel:+919263840556"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span>Call now</span></a>
+      </div>
+      <div class="mc-callcard">
+        <div class="eyebrow">Partnerships</div>
+        <p>Labs, doctors and collection agents can also write to <a class="cfg-mail cfg-email" href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a>.</p>
+      </div>
+      <button type="button" class="mc-btn" data-tab-back>Back to chat</button>
+    </div>
+  </div>
+</aside>
+</div><!-- /shell -->
+
+<script src="config.js"></script>
 <script>
 (function(){
+  var C = window.MR_CONFIG || {};
+  function inr(n){ return '₹' + Number(n).toLocaleString('en-IN'); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  // Contact details come from config.js so they're changed in one place.
+  document.querySelectorAll('.cfg-phone').forEach(function(e){ e.textContent = C.phoneDisplay; });
+  document.querySelectorAll('.cfg-tel').forEach(function(e){ e.href = 'tel:' + C.phone; });
+  document.querySelectorAll('.cfg-email').forEach(function(e){ e.textContent = C.email; });
+  document.querySelectorAll('.cfg-mail').forEach(function(e){ e.href = 'mailto:' + C.email; });
+  document.querySelectorAll('.cfg-portal').forEach(function(e){ e.href = C.apps.partnerPortal; });
+
+  // Offers ticker — rendered twice so the marquee loops seamlessly (second copy is hidden from AT).
+  var live = (C.campaigns || []).filter(function(c){ return c.active !== false; });
+  var tk = document.getElementById('ticker');
+  function offerHtml(c, dup){
+    var mrp = c.tests.reduce(function(s,t){ return s + t[1]; }, 0), save = mrp - c.price;
+    return '<button class="offer" data-chat="campaign:' + esc(c.code) + '"' + (dup ? ' tabindex="-1"' : '') + '>' +
+      '<span class="offer-tag">' + esc(c.tag || 'Offer') + '</span><b class="n">' + esc(c.name) + '</b>' +
+      '<small>' + c.tests.length + ' tests' + (c.fasting ? ' · fasting' : '') + '</small>' +
+      '<span class="offer-price"><b>' + inr(c.price) + '</b><s>' + inr(mrp) + '</s>' +
+      (save > 0 ? '<span class="save">Save ' + inr(save) + '</span>' : '') + '</span></button>';
+  }
+  if (live.length) {
+    tk.innerHTML = '<div style="display:flex;gap:14px">' + live.map(function(c){ return offerHtml(c); }).join('') + '</div>' +
+                   '<div style="display:flex;gap:14px" aria-hidden="true">' + live.map(function(c){ return offerHtml(c, true); }).join('') + '</div>';
+  } else { document.querySelector('.offers').hidden = true; }
+
+  // Centres
+  var cl = document.getElementById('centre-list');
+  var pin = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
+  var ph = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg>';
+  cl.innerHTML = (C.centres || []).map(function(x){
+    return '<article class="card loc"><div class="loc-top"><h3>' + esc(x.name) + '</h3><span class="pill">' + esc(x.tag || '') + '</span></div>' +
+      '<div class="loc-row">' + pin + '<span>' + esc(x.address) + '</span></div>' +
+      '<div class="loc-row">' + ph + '<span class="mono">' + x.phones.map(esc).join(' · ') + '</span></div>' +
+      '<div class="loc-act"><button class="btn btn-pri" data-chat="centre:' + esc(x.id) + '">Book a visit</button>' +
+      '<a class="btn btn-gho" href="tel:' + esc(x.phones[0].replace(/\s/g,'')) + '">Call</a></div></article>';
+  }).join('');
+
+  // Audience switch (patients default; #partners deep-links the partner view)
   var VIEWS = ['patients','b2b'];
-  function apply(view){
-    if(VIEWS.indexOf(view)<0) view='patients';
-    document.body.setAttribute('data-view',view);
-    // Toggle every element tagged with a data-aud to match the active view.
-    document.querySelectorAll('[data-aud]').forEach(function(el){
-      el.hidden = (el.getAttribute('data-aud')!==view);
-    });
-    document.querySelectorAll('.aud-btn').forEach(function(b){
-      var on = b.getAttribute('data-go')===view;
-      b.classList.toggle('active',on); b.setAttribute('aria-selected',on?'true':'false');
-    });
-    try{ localStorage.setItem('mr_view',view); }catch(e){}
+  function apply(view, fromUser){
+    if (VIEWS.indexOf(view) < 0) view = 'patients';
+    document.body.setAttribute('data-view', view);
+    document.querySelectorAll('[data-aud]').forEach(function(el){ el.hidden = el.getAttribute('data-aud') !== view; });
+    document.querySelectorAll('.aud-btn').forEach(function(b){ var on = b.getAttribute('data-go') === view; b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    try { localStorage.setItem('mr_view', view); } catch(e) {}
+    if (fromUser && window.MRChat) window.MRChat.setAudience(view);
   }
-  function go(view,scrollTop){
-    apply(view);
-    if(scrollTop){ window.scrollTo({top:0,behavior:'smooth'}); }
-  }
-  // Audience toggle buttons
-  document.querySelectorAll('.aud-btn').forEach(function(b){
-    b.addEventListener('click',function(){ go(b.getAttribute('data-go'),true); });
+  document.querySelectorAll('[data-go]').forEach(function(b){
+    b.addEventListener('click', function(){ apply(b.getAttribute('data-go'), true); window.scrollTo({ top: 0, behavior: 'smooth' }); });
   });
-  // Footer cross-links that also switch view before jumping to the anchor
-  document.querySelectorAll('a[data-go]').forEach(function(a){
-    a.addEventListener('click',function(){ apply(a.getAttribute('data-go')); });
-  });
-  // Initial view: URL hash (#b2b / #platform / #doctors / #demo / #flow / #security) → b2b, else stored, else patients
-  var b2bHashes=['#b2b','#platform','#flow','#doctors','#security','#demo','#top-b2b'];
-  var initial='patients';
-  try{ if(localStorage.getItem('mr_view')) initial=localStorage.getItem('mr_view'); }catch(e){}
-  if(b2bHashes.indexOf(location.hash)>=0) initial='b2b';
-  apply(initial);
+  var initial = 'patients';
+  try { if (localStorage.getItem('mr_view')) initial = localStorage.getItem('mr_view'); } catch(e) {}
+  if (/^#(partners|b2b|doctors|labs)$/.test(location.hash)) initial = 'b2b';
+  if (/^#(patients|top)$/.test(location.hash)) initial = 'patients';
+  apply(initial, false);
 
-  // ── APP STORE LINKS ───────────────────────────────────────────────────────
-  // Paste the real store URLs here once the apps are published, then re-deploy.
-  // Leave a value empty to keep that badge inert ("Coming soon"). The patient
-  // view badges point at the PATIENT app; the labs & doctors view badges at the
-  // STAFF/DOCTOR apps — fill whichever are live.
-  var STORE_LINKS = {
-    patients: { ios: "", play: "" },   // e.g. ios:"https://apps.apple.com/app/idXXXXXXXXXX", play:"https://play.google.com/store/apps/details?id=com.medrelief.patient"
-    b2b:      { ios: "", play: "" }    // e.g. the staff app's App Store / Play links
-  };
-  document.querySelectorAll('.store').forEach(function(a){
-    var host = a.closest('[data-aud]');
-    var view = host ? host.getAttribute('data-aud') : 'patients';
-    var set  = STORE_LINKS[view] || {};
-    var isPlay = (a.getAttribute('aria-label')||'').toLowerCase().indexOf('play') >= 0;
-    var url = isPlay ? set.play : set.ios;
-    if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; }
-    else { a.href = '#'; a.title = 'Coming soon'; a.style.cursor = 'default';
-           a.addEventListener('click', function(e){ e.preventDefault(); }); }
-  });
-
-  // ── Animated scan → autofill demo: loops while the section is on screen ──
-  (function(){
-    var demo = document.getElementById('scan-demo'); if(!demo) return;
-    var cam  = demo.querySelector('.dcam');
-    var form = demo.querySelector('.dform');
-    var rows = [].slice.call(demo.querySelectorAll('.frow'));
-    var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-    var timers = [], started = false;
-    function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
-    function clear(){ timers.forEach(clearTimeout); timers = []; }
-    function cycle(){
-      clear();
-      // back to camera: fade the (still-filled) form out, bring the scanner in
-      cam.classList.remove('hide'); cam.classList.add('scanning');
-      form.classList.add('hide');
-      if (reduce) {                                   // no motion: just show the filled result
-        rows.forEach(function(r){ r.classList.add('in'); });
-        cam.classList.add('hide'); form.classList.remove('hide'); form.classList.add('done');
-        return;
-      }
-      // reset the form only AFTER it has faded out, so the un-fill is never seen
-      at(540, function(){ rows.forEach(function(r){ r.classList.remove('in'); r.classList.remove('typing'); }); form.classList.remove('done'); });
-      // scan finished → reveal the empty form, then fill it field by field (cursor moves down)
-      at(3000, function(){ cam.classList.remove('scanning'); cam.classList.add('hide'); form.classList.remove('hide'); });
-      rows.forEach(function(r, i){ at(3350 + i*470, function(){
-        if (i > 0) rows[i-1].classList.remove('typing');
-        r.classList.add('in'); r.classList.add('typing');
-      }); });
-      at(3350 + rows.length*470 + 250, function(){ rows.forEach(function(r){ r.classList.remove('typing'); }); form.classList.add('done'); });
-      at(3350 + rows.length*470 + 2900, cycle);        // loop
-    }
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){ if (e.isIntersecting && !started){ started = true; cycle(); } });
-    }, { threshold: 0.35 });
-    io.observe(demo);
-  })();
+  document.querySelector('[data-tab-back]').addEventListener('click', function(){ document.querySelector('.mc-tab[data-tab="chat"]').click(); });
 })();
 </script>
+<script src="chat.js"></script>
 </body>
 </html>
