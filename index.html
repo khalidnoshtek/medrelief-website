@@ -3,173 +3,191 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>MedRelief Diagnostics</title>
-<meta name="description" content="MedRelief Diagnostics, Bihar Sharif (Nalanda) — book home sample collection or a centre visit in a chat, track your report, and get it on WhatsApp." />
-<meta name="theme-color" content="#0891B2" />
-<link rel="icon" href="assets/mr-logo.png" type="image/png" />
+<title>Med Relief Diagnostics</title>
+<meta name="description" content="Med Relief Diagnostics, Bihar Sharif (Nalanda) — book home sample collection or a centre visit in a chat, pay by UPI, and get your report on WhatsApp. हिंदी में भी।" />
+<meta name="theme-color" content="#86198F" />
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/brand/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon-180.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root{--brand:#0891B2;--brand-deep:#0E7490;--brandsoft:#ECFEFF;--ok:#059669;--oksoft:#ECFDF5;--warn:#B45309;--warnsoft:#FFFBEB;--bg:#FAFAF8;--cool:#EDF4F6;--card:#FFFFFF;--line:#E2E8F0;--ink:#0F172A;--muted:#64748B;--faint:#94A3B8;--shadow:0 1px 2px rgba(15,23,42,.04),0 12px 26px -18px rgba(15,23,42,.20);--chat-w:400px}
+/* Med Relief brand tokens: Plum v1.0 (brand kit, 1 Oct 2026). Status colours are for results only. */
+:root{
+  --mr-primary:#86198F;--mr-primary-deep:#701A75;--mr-primary-bright:#A21CAF;--mr-on-dark:#F0ABFC;--mr-tint:#FDF4FF;
+  --mr-ink:#0F172A;--mr-muted:#64748B;--mr-faint:#94A3B8;--mr-line:#E2E8F0;--mr-bg:#FAFAF8;--mr-white:#FFFFFF;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 14px 30px -20px rgba(112,26,117,.35);
+  --radius:20px;--chat-w:400px;
+  --font:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+}
+html[lang="hi"]{--font:'Mukta','Inter',ui-sans-serif,system-ui,sans-serif}
+html[lang="hi"] body{font-size:17px}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--card);-webkit-font-smoothing:antialiased;text-wrap:pretty}
-h1,h2,h3,h4{letter-spacing:-.025em;line-height:1.1}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font);color:var(--mr-ink);background:var(--mr-bg);-webkit-font-smoothing:antialiased;text-wrap:pretty;font-size:16px}
+h1,h2,h3,h4{letter-spacing:-.02em;line-height:1.12}
+html[lang="hi"] h1,html[lang="hi"] h2,html[lang="hi"] h3{letter-spacing:0;line-height:1.25}
 img{display:block;max-width:100%}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit}
-a{color:var(--brand-deep);text-decoration:none}
-a:hover{color:var(--brand)}
-:focus-visible{outline:3px solid rgba(8,145,178,.45);outline-offset:2px}
+a{color:var(--mr-primary);text-decoration:none}
+:focus-visible{outline:3px solid rgba(162,28,175,.45);outline-offset:2px}
 .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
-.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
-.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand)}
-.lede{color:var(--muted);font-size:clamp(16px,1.2vw,18px);line-height:1.6}
-.btn{display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 22px;border-radius:14px;font-size:15.5px;font-weight:600;border:1px solid transparent;cursor:pointer;white-space:nowrap}
-.btn-pri{background:var(--brand);color:#fff;box-shadow:0 10px 24px -12px rgba(8,145,178,.5)}
-.btn-pri:hover{background:var(--brand-deep);color:#fff}
-.btn-gho{background:var(--card);color:var(--ink);border-color:var(--line)}
-.btn-gho:hover{background:var(--bg);color:var(--ink)}
-.pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--brandsoft);color:var(--brand-deep)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+@media(min-width:720px){.wrap{padding:0 28px}}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mr-primary)}
+html[lang="hi"] .eyebrow{letter-spacing:.02em;font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:0 20px;border-radius:14px;font-size:15.5px;font-weight:600;border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.btn-pri{background:var(--mr-primary);color:#fff}
+.btn-pri:hover{background:var(--mr-primary-deep);color:#fff}
+.btn-gho{background:#fff;color:var(--mr-ink);border-color:var(--mr-line)}
+.btn-gho:hover{background:var(--mr-tint)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--mr-tint);color:var(--mr-primary-deep)}
+.card{background:#fff;border:1px solid var(--mr-line);border-radius:var(--radius);box-shadow:var(--shadow)}
 
 /* ---- shell: page + always-open assistant ---- */
-.shell{min-height:100vh}
-@media(min-width:1080px){
-  .shell{display:grid;grid-template-columns:minmax(0,1fr) var(--chat-w)}
+@media(min-width:1080px){.shell{display:grid;grid-template-columns:minmax(0,1fr) var(--chat-w)}}
+
+/* ---- header ---- */
+.hdr{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--mr-line)}
+.hdr .wrap{display:flex;align-items:center;gap:10px;min-height:62px}
+.hdr .logo img{height:34px;width:auto}
+.hdr-sp{flex:1}
+.seg{display:inline-flex;padding:3px;border-radius:999px;background:var(--mr-tint);border:1px solid rgba(134,25,143,.18)}
+.seg button{appearance:none;border:0;background:none;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--mr-primary-deep)}
+.seg button.on{background:var(--mr-primary);color:#fff}
+.seg .hi{font-family:'Mukta',sans-serif;font-size:15px}
+.icbtn{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;border:1px solid var(--mr-line);background:#fff;color:var(--mr-primary);flex:0 0 auto}
+.audbar{background:#fff;border-bottom:1px solid var(--mr-line)}
+.audbar .wrap{display:flex;gap:6px;padding-top:6px;padding-bottom:6px}
+.aud-btn{appearance:none;flex:1;border:0;background:none;cursor:pointer;min-height:38px;border-radius:11px;font-size:14px;font-weight:600;color:var(--mr-muted)}
+.aud-btn.active{background:var(--mr-tint);color:var(--mr-primary-deep)}
+@media(min-width:720px){.aud-btn{flex:0 0 auto;padding:0 16px}}
+
+/* ---- hero ---- */
+.hero{background:linear-gradient(160deg,var(--mr-primary) 0%,var(--mr-primary-deep) 100%);color:#fff;padding:26px 0 96px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-40px;width:260px;height:260px;border-radius:50%;background:rgba(240,171,252,.12)}
+.hero .eyebrow{color:var(--mr-on-dark)}
+.hero h1{font-size:clamp(30px,6.6vw,50px);margin:10px 0 12px;max-width:17ch;position:relative;z-index:1}
+.hero h1 em{font-style:normal;color:var(--mr-on-dark)}
+.hero p{color:rgba(255,255,255,.88);font-size:clamp(15.5px,2.2vw,18px);line-height:1.55;max-width:52ch;position:relative;z-index:1}
+html[lang="hi"] .hero p{font-size:18px}
+
+/* ---- actions ---- */
+.actions{margin-top:-74px;position:relative;z-index:2}
+.act-main{appearance:none;width:100%;text-align:left;cursor:pointer;display:flex;align-items:center;gap:14px;padding:18px;border-radius:22px;border:1px solid var(--mr-line);background:#fff;box-shadow:0 20px 40px -24px rgba(112,26,117,.55)}
+.act-ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--mr-primary);color:#fff;flex:0 0 auto}
+.act-main b{display:block;font-size:19px;font-weight:700;color:var(--mr-ink)}
+.act-main small{display:block;font-size:13.5px;color:var(--mr-muted);margin-top:3px;line-height:1.4}
+.act-main .go{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:var(--mr-primary);color:#fff;font-size:14px;font-weight:700;padding:10px 14px;border-radius:12px;white-space:nowrap}
+.act-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.act{appearance:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;min-height:98px;padding:12px 6px;border-radius:18px;border:1px solid var(--mr-line);background:#fff;box-shadow:var(--shadow);color:var(--mr-ink);font-size:14px;font-weight:600;line-height:1.2}
+.act .ai{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--mr-tint);color:var(--mr-primary)}
+.act:hover,.act-main:hover{border-color:rgba(134,25,143,.45)}
+.app-card{display:none}
+@media(hover:hover) and (pointer:fine){
+  .app-card{display:flex;align-items:center;gap:16px;margin-top:10px;padding:14px 16px}
+  .app-card img{width:92px;height:92px;border:1px solid var(--mr-line);border-radius:12px;padding:5px;background:#fff}
+  .app-card b{font-size:16px}
+  .app-card p{font-size:13.5px;color:var(--mr-muted);margin-top:3px}
 }
-
-/* ---- top bar + nav ---- */
-.topbar{background:var(--ink);color:#fff}
-.topbar .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;min-height:44px;font-size:13px;padding-top:6px;padding-bottom:6px}
-.tb-info{color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:8px}
-.tb-info b{color:#fff;font-weight:600}
-.aud{display:inline-flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px}
-.aud-btn{appearance:none;background:none;border:0;color:rgba(255,255,255,.72);font:600 12.5px 'Inter',sans-serif;padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
-.aud-btn:hover{color:#fff}
-.aud-btn.active{background:#fff;color:var(--ink)}
-nav{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;gap:16px;min-height:72px}
-.logo{display:flex;align-items:center;gap:12px}
-.logo img{width:42px;height:42px;object-fit:contain}
-.logo-name{font-size:20px;font-weight:800;color:var(--ink)}
-.logo-name span{color:var(--brand)}
-.logo-sub{display:block;font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-top:2px}
-.nav-call{margin-left:auto;height:44px;padding:0 16px;font-size:14.5px}
-
-/* ---- hero + action tiles ---- */
-.hero{background:linear-gradient(180deg,var(--cool),var(--card));border-bottom:1px solid var(--line)}
-.hero .wrap{padding-top:clamp(36px,5vw,64px);padding-bottom:clamp(36px,5vw,60px)}
-.hero h1{font-size:clamp(32px,4.2vw,52px);margin:14px 0 14px;max-width:18ch}
-.hero h1 em{font-style:normal;color:var(--brand)}
-.hero .lede{max-width:56ch}
-.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:30px}
-.tile{appearance:none;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:22px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);min-height:150px;transition:transform .15s,border-color .15s;color:var(--ink)}
-.tile:hover{transform:translateY(-2px);border-color:rgba(8,145,178,.45);color:var(--ink)}
-.tile-ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--brandsoft);color:var(--brand)}
-.tile b{font-size:18.5px;font-weight:700;letter-spacing:-.015em}
-.tile span.sub{font-size:14px;color:var(--muted);line-height:1.5}
-.tile .go{margin-top:auto;font-size:14px;font-weight:600;color:var(--brand);display:inline-flex;align-items:center;gap:6px}
-.tile.pri{background:var(--brand);border-color:var(--brand);color:#fff}
-.tile.pri .tile-ico{background:rgba(255,255,255,.18);color:#fff}
-.tile.pri span.sub{color:rgba(255,255,255,.86)}
-.tile.pri .go{color:#fff}
-.tile.pri:hover{color:#fff;border-color:var(--brand-deep)}
-.tile-app{flex-direction:row;align-items:center;gap:16px}
-.tile-app .tile-body{display:flex;flex-direction:column;gap:10px;flex:1;min-width:0;align-self:stretch}
-.tile-qr{width:104px;height:104px;border-radius:12px;border:1px solid var(--line);padding:6px;background:#fff;flex:0 0 auto}
-.only-touch{display:none}
-@media(hover:none) and (pointer:coarse){.only-touch{display:inline-flex}.no-touch{display:none!important}}
-.hero-foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+@media(max-width:380px){.act{font-size:13px;min-height:90px}.act-main{padding:14px;gap:12px}.act-main .go span{display:none}}
+@media(max-width:520px){.act-main .go{padding:10px 12px}}
 
 /* ---- offers ticker ---- */
-.offers{padding:clamp(40px,5vw,64px) 0 clamp(28px,4vw,44px)}
-.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px;margin-bottom:22px}
-.sec-head h2{font-size:clamp(24px,2.6vw,32px);margin-top:10px}
-.linkish{appearance:none;background:none;border:0;cursor:pointer;font-size:14.5px;font-weight:600;color:var(--brand);display:inline-flex;align-items:center;gap:6px}
-.ticker{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
-.ticker-track{display:flex;gap:14px;width:max-content;animation:tick 42s linear infinite;padding:4px 0 12px}
-.ticker:hover .ticker-track,.ticker:focus-within .ticker-track{animation-play-state:paused}
-@keyframes tick{to{transform:translateX(calc(-50% - 7px))}}
+section.block{padding:34px 0}
+@media(min-width:720px){section.block{padding:48px 0}}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}
+.sec-head h2{font-size:clamp(22px,3vw,30px);margin-top:6px}
+.linkish{appearance:none;background:none;border:0;cursor:pointer;font-size:14.5px;font-weight:600;color:var(--mr-primary);display:inline-flex;align-items:center;gap:5px;min-height:40px}
+.ticker{overflow:hidden;margin:0 -16px;padding:0 16px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
+.ticker-track{display:flex;gap:12px;width:max-content;animation:tick 40s linear infinite;padding:4px 0 14px}
+.ticker:hover .ticker-track,.ticker:focus-within .ticker-track,.ticker.hold .ticker-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(calc(-50% - 6px))}}
 @media(prefers-reduced-motion:reduce){.ticker{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.ticker-track{animation:none}.ticker-track [aria-hidden="true"]{display:none}}
-.offer{appearance:none;cursor:pointer;text-align:left;width:250px;flex:0 0 auto;display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:20px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);color:var(--ink);transition:border-color .15s}
-.offer:hover{border-color:rgba(8,145,178,.45);color:var(--ink)}
-.offer-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-deep);background:var(--brandsoft);padding:4px 9px;border-radius:999px}
+.offer{appearance:none;cursor:pointer;text-align:left;width:236px;flex:0 0 auto;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:18px;border:1px solid var(--mr-line);background:#fff;box-shadow:var(--shadow);color:var(--mr-ink)}
+.offer:hover{border-color:rgba(134,25,143,.45)}
+.offer-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--mr-primary);padding:4px 9px;border-radius:999px}
+html[lang="hi"] .offer-tag{text-transform:none;letter-spacing:0;font-size:12.5px}
 .offer b.n{font-size:17px;font-weight:700}
-.offer small{font-size:13px;color:var(--muted)}
-.offer-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
-.offer-price b{font-size:22px;font-weight:800;letter-spacing:-.02em}
-.offer-price s{color:var(--faint);font-size:14px}
-.save{font-size:12px;font-weight:700;color:var(--ok);background:var(--oksoft);padding:3px 8px;border-radius:999px}
+.offer small{font-size:13px;color:var(--mr-muted)}
+.offer-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.offer-price b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--mr-primary-deep)}
+.offer-price s{color:var(--mr-faint);font-size:14px}
+.save{font-size:12px;font-weight:700;color:var(--mr-primary-deep);background:var(--mr-tint);border:1px solid rgba(134,25,143,.2);padding:2px 8px;border-radius:999px}
 
 /* ---- trust + centres ---- */
-.trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg)}
-.trust .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px 28px;padding-top:28px;padding-bottom:28px}
-.trust-i{display:flex;gap:12px;align-items:flex-start}
-.trust-i svg{flex:0 0 auto;color:var(--brand);margin-top:2px}
-.trust-i b{display:block;font-size:15px}
-.trust-i span{font-size:13.5px;color:var(--muted);line-height:1.5}
-section.block{padding:clamp(44px,5.5vw,76px) 0}
-.grid{display:grid;gap:16px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
-.loc{padding:20px;display:flex;flex-direction:column;gap:10px}
+.trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:900px){.trust{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.trust-i{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:16px;background:#fff;border:1px solid var(--mr-line)}
+.trust-i svg{color:var(--mr-primary)}
+.trust-i b{font-size:14.5px;line-height:1.3}
+.trust-i span{font-size:13px;color:var(--mr-muted);line-height:1.45}
+.head{margin-bottom:16px}
+.head h2{font-size:clamp(22px,3vw,30px);margin-top:6px}
+.centres{display:grid;gap:10px}
+@media(min-width:720px){.centres{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.loc{padding:16px;display:flex;flex-direction:column;gap:8px}
 .loc-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.loc h3{font-size:18px}
-.loc-row{display:flex;gap:10px;font-size:14px;color:var(--muted);line-height:1.5}
-.loc-row svg{flex:0 0 auto;margin-top:2px;color:var(--brand)}
-.loc-act{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
-.loc-act .btn{height:42px;padding:0 15px;font-size:14px}
+.loc h3{font-size:17px}
+.loc-row{display:flex;gap:9px;font-size:14px;color:var(--mr-muted);line-height:1.45}
+.loc-row svg{flex:0 0 auto;margin-top:2px;color:var(--mr-primary)}
+.loc-act{display:flex;gap:8px;margin-top:4px}
+.loc-act .btn{min-height:44px;padding:0 14px;font-size:14px;flex:1}
 
 /* ---- partners view ---- */
-.p-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
-.p-card{padding:22px;display:flex;flex-direction:column;gap:10px}
-.p-ico{width:48px;height:48px;border-radius:14px;background:var(--brandsoft);color:var(--brand);display:grid;place-items:center}
-.p-card h3{font-size:18px}
-.p-card p{font-size:14.5px;color:var(--muted);line-height:1.6}
-.p-card .linkish{margin-top:auto;padding-top:6px;align-self:flex-start}
-.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.fstep{padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--card);border-top:4px solid var(--c)}
-.fnum{font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--c)}
-.fstep h4{font-size:16.5px;margin:10px 0 6px}
-.fstep p{font-size:14px;color:var(--muted);line-height:1.5}
-.benefits{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.ben{display:flex;gap:12px;align-items:flex-start;padding:4px 0}
-.ben svg{flex:0 0 auto;color:var(--ok);margin-top:2px}
-.ben b{display:block;font-size:15.5px}
-.ben span{font-size:14px;color:var(--muted);line-height:1.55}
-.band{background:var(--brand);color:#fff;border-radius:26px;padding:clamp(24px,3.4vw,40px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:center}
-.band h2{font-size:clamp(24px,2.6vw,32px);color:#fff}
-.band p{color:rgba(255,255,255,.88);font-size:16px;line-height:1.6;margin-top:12px}
-.band .btn-pri{background:#fff;color:var(--brand-deep)}
-.band .btn-pri:hover{background:var(--brandsoft);color:var(--brand-deep)}
-.band-list{display:grid;gap:2px}
-.band-list div{display:flex;justify-content:space-between;gap:12px;padding:12px 2px;border-bottom:1px solid rgba(255,255,255,.18);font-size:14px}
-.band-list div:last-child{border-bottom:0}
-.band-list span{color:rgba(255,255,255,.8)}
-.note{display:flex;gap:14px;align-items:flex-start;padding:20px 22px;border:1px dashed rgba(8,145,178,.45);border-radius:18px;background:var(--brandsoft);margin-top:18px}
-.note svg{flex:0 0 auto;color:var(--brand-deep);margin-top:2px}
-.note b{display:block;font-size:15.5px}
-.note span{font-size:14px;color:var(--brand-deep);line-height:1.55}
-.head{max-width:640px;margin-bottom:26px}
-.head h2{font-size:clamp(24px,2.8vw,34px);margin:12px 0 10px}
-.alt{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.p-hero{padding-bottom:40px}
+.p-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;position:relative;z-index:1}
+.p-cta .btn-pri{background:#fff;color:var(--mr-primary-deep)}
+.p-cta .btn-gho{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.p-cards{display:grid;gap:12px}
+@media(min-width:720px){.p-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.p-card{padding:18px;display:flex;flex-direction:column;gap:8px}
+.p-ico{width:46px;height:46px;border-radius:14px;background:var(--mr-tint);color:var(--mr-primary);display:grid;place-items:center}
+.p-card h3{font-size:17.5px}
+.p-card p{font-size:14.5px;color:var(--mr-muted);line-height:1.55}
+.p-card .linkish{margin-top:auto;align-self:flex-start}
+.flow{display:grid;gap:10px}
+@media(min-width:720px){.flow{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.fstep{padding:16px;border:1px solid var(--mr-line);border-radius:16px;background:#fff;border-top:4px solid var(--mr-primary)}
+.fnum{font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--mr-primary)}
+.fstep h4{font-size:16px;margin:8px 0 5px}
+.fstep p{font-size:14px;color:var(--mr-muted);line-height:1.5}
+.benefits{display:grid;gap:14px}
+@media(min-width:720px){.benefits{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ben{display:flex;gap:10px;align-items:flex-start}
+.ben svg{flex:0 0 auto;color:var(--mr-primary);margin-top:2px}
+.ben b{display:block;font-size:15px}
+.ben span{font-size:14px;color:var(--mr-muted);line-height:1.5}
+.band{background:var(--mr-primary-deep);color:#fff;border-radius:22px;padding:22px}
+.band h2{font-size:clamp(22px,3vw,28px);color:#fff}
+.band p{color:rgba(255,255,255,.86);font-size:15.5px;line-height:1.6;margin:10px 0 16px}
+.band .btn-pri{background:#fff;color:var(--mr-primary-deep)}
+.note{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px dashed rgba(134,25,143,.45);border-radius:16px;background:var(--mr-tint);margin-top:12px}
+.note svg{flex:0 0 auto;color:var(--mr-primary-deep);margin-top:2px}
+.note b{display:block;font-size:15px}
+.note span{font-size:14px;color:var(--mr-primary-deep);line-height:1.55}
 
 /* ---- footer ---- */
-footer{background:var(--bg);border-top:1px solid var(--line);padding:44px 0 28px;font-size:14px}
-.foot-grid{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(auto-fit,minmax(140px,1fr));gap:28px}
-.foot-grid h4{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
-.foot-links{display:grid;gap:10px}
-.foot-links a,.foot-links button{appearance:none;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--muted);font-weight:500;font-size:14px}
-.foot-links a:hover,.foot-links button:hover{color:var(--brand)}
-.foot-about p{color:var(--muted);line-height:1.65;margin:14px 0 0;max-width:40ch}
-.foot-bot{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;margin-top:34px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:13px}
+footer{background:var(--mr-primary-deep);color:rgba(255,255,255,.8);padding:32px 0 26px;font-size:14px}
+footer .flogo{height:34px;width:auto}
+.foot-grid{display:grid;gap:24px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.foot-about{grid-column:1/-1}
+@media(min-width:900px){.foot-grid{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr))}.foot-about{grid-column:auto}}
+.foot-grid h4{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mr-on-dark);margin-bottom:12px}
+html[lang="hi"] .foot-grid h4{letter-spacing:.02em;font-size:14px}
+.foot-links{display:grid;gap:4px}
+.foot-links a,.foot-links button{appearance:none;background:none;border:0;padding:6px 0;text-align:left;cursor:pointer;color:rgba(255,255,255,.86);font-weight:500;font-size:14px}
+.foot-links a:hover,.foot-links button:hover{color:#fff}
+.foot-about p{line-height:1.6;margin-top:12px;max-width:42ch}
+.foot-bot{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;margin-top:26px;padding-top:16px;border-top:1px solid rgba(255,255,255,.16);font-size:12.5px;color:rgba(255,255,255,.62)}
+.foot-bot a{color:rgba(255,255,255,.86)}
 
 /* ================= ASSISTANT ================= */
-.mc{--mc-h:100vh}
-.mc-panel{display:flex;flex-direction:column;background:var(--card);height:100%;min-height:0}
+.mc-panel{display:flex;flex-direction:column;background:#fff;height:100%;min-height:0}
 @media(min-width:1080px){
-  .mc{position:sticky;top:0;height:100vh;height:100dvh;border-left:1px solid var(--line);box-shadow:-18px 0 40px -34px rgba(15,23,42,.35);z-index:35}
+  .mc{position:sticky;top:0;height:100vh;height:100dvh;border-left:1px solid var(--mr-line);z-index:35}
   .mc-launch,.mc-close{display:none!important}
 }
 @media(max-width:1079.98px){
@@ -181,243 +199,207 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:44px 0 28px
 }
 .mc-launch{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;gap:8px}
 .mc.open .mc-launch{display:none}
-.mc-launch-open{flex:1;min-width:0;appearance:none;border:0;cursor:pointer;display:flex;align-items:center;gap:12px;height:60px;padding:0 16px;border-radius:18px;background:var(--brand);color:#fff;box-shadow:0 16px 30px -14px rgba(8,145,178,.7);text-align:left}
+.mc-launch-open{flex:1;min-width:0;appearance:none;border:0;cursor:pointer;display:flex;align-items:center;gap:12px;height:62px;padding:0 16px;border-radius:18px;background:var(--mr-primary);color:#fff;box-shadow:0 16px 30px -14px rgba(112,26,117,.8);text-align:left}
 .mc-launch-open b{display:block;font-size:15.5px}
-.mc-launch-open small{display:block;font-size:12.5px;color:rgba(255,255,255,.82)}
-.mc-launch-call{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;background:var(--ink);color:#fff;flex:0 0 auto;box-shadow:0 16px 30px -14px rgba(15,23,42,.6)}
-.mc-launch-call:hover{color:#fff}
-.mc-head{padding:14px 16px 12px;border-bottom:1px solid var(--line);background:var(--card)}
-.mc-id{display:flex;align-items:center;gap:11px}
-.mc-id img{width:36px;height:36px;object-fit:contain}
+.mc-launch-open small{display:block;font-size:12.5px;color:rgba(255,255,255,.84)}
+.mc-launch-call{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:var(--mr-ink);color:#fff;flex:0 0 auto}
+.mc-head{padding:12px 14px 10px;background:var(--mr-primary);color:#fff}
+.mc-id{display:flex;align-items:center;gap:10px}
+.mc-avatar{width:40px;height:40px;border-radius:12px;background:#fff;display:grid;place-items:center;flex:0 0 auto}
+.mc-avatar img{width:30px;height:auto}
 .mc-id b{display:block;font-size:15.5px}
-.mc-id small{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.mc-live{width:7px;height:7px;border-radius:50%;background:var(--ok)}
-.mc-icbtn{appearance:none;border:1px solid var(--line);background:var(--card);width:36px;height:36px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:0 0 auto}
-.mc-icbtn:hover{color:var(--ink);background:var(--bg)}
+.mc-id small{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.84)}
+.mc-live{width:7px;height:7px;border-radius:50%;background:#86EFAC}
+.mc-icbtn{appearance:none;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:#fff;flex:0 0 auto}
 .mc-id .sp{margin-left:auto;display:flex;gap:6px}
-.mc-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:12px;padding:4px;border-radius:13px;background:var(--bg);border:1px solid var(--line)}
-.mc-tab{appearance:none;border:0;background:none;cursor:pointer;height:36px;border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;gap:7px}
-.mc-tab.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.1)}
+.mc-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:10px;padding:4px;border-radius:13px;background:rgba(0,0,0,.16)}
+.mc-tab{appearance:none;border:0;background:none;cursor:pointer;min-height:38px;border-radius:10px;font-size:14px;font-weight:600;color:rgba(255,255,255,.85);display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.mc-tab.on{background:#fff;color:var(--mr-primary-deep)}
 .mc-chatpane{flex:1;min-height:0;display:flex;flex-direction:column}
-.mc-log{flex:1;min-height:0;overflow-y:auto;padding:16px 14px 10px;display:flex;flex-direction:column;gap:9px;background:var(--bg);overscroll-behavior:contain}
-.mc-msg{max-width:88%;font-size:14.5px;line-height:1.5;padding:10px 13px;border-radius:16px}
-.mc-bot{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:6px}
-.mc-me{align-self:flex-end;background:var(--brand);color:#fff;border-bottom-right-radius:6px;white-space:pre-wrap;word-break:break-word}
+.mc-log{flex:1;min-height:0;overflow-y:auto;padding:14px 12px 10px;display:flex;flex-direction:column;gap:9px;background:var(--mr-bg);overscroll-behavior:contain}
+.mc-msg{max-width:90%;font-size:15px;line-height:1.5;padding:10px 13px;border-radius:16px}
+html[lang="hi"] .mc-msg{font-size:16.5px}
+.mc-bot{align-self:flex-start;background:#fff;border:1px solid var(--mr-line);border-bottom-left-radius:6px}
+.mc-me{align-self:flex-end;background:var(--mr-primary);color:#fff;border-bottom-right-radius:6px;white-space:pre-wrap;word-break:break-word}
 .mc-wide{max-width:100%;width:100%;padding:0;background:none;border:0}
 .mc-typing{display:flex;gap:4px;padding:13px 14px}
-.mc-typing span{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:mcdot 1s infinite}
+.mc-typing span{width:6px;height:6px;border-radius:50%;background:var(--mr-faint);animation:mcdot 1s infinite}
 .mc-typing span:nth-child(2){animation-delay:.15s}.mc-typing span:nth-child(3){animation-delay:.3s}
 @keyframes mcdot{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-3px)}}
 .mc-chips{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 4px}
-.mc-chip{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 13px;border-radius:999px;border:1px solid rgba(8,145,178,.35);background:var(--card);color:var(--brand-deep);font-size:14px;font-weight:600;text-align:left;line-height:1.25}
-.mc-chip:hover{background:var(--brandsoft);color:var(--brand-deep)}
-.mc-chip-pri{background:var(--brand);border-color:var(--brand);color:#fff}
-.mc-chip-pri:hover{background:var(--brand-deep);color:#fff}
-.mc-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.mc-chip{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:9px 14px;border-radius:999px;border:1.5px solid rgba(134,25,143,.35);background:#fff;color:var(--mr-primary-deep);font-size:14.5px;font-weight:600;text-align:left;line-height:1.25}
+html[lang="hi"] .mc-chip{font-size:16px}
+.mc-chip:hover{background:var(--mr-tint)}
+.mc-chip-pri{background:var(--mr-primary);border-color:var(--mr-primary);color:#fff}
+.mc-chip-pri:hover{background:var(--mr-primary-deep);color:#fff}
+.mc-card{background:#fff;border:1px solid var(--mr-line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
 .mc-actions{display:flex;flex-wrap:wrap;gap:8px}
-.mc-btn{appearance:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;font-weight:600}
-.mc-btn:hover{background:var(--bg);color:var(--ink)}
-.mc-btn-pri{background:var(--brand);border-color:var(--brand);color:#fff}
-.mc-btn-pri:hover{background:var(--brand-deep);color:#fff}
+.mc-actions-col{flex-direction:column}
+.mc-btn{appearance:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:0 14px;border-radius:12px;border:1px solid var(--mr-line);background:#fff;color:var(--mr-ink);font-size:14.5px;font-weight:600}
+.mc-btn:hover{background:var(--mr-tint)}
+.mc-btn-pri{background:var(--mr-primary);border-color:var(--mr-primary);color:#fff}
+.mc-btn-pri:hover{background:var(--mr-primary-deep);color:#fff}
+.mc-btn-block{width:100%;min-height:52px;font-size:16px}
 .mc-btn:disabled{opacity:.45;cursor:default}
-.mc-btn-sm{min-height:36px;padding:0 12px;font-size:13px}
+.mc-btn-sm{min-height:38px;padding:0 12px;font-size:13.5px}
 .mc-offer-top{display:flex;justify-content:space-between;align-items:center}
-.mc-tag{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-deep);background:var(--brandsoft);padding:3px 8px;border-radius:999px}
-.mc-offer-n{font-size:12px;color:var(--muted);font-weight:600}
-.mc-offer-name{font-size:16.5px;font-weight:700}
-.mc-offer-blurb{font-size:13.5px;color:var(--muted);line-height:1.5}
+.mc-tag{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--mr-primary);padding:3px 8px;border-radius:999px}
+html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
+.mc-offer-n{font-size:12px;color:var(--mr-muted);font-weight:600}
+.mc-offer-name{font-size:17px;font-weight:700}
+.mc-offer-blurb{font-size:13.5px;color:var(--mr-muted);line-height:1.5}
 .mc-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
-.mc-price b{font-size:22px;font-weight:800;letter-spacing:-.02em}
-.mc-price s,.mc-line s,.mc-total s{color:var(--faint);font-size:13px}
-.mc-save{font-size:12px;font-weight:700;color:var(--ok);background:var(--oksoft);padding:3px 8px;border-radius:999px}
-.mc-details summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--brand-deep)}
-.mc-inc{list-style:none;display:grid;gap:0;margin-top:6px}
-.mc-inc li,.mc-inc-total{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--line)}
+.mc-price b{font-size:22px;font-weight:800;color:var(--mr-primary-deep)}
+.mc-price s,.mc-line s,.mc-total s,.mc-pick-row s{color:var(--mr-faint);font-size:13px}
+.mc-save{font-size:12px;font-weight:700;color:var(--mr-primary-deep);background:var(--mr-tint);border:1px solid rgba(134,25,143,.2);padding:2px 8px;border-radius:999px}
+.mc-details summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--mr-primary);min-height:32px;display:flex;align-items:center}
+.mc-inc{list-style:none;display:grid;margin-top:4px}
+.mc-inc li,.mc-inc-total{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:7px 0;border-bottom:1px solid var(--mr-line)}
 .mc-inc li:last-child{border-bottom:0}
-.mc-inc-total{border-top:1px solid var(--line);border-bottom:0;font-weight:700}
-.mc-inc-p{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);white-space:nowrap}
-.mc-note{font-size:12.5px;color:var(--warn);background:var(--warnsoft);border-radius:10px;padding:8px 10px;line-height:1.45}
+.mc-inc-total{border-top:1px solid var(--mr-line);border-bottom:0;font-weight:700}
+.mc-inc-p{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--mr-muted);white-space:nowrap}
+.mc-note{font-size:13px;color:var(--mr-primary-deep);background:var(--mr-tint);border-radius:10px;padding:9px 11px;line-height:1.45}
 .mc-pick{display:grid;gap:8px}
-.mc-pick-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:14px}
-.mc-pick-row b{display:block;font-size:14.5px}
-.mc-pick-row small{font-size:12.5px;color:var(--muted)}
-.mc-checks{display:grid;max-height:280px;overflow-y:auto}
-.mc-check{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px;cursor:pointer}
+.mc-pick-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;background:#fff;border:1px solid var(--mr-line);border-radius:14px}
+.mc-pick-row b{display:block;font-size:15px}
+.mc-pick-row small{font-size:12.5px;color:var(--mr-muted)}
+.mc-pick-row .mc-pp{display:inline;font-size:13px;color:var(--mr-primary-deep)}
+.mc-checks{display:grid;max-height:300px;overflow-y:auto}
+.mc-check{display:flex;align-items:center;gap:10px;min-height:46px;border-bottom:1px solid var(--mr-line);font-size:14.5px;cursor:pointer}
 .mc-check span:nth-child(2){flex:1}
-.mc-check input{width:18px;height:18px;accent-color:var(--brand)}
-.mc-checks-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px}
-.mc-summary .mc-sum-h{font-size:15.5px;font-weight:700}
-.mc-row{display:flex;justify-content:space-between;gap:14px;font-size:13.5px}
-.mc-row span{color:var(--muted);flex:0 0 auto}
+.mc-check input{width:20px;height:20px;accent-color:var(--mr-primary)}
+.mc-checks-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14.5px}
+.mc-summary .mc-sum-h{font-size:16px;font-weight:700;color:var(--mr-primary-deep)}
+.mc-row{display:flex;justify-content:space-between;gap:14px;font-size:14px}
+.mc-row span{color:var(--mr-muted);flex:0 0 auto}
 .mc-row b{font-weight:600;text-align:right}
-.mc-lines{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.mc-line{display:flex;justify-content:space-between;gap:10px;font-size:13.5px}
-.mc-total{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:600}
-.mc-total b{font-size:18px}
-.mc-muted{color:var(--muted);font-size:13px}
-.mc-consent{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--muted);line-height:1.45;cursor:pointer}
-.mc-consent input{width:18px;height:18px;flex:0 0 auto;margin-top:1px;accent-color:var(--brand)}
-.mc-pre{white-space:pre-wrap;font:500 12.5px/1.55 'JetBrains Mono',monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink)}
+.mc-lines{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--mr-line);border-bottom:1px solid var(--mr-line)}
+.mc-line{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.mc-total{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:700}
+.mc-total b{font-size:20px;color:var(--mr-primary-deep)}
+.mc-muted{color:var(--mr-muted);font-size:13px}
+.mc-consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--mr-muted);line-height:1.45;cursor:pointer}
+.mc-consent input{width:20px;height:20px;flex:0 0 auto;margin-top:1px;accent-color:var(--mr-primary)}
+.mc-pre{white-space:pre-wrap;font:500 12.5px/1.55 'JetBrains Mono',monospace;background:var(--mr-bg);border:1px solid var(--mr-line);border-radius:10px;padding:10px}
 .mc-step{display:flex;gap:10px;font-size:14px;line-height:1.5}
-.mc-num{width:24px;height:24px;border-radius:50%;background:var(--brandsoft);color:var(--brand-deep);display:grid;place-items:center;font-size:12px;font-weight:700;flex:0 0 auto}
-.mc-qr{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
-.mc-qr img{width:120px;height:120px;border:1px solid var(--line);border-radius:10px;padding:5px;background:#fff}
+.mc-num{width:24px;height:24px;border-radius:50%;background:var(--mr-tint);color:var(--mr-primary-deep);display:grid;place-items:center;font-size:12px;font-weight:700;flex:0 0 auto}
+.mc-qr{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--mr-muted)}
+.mc-qr img{width:120px;height:120px;border:1px solid var(--mr-line);border-radius:10px;padding:5px;background:#fff}
 .mc-soon{align-self:center}
 .mc-mono{font-family:'JetBrains Mono',monospace}
-.mc-form{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
-.mc-input{flex:1;min-width:0;height:46px;border:1px solid var(--line);border-radius:13px;padding:0 14px;font:500 15px 'Inter',sans-serif;color:var(--ink);background:var(--bg)}
-.mc-input:focus{outline:2px solid var(--brandsoft);border-color:var(--brand)}
-.mc-send{appearance:none;border:0;cursor:pointer;width:46px;height:46px;border-radius:13px;background:var(--brand);color:#fff;display:grid;place-items:center;flex:0 0 auto}
-.mc-send:hover{background:var(--brand-deep)}
-.mc-callpane{flex:1;min-height:0;overflow-y:auto;padding:26px 20px;display:flex;flex-direction:column;gap:16px;background:var(--bg)}
-.mc-callcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
-.mc-callcard .big{font:700 24px/1.2 'JetBrains Mono',monospace;letter-spacing:-.01em;color:var(--ink)}
-.mc-callcard p{font-size:14px;color:var(--muted);line-height:1.55}
-
-@media(max-width:560px){
-  .wrap{padding:0 16px}
-  .tiles{gap:10px}
-  .tile{padding:16px;min-height:0;border-radius:18px}
-  .tile b{font-size:16px}
-  .tile span.sub{font-size:13px}
-  .tile .go{display:none}
-  .tile-ico{width:40px;height:40px;border-radius:12px}
-  .tile-app{flex-direction:column;align-items:flex-start}
-  .tile-qr{display:none}
-  .band{grid-template-columns:1fr}
-  .topbar .tb-info{display:none}
-  .topbar .wrap{justify-content:center}
-  .nav-call span{display:none}
-  .nav-call{padding:0 13px}
-}
-@media(max-width:900px){.band{grid-template-columns:1fr}}
+.mc-form{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--mr-line);background:#fff}
+.mc-input{flex:1;min-width:0;height:48px;border:1px solid var(--mr-line);border-radius:13px;padding:0 14px;font:500 16px var(--font);color:var(--mr-ink);background:var(--mr-bg)}
+.mc-input:focus{outline:2px solid var(--mr-tint);border-color:var(--mr-primary)}
+.mc-send{appearance:none;border:0;cursor:pointer;width:48px;height:48px;border-radius:13px;background:var(--mr-primary);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+.mc-callpane{flex:1;min-height:0;overflow-y:auto;padding:22px 16px;display:flex;flex-direction:column;gap:14px;background:var(--mr-bg)}
+.mc-callcard{background:#fff;border:1px solid var(--mr-line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.mc-callcard .big{font:700 24px/1.2 'JetBrains Mono',monospace;color:var(--mr-ink)}
+.mc-callcard p{font-size:14.5px;color:var(--mr-muted);line-height:1.55}
 </style>
 </head>
 <body data-view="patients">
 <div class="shell">
 <div class="page">
 
-<div class="topbar"><div class="wrap">
-  <span class="tb-info" data-aud="patients"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg> Call to book <b class="cfg-phone">+91 92638 40556</b> · Bihar Sharif, Nalanda</span>
-  <span class="tb-info" data-aud="b2b" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> Partnerships <b class="cfg-email">hi@medrelief.co.in</b></span>
-  <div class="aud" role="tablist" aria-label="Choose audience">
-    <button class="aud-btn active" data-go="patients" role="tab" aria-selected="true">For patients</button>
-    <button class="aud-btn" data-go="b2b" role="tab" aria-selected="false">Labs, doctors &amp; partners</button>
+<header class="hdr"><div class="wrap">
+  <a href="#" class="logo" aria-label="Med Relief Diagnostics"><img src="assets/brand/medrelief-horizontal-descriptor-plum.svg" alt="Med Relief Diagnostics" width="173" height="35" /></a>
+  <span class="hdr-sp"></span>
+  <div class="seg" role="group" aria-label="Language / भाषा" data-aud="patients">
+    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" data-lang="hi" class="hi" aria-pressed="false">हिं</button>
   </div>
-</div></div>
-
-<nav><div class="wrap">
-  <a href="#" class="logo" aria-label="MedRelief — back to top">
-    <img src="assets/mr-logo.png" alt="" />
-    <span><span class="logo-name">Med<span>Relief</span></span><span class="logo-sub" data-aud="patients">Diagnostics</span><span class="logo-sub" data-aud="b2b" hidden>Partners</span></span>
-  </a>
-  <a class="btn btn-gho nav-call cfg-tel" href="tel:+919263840556" aria-label="Call MedRelief"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span class="cfg-phone">+91 92638 40556</span></a>
+  <a class="icbtn cfg-tel" href="tel:+919263840556" aria-label="Call Med Relief"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg></a>
+</div></header>
+<nav class="audbar" aria-label="Audience"><div class="wrap" role="tablist">
+  <button class="aud-btn active" data-go="patients" role="tab" aria-selected="true" data-i18n="aud_patients">Patients</button>
+  <button class="aud-btn" data-go="b2b" role="tab" aria-selected="false" data-i18n="aud_partners">Labs &amp; doctors</button>
 </div></nav>
 
 <!-- ============================ PATIENTS ============================ -->
 <main class="view" data-aud="patients">
-
 <header class="hero"><div class="wrap">
-  <div class="eyebrow">Diagnostics · Bihar Sharif, Nalanda</div>
-  <h1>Book a lab test in <em>a few taps</em>.</h1>
-  <p class="lede">Home sample collection or a centre visit — our assistant books it with you in the chat, and your pathologist-verified report arrives on WhatsApp.</p>
-
-  <div class="tiles">
-    <button class="tile pri" data-chat="home">
-      <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg></span>
-      <b>Home sample collection</b>
-      <span class="sub">A trained agent collects at your door. Nothing to pay until the sample is taken.</span>
-      <span class="go">Book in chat <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-    </button>
-    <button class="tile" data-chat="visit">
-      <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 11h4M12 9v4"/></svg></span>
-      <b>Schedule a centre visit</b>
-      <span class="sub">Pick a time at one of our centres and skip the queue.</span>
-      <span class="go">Pick a slot <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-    </button>
-    <button class="tile" data-chat="track">
-      <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
-      <b>Track my report</b>
-      <span class="sub">See where your report is, and get it on WhatsApp.</span>
-      <span class="go">Track <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-    </button>
-    <button class="tile tile-app" data-chat="app">
-      <span class="tile-body">
-        <span class="tile-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
-        <b>Get the patient app</b>
-        <span class="sub no-touch">Scan the code with your phone camera to install.</span>
-        <span class="sub only-touch">Every report in one place. Install on Android.</span>
-      </span>
-      <img class="tile-qr no-touch" src="assets/qr-patient-app.svg" alt="QR code: install the MedRelief patient app" width="104" height="104" />
-    </button>
-  </div>
-  <div class="hero-foot">
-    <span class="pill">Pathologist verified</span>
-    <span class="pill">Reports on WhatsApp</span>
-    <span class="pill">UPI · card · cash</span>
-  </div>
+  <div class="eyebrow" data-i18n="hero_eyebrow">Diagnostics · Bihar Sharif, Nalanda</div>
+  <h1 data-i18n-html="hero_h1">Lab tests, <em>booked in a chat</em>.</h1>
+  <p data-i18n="hero_lede">Book a home sample collection or a centre visit, pay by UPI, and get your pathologist-verified report on WhatsApp.</p>
 </div></header>
 
-<section class="offers" aria-labelledby="offers-h"><div class="wrap">
-  <div class="sec-head">
-    <div><div class="eyebrow">Health packages</div><h2 id="offers-h">Current offers</h2></div>
-    <button class="linkish" data-chat="offers">Compare all in chat <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+<div class="wrap actions">
+  <button class="act-main" data-chat="home">
+    <span class="act-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-6h6v6"/></svg></span>
+    <span><b data-i18n="tile_home_t">Home sample collection</b><small data-i18n="tile_home_s" data-km>Within 15 km of our Bihar Sharif lab · pay online by UPI</small></span>
+    <span class="go"><span data-i18n="tile_home_go">Book now</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+  </button>
+  <div class="act-row">
+    <button class="act" data-chat="visit"><span class="ai"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 11h4M12 9v4"/></svg></span><span data-i18n="tile_visit_t">Centre visit</span></button>
+    <button class="act" data-chat="track"><span class="ai"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><span data-i18n="tile_track_t">My report</span></button>
+    <button class="act" data-chat="app"><span class="ai"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span><span data-i18n="tile_app_t">Get the app</span></button>
   </div>
-  <div class="ticker"><div class="ticker-track" id="ticker"></div></div>
+  <div class="card app-card">
+    <img src="assets/qr-patient-app.svg" alt="QR code: install the Med Relief patient app" width="92" height="92" />
+    <div><b data-i18n="tile_app_t">Get the app</b><p data-i18n="tile_app_s">Scan with your phone camera to install the patient app.</p></div>
+  </div>
+</div>
+
+<section class="block" aria-labelledby="offers-h"><div class="wrap">
+  <div class="sec-head">
+    <div><div class="eyebrow" data-i18n="offers_eyebrow">Health packages</div><h2 id="offers-h" data-i18n="offers_h">Current offers</h2></div>
+    <button class="linkish" data-chat="offers"><span data-i18n="offers_all">Compare in chat</span> →</button>
+  </div>
+  <div class="ticker" id="ticker-wrap"><div class="ticker-track" id="ticker"></div></div>
 </div></section>
 
-<div class="trust"><div class="wrap">
-  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><path d="m9.5 10.5 1.8 1.8 3.4-3.4"/></svg><div><b>Pathologist verified</b><span>Every result reviewed and signed before it reaches you.</span></div></div>
-  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div><b>Reports on WhatsApp</b><span>The PDF lands on your phone as soon as it's signed.</span></div></div>
-  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><div><b>Most reports same day</b><span>Routine blood tests are usually reported the same day.</span></div></div>
-  <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg><div><b>Private by default</b><span>Your report goes only to your own number.</span></div></div>
-</div></div>
-
-<section class="block" id="centres" aria-labelledby="centres-h"><div class="wrap">
-  <div class="head"><div class="eyebrow">Our centres</div><h2 id="centres-h">Walk in, or book a slot.</h2></div>
-  <div class="grid g2" id="centre-list"></div>
+<section class="block" style="padding-top:0"><div class="wrap">
+  <div class="trust">
+    <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><path d="m9.5 10.5 1.8 1.8 3.4-3.4"/></svg><b data-i18n="trust_1_t">Pathologist verified</b><span data-i18n="trust_1_s"></span></div>
+    <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><b data-i18n="trust_2_t">Reports on WhatsApp</b><span data-i18n="trust_2_s"></span></div>
+    <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><b data-i18n="trust_3_t">Most reports same day</b><span data-i18n="trust_3_s"></span></div>
+    <div class="trust-i"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg><b data-i18n="trust_4_t">Private by default</b><span data-i18n="trust_4_s"></span></div>
+  </div>
 </div></section>
 
+<section class="block" style="padding-top:0" aria-labelledby="centres-h"><div class="wrap">
+  <div class="head"><div class="eyebrow" data-i18n="centres_eyebrow">Our centres</div><h2 id="centres-h" data-i18n="centres_h">Walk in, or book a slot.</h2></div>
+  <div class="centres" id="centre-list"></div>
+</div></section>
 </main>
 
-<!-- ============================ LABS, DOCTORS & PARTNERS ============================ -->
-<main class="view" data-aud="b2b" hidden>
-
-<header class="hero"><div class="wrap">
+<!-- ============================ LABS, DOCTORS & PARTNERS (English) ============================ -->
+<main class="view" data-aud="b2b" hidden lang="en">
+<header class="hero p-hero"><div class="wrap">
   <div class="eyebrow">For labs, doctors &amp; collection partners</div>
-  <h1>Partner with <em>MedRelief Diagnostics</em>.</h1>
-  <p class="lede">Refer patients, send us samples, or collect on our behalf. Every result is verified by a pathologist, the report comes back to you and your patient, and every submission can be tracked.</p>
-  <div class="hero-foot" style="margin-top:26px;gap:12px">
-    <button class="btn btn-pri" data-chat="partner">Become a partner <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+  <h1>Partner with <em>Med Relief Diagnostics</em>.</h1>
+  <p>Refer patients, send us samples, or collect on our behalf. Every result is verified by a pathologist, the report comes back to you and your patient, and every submission can be tracked.</p>
+  <div class="p-cta">
+    <button class="btn btn-pri" data-chat="partner">Become a partner</button>
     <a class="btn btn-gho cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener">Partner login</a>
   </div>
 </div></header>
 
 <section class="block"><div class="wrap">
   <div class="head"><div class="eyebrow">Ways to work with us</div><h2>Pick how you'd like to partner.</h2></div>
-  <div class="grid p-cards">
-    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h3>Refer patients</h3><p>Doctors and clinics refer patients for a centre visit or home collection. Verified reports reach you in the MedRelief doctor app, with a statement of every referral.</p><button class="linkish" data-chat="partner:refer">Talk to us →</button></article>
-    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-5 9a3 3 0 0 0 2.6 4.5h10.8A3 3 0 0 0 20 17l-5-9V2"/><path d="M8 2h8M7 14h10"/></svg></div><h3>Send samples to MedRelief</h3><p>Labs send us the tests they don't run in-house. We process them on connected analysers and return an integrated, pathologist-signed report.</p><button class="linkish" data-chat="partner:samples">Talk to us →</button></article>
+  <div class="p-cards">
+    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h3>Refer patients</h3><p>Doctors and clinics refer patients for a centre visit or home collection. Verified reports reach you in the Med Relief doctor app, with a statement of every referral.</p><button class="linkish" data-chat="partner:refer">Talk to us →</button></article>
+    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-5 9a3 3 0 0 0 2.6 4.5h10.8A3 3 0 0 0 20 17l-5-9V2"/><path d="M8 2h8M7 14h10"/></svg></div><h3>Send samples to Med Relief</h3><p>Labs send us the tests they don't run in-house. We process them on connected analysers and return an integrated, pathologist-signed report.</p><button class="linkish" data-chat="partner:samples">Talk to us →</button></article>
     <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h2l3 11.5M5.5 17.5 9 10h6l-3 7.5"/></svg></div><h3>Use our collection agents</h3><p>Our trained agents pick up samples from your clinic or your patients' homes and bring them to our lab — barcoded and tracked.</p><button class="linkish" data-chat="partner:agents">Talk to us →</button></article>
-    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div><h3>Become a collection agent</h3><p>Collect samples on MedRelief's behalf — you don't run the tests. Get assignments and addresses in our app and hand samples over to our lab.</p><button class="linkish" data-chat="partner:collect">Talk to us →</button></article>
+    <article class="card p-card"><div class="p-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div><h3>Become a collection agent</h3><p>Collect samples on Med Relief's behalf — you don't run the tests. Get assignments and addresses in our app and hand samples over to our lab.</p><button class="linkish" data-chat="partner:collect">Talk to us →</button></article>
   </div>
 </div></section>
 
-<section class="block alt"><div class="wrap">
+<section class="block" style="padding-top:0"><div class="wrap">
   <div class="head"><div class="eyebrow">How it works</div><h2>From referral to report.</h2></div>
   <div class="flow">
-    <div class="fstep" style="--c:#64748B"><div class="fnum">STEP 01</div><h4>Refer or collect</h4><p>Refer a patient, or hand over the samples you've collected.</p></div>
-    <div class="fstep" style="--c:#0891B2"><div class="fnum">STEP 02</div><h4>Reaches our lab</h4><p>Picked up by our collection agent or dropped at a centre — barcoded on the way in.</p></div>
-    <div class="fstep" style="--c:#D97706"><div class="fnum">STEP 03</div><h4>Tested &amp; verified</h4><p>Run on connected analysers; every result signed by a pathologist.</p></div>
-    <div class="fstep" style="--c:#059669"><div class="fnum">STEP 04</div><h4>Report to both</h4><p>An integrated report reaches you and your patient, and the submission is closed out.</p></div>
+    <div class="fstep"><div class="fnum">STEP 01</div><h4>Refer or collect</h4><p>Refer a patient, or hand over the samples you've collected.</p></div>
+    <div class="fstep"><div class="fnum">STEP 02</div><h4>Reaches our lab</h4><p>Picked up by our collection agent or dropped at a centre — barcoded on the way in.</p></div>
+    <div class="fstep"><div class="fnum">STEP 03</div><h4>Tested &amp; verified</h4><p>Run on connected analysers; every result signed by a pathologist.</p></div>
+    <div class="fstep"><div class="fnum">STEP 04</div><h4>Report to both</h4><p>An integrated report reaches you and your patient, and the submission is closed out.</p></div>
   </div>
 </div></section>
 
-<section class="block"><div class="wrap">
+<section class="block" style="padding-top:0"><div class="wrap">
   <div class="head"><div class="eyebrow">What you get</div><h2>Service you can build on.</h2></div>
-  <div class="grid benefits">
+  <div class="benefits">
     <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Pathologist verified</b><span>Never auto-released from the analyser.</span></div></div>
-    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Connected analysers</b><span>Results flow straight from the machine into the report — no re-typing.</span></div></div>
+    <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Connected analysers</b><span>Results flow straight from the machine into the report.</span></div></div>
     <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Digital reports</b><span>In the partner app and on the patient's WhatsApp.</span></div></div>
     <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Pickup by our agents</b><span>From your clinic or the patient's home.</span></div></div>
     <div class="ben"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><div><b>Clear statements</b><span>Date-filtered statements of every referral.</span></div></div>
@@ -427,138 +409,148 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:44px 0 28px
 
 <section class="block" style="padding-top:0"><div class="wrap">
   <div class="band">
-    <div>
-      <h2>Track every submission.</h2>
-      <p>Doctors and corporate partners follow their referrals and reports in the MedRelief partner portal. Lab and collection partners get tracking access when they're onboarded.</p>
-      <a class="btn btn-pri cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener" style="margin-top:20px">Partner login</a>
-    </div>
-    <div class="band-list">
-      <div><b>Referred patients</b><span>with each report</span></div>
-      <div><b>Report status</b><span>as soon as it's signed</span></div>
-      <div><b>Statements</b><span>per patient, by date</span></div>
-    </div>
+    <h2>Track every submission.</h2>
+    <p>Doctors and corporate partners follow their referrals and reports in the Med Relief partner portal. Lab and collection partners get tracking access when they're onboarded.</p>
+    <a class="btn btn-pri cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener">Partner login</a>
   </div>
   <div class="note">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M7 8h10v4a5 5 0 0 1-10 0zM12 17v5"/></svg>
-    <div><b>API or website integration</b><span>Integrations (results into your system, a booking link on your site) are set up by our team for approved partners — not self-service. <button class="linkish" data-chat="partner:api" style="font-size:14px">Tell us what you need →</button></span></div>
+    <div><b>API or website integration</b><span>Set up by our team for approved partners — not self-service. <button class="linkish" data-chat="partner:api" style="min-height:0;font-size:14px">Tell us what you need →</button></span></div>
   </div>
 </div></section>
-
 </main>
 
-<!-- ============================ FOOTER ============================ -->
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="foot-about">
-      <div class="logo"><img src="assets/mr-logo.png" alt="" /><span><span class="logo-name">Med<span>Relief</span></span><span class="logo-sub">Diagnostics</span></span></div>
-      <p>A diagnostic laboratory serving Bihar Sharif, Nalanda and Madhubani. Reports verified and signed by qualified pathologists, every time.</p>
+      <img class="flogo" src="assets/brand/medrelief-horizontal-white.svg" alt="Med Relief" width="168" height="34" />
+      <p data-i18n="footer_about">A diagnostic laboratory serving Bihar Sharif, Nalanda and Madhubani.</p>
     </div>
-    <div><h4>Patients</h4><div class="foot-links"><button data-chat="home">Home collection</button><button data-chat="visit">Book a centre visit</button><button data-chat="track">Track a report</button><button data-chat="offers">Offers &amp; packages</button></div></div>
-    <div><h4>Partners</h4><div class="foot-links"><button data-go="b2b">Labs, doctors &amp; partners</button><button data-chat="partner:collect">Become a collection agent</button><a class="cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener">Partner login</a></div></div>
-    <div><h4>Contact</h4><div class="foot-links"><a class="cfg-tel cfg-phone" href="tel:+919263840556">+91 92638 40556</a><a class="cfg-mail cfg-email" href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a></div></div>
+    <div><h4 data-i18n="f_patients">Patients</h4><div class="foot-links"><button data-chat="home" data-i18n="f_home">Home collection</button><button data-chat="visit" data-i18n="f_visit">Book a centre visit</button><button data-chat="track" data-i18n="f_track">Track a report</button><button data-chat="offers" data-i18n="f_offers">Offers &amp; packages</button></div></div>
+    <div><h4 data-i18n="f_partners">Partners</h4><div class="foot-links"><button data-go="b2b" data-i18n="f_labs">Labs, doctors &amp; partners</button><button data-chat="partner:collect" data-i18n="f_agent">Become a collection agent</button><a class="cfg-portal" href="https://doctor.medlab.noshtek.ai" target="_blank" rel="noopener" data-i18n="f_login">Partner login</a></div></div>
+    <div><h4 data-i18n="f_contact">Contact</h4><div class="foot-links"><a class="cfg-tel cfg-phone" href="tel:+919263840556">+91 92638 40556</a><a class="cfg-mail cfg-email" href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a></div></div>
   </div>
   <div class="foot-bot">
     <span>© 2026 Med Relief Healthcare Pvt. Ltd. · Bihar Sharif, Nalanda, Bihar · CIN U85100BR2021PTC053162</span>
-    <span><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a></span>
+    <span><a href="privacy.html" data-i18n="privacy">Privacy Policy</a> · <a href="terms.html" data-i18n="terms">Terms of Use</a></span>
   </div>
 </div></footer>
-
 </div><!-- /page -->
 
 <!-- ============================ ASSISTANT (always open) ============================ -->
-<aside id="mr-chat" class="mc" aria-label="MedRelief assistant">
+<aside id="mr-chat" class="mc" aria-label="Med Relief assistant">
   <div class="mc-launch">
     <button type="button" class="mc-launch-open">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span><b>Chat with MedRelief</b><small>Book a test, track a report, ask anything</small></span>
+      <span><b data-i18n="launch_t">Chat with Med Relief</b><small data-i18n="launch_s">Book, pay and track — all here</small></span>
     </button>
-    <a class="mc-launch-call cfg-tel" href="tel:+919263840556" aria-label="Call MedRelief"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg></a>
+    <a class="mc-launch-call cfg-tel" href="tel:+919263840556" aria-label="Call Med Relief"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg></a>
   </div>
   <div class="mc-panel">
     <div class="mc-head">
       <div class="mc-id">
-        <img src="assets/mr-logo.png" alt="" />
-        <div><b class="mc-title">MedRelief assistant</b><small><span class="mc-live"></span>Online · replies instantly</small></div>
+        <span class="mc-avatar"><img src="assets/brand/medrelief-mark-plum.svg" alt="" /></span>
+        <div><b class="mc-title">Med Relief assistant</b><small><span class="mc-live"></span><span data-i18n="chat_status">Online · replies instantly</span></small></div>
         <div class="sp">
-          <button type="button" class="mc-icbtn mc-restart" aria-label="Start over" title="Start over"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
-          <button type="button" class="mc-icbtn mc-close" aria-label="Minimise chat" title="Minimise"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+          <button type="button" class="mc-icbtn mc-restart" aria-label="Start over" data-i18n-aria="restart"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+          <button type="button" class="mc-icbtn mc-close" aria-label="Minimise" data-i18n-aria="minimise"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
         </div>
       </div>
-      <div class="mc-tabs" role="tablist" aria-label="Chat or call">
-        <button type="button" class="mc-tab on" data-tab="chat" role="tab" aria-selected="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</button>
-        <button type="button" class="mc-tab" data-tab="call" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg>Call an agent</button>
+      <div class="mc-tabs" role="tablist">
+        <button type="button" class="mc-tab on" data-tab="chat" role="tab" aria-selected="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span data-i18n="tab_chat">Chat</span></button>
+        <button type="button" class="mc-tab" data-tab="call" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span data-i18n="tab_call">Call an agent</span></button>
       </div>
     </div>
     <div class="mc-chatpane">
-      <div class="mc-log" role="log" aria-live="polite" aria-label="Conversation"></div>
+      <div class="mc-log" role="log" aria-live="polite"></div>
       <form class="mc-form" autocomplete="off">
-        <input class="mc-input" type="text" enterkeyhint="send" placeholder="Type a message, or pick an option" aria-label="Message" maxlength="300" />
+        <input class="mc-input" type="text" enterkeyhint="send" aria-label="Message" maxlength="300" />
         <button class="mc-send" type="submit" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
       </form>
     </div>
     <div class="mc-callpane" hidden>
       <div class="mc-callcard">
-        <div class="eyebrow">Talk to our team</div>
+        <div class="eyebrow" data-i18n="call_eyebrow">Talk to our team</div>
         <div class="big cfg-phone">+91 92638 40556</div>
-        <p>Book a home collection or a centre visit, ask about a report, or get help choosing tests.</p>
-        <a class="mc-btn mc-btn-pri cfg-tel" href="tel:+919263840556"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg><span>Call now</span></a>
+        <p data-i18n="call_p">Book a home collection or a centre visit, ask about a report, or get help choosing tests.</p>
+        <a class="mc-btn mc-btn-pri cfg-tel" href="tel:+919263840556"><span data-i18n="call_now">Call now</span></a>
       </div>
-      <div class="mc-callcard">
-        <div class="eyebrow">Partnerships</div>
-        <p>Labs, doctors and collection agents can also write to <a class="cfg-mail cfg-email" href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a>.</p>
-      </div>
-      <button type="button" class="mc-btn" data-tab-back>Back to chat</button>
+      <div class="mc-callcard"><p><span data-i18n="partners_mail">Labs, doctors and collection agents can also write to</span> <a class="cfg-mail cfg-email" href="mailto:hi@medrelief.co.in">hi@medrelief.co.in</a></p></div>
+      <button type="button" class="mc-btn" data-tab-back><span data-i18n="back_chat">Back to chat</span></button>
     </div>
   </div>
 </aside>
 </div><!-- /shell -->
 
-<script src="config.js"></script>
+<script src="config.js?v=20261001"></script>
+<script src="i18n.js?v=20261001"></script>
 <script>
 (function(){
-  var C = window.MR_CONFIG || {};
+  var C = window.MR_CONFIG || {}, t = window.MR_T;
+  var KM = (C.homeCollection && C.homeCollection.radiusKm) || 15;
   function inr(n){ return '₹' + Number(n).toLocaleString('en-IN'); }
   function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function hi(){ return window.MR_LANG() === 'hi'; }
 
-  // Contact details come from config.js so they're changed in one place.
   document.querySelectorAll('.cfg-phone').forEach(function(e){ e.textContent = C.phoneDisplay; });
   document.querySelectorAll('.cfg-tel').forEach(function(e){ e.href = 'tel:' + C.phone; });
   document.querySelectorAll('.cfg-email').forEach(function(e){ e.textContent = C.email; });
   document.querySelectorAll('.cfg-mail').forEach(function(e){ e.href = 'mailto:' + C.email; });
   document.querySelectorAll('.cfg-portal').forEach(function(e){ e.href = C.apps.partnerPortal; });
 
-  // Offers ticker — rendered twice so the marquee loops seamlessly (second copy is hidden from AT).
-  var live = (C.campaigns || []).filter(function(c){ return c.active !== false; });
-  var tk = document.getElementById('ticker');
-  function offerHtml(c, dup){
-    var mrp = c.tests.reduce(function(s,t){ return s + t[1]; }, 0), save = mrp - c.price;
-    return '<button class="offer" data-chat="campaign:' + esc(c.code) + '"' + (dup ? ' tabindex="-1"' : '') + '>' +
-      '<span class="offer-tag">' + esc(c.tag || 'Offer') + '</span><b class="n">' + esc(c.name) + '</b>' +
-      '<small>' + c.tests.length + ' tests' + (c.fasting ? ' · fasting' : '') + '</small>' +
-      '<span class="offer-price"><b>' + inr(c.price) + '</b><s>' + inr(mrp) + '</s>' +
-      (save > 0 ? '<span class="save">Save ' + inr(save) + '</span>' : '') + '</span></button>';
-  }
-  if (live.length) {
-    tk.innerHTML = '<div style="display:flex;gap:14px">' + live.map(function(c){ return offerHtml(c); }).join('') + '</div>' +
-                   '<div style="display:flex;gap:14px" aria-hidden="true">' + live.map(function(c){ return offerHtml(c, true); }).join('') + '</div>';
-  } else { document.querySelector('.offers').hidden = true; }
-
-  // Centres
-  var cl = document.getElementById('centre-list');
   var pin = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
   var ph = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5c0-1 1-2 2-2h2l2 4-2 1a12 12 0 0 0 6 6l1-2 4 2v2c0 1-1 2-2 2A16 16 0 0 1 4 5z"/></svg>';
-  cl.innerHTML = (C.centres || []).map(function(x){
-    return '<article class="card loc"><div class="loc-top"><h3>' + esc(x.name) + '</h3><span class="pill">' + esc(x.tag || '') + '</span></div>' +
-      '<div class="loc-row">' + pin + '<span>' + esc(x.address) + '</span></div>' +
-      '<div class="loc-row">' + ph + '<span class="mono">' + x.phones.map(esc).join(' · ') + '</span></div>' +
-      '<div class="loc-act"><button class="btn btn-pri" data-chat="centre:' + esc(x.id) + '">Book a visit</button>' +
-      '<a class="btn btn-gho" href="tel:' + esc(x.phones[0].replace(/\s/g,'')) + '">Call</a></div></article>';
-  }).join('');
+  var hom = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+
+  function renderDynamic(){
+    // Offers ticker — rendered twice so the marquee loops seamlessly (copy 2 hidden from AT).
+    var live = (C.campaigns || []).filter(function(c){ return c.active !== false; });
+    var tk = document.getElementById('ticker');
+    function offer(c, dup){
+      var mrp = c.tests.reduce(function(s,x){ return s + x[1]; }, 0), save = mrp - c.price;
+      var name = (hi() && c.name_hi) || c.name, tag = (hi() && c.tag_hi) || c.tag || 'Offer';
+      return '<button class="offer" data-chat="campaign:' + esc(c.code) + '"' + (dup ? ' tabindex="-1"' : '') + '>' +
+        '<span class="offer-tag">' + esc(tag) + '</span><b class="n">' + esc(name) + '</b>' +
+        '<small>' + t('tests_n', { n: c.tests.length }) + (c.fasting ? ' · ' + t('fasting_short') : '') + '</small>' +
+        '<span class="offer-price"><b>' + inr(c.price) + '</b><s>' + inr(mrp) + '</s>' +
+        (save > 0 ? '<span class="save">' + t('save') + ' ' + inr(save) + '</span>' : '') + '</span></button>';
+    }
+    tk.innerHTML = live.length
+      ? '<div style="display:flex;gap:12px">' + live.map(function(c){ return offer(c); }).join('') + '</div><div style="display:flex;gap:12px" aria-hidden="true">' + live.map(function(c){ return offer(c, true); }).join('') + '</div>'
+      : '';
+    // Centres
+    document.getElementById('centre-list').innerHTML = (C.centres || []).map(function(x, i){
+      var home = C.homeCollection && C.homeCollection.lab && C.homeCollection.lab.name === x.name;
+      return '<article class="card loc"><div class="loc-top"><h3>' + esc(x.name) + '</h3>' + (i === 0 ? '<span class="pill">' + t('main_lab') + '</span>' : '') + '</div>' +
+        '<div class="loc-row">' + pin + '<span>' + esc(x.address) + '</span></div>' +
+        '<div class="loc-row">' + ph + '<span class="mono">' + x.phones.map(esc).join(' · ') + '</span></div>' +
+        (home ? '<div class="loc-row">' + hom + '<span>' + t('home_radius_note', { km: KM }) + '</span></div>' : '') +
+        '<div class="loc-act"><button class="btn btn-pri" data-chat="centre:' + esc(x.id) + '">' + t('book_visit') + '</button>' +
+        '<a class="btn btn-gho" href="tel:' + esc(x.phones[0].replace(/\s/g,'')) + '">' + t('call') + '</a></div></article>';
+    }).join('');
+  }
+  function applyLang(){
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      if (el.closest('main[lang="en"]')) return; // partner view stays English
+      el.textContent = el.hasAttribute('data-km') ? t(el.getAttribute('data-i18n'), { km: KM }) : t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el){ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){ el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+    document.querySelectorAll('[data-lang]').forEach(function(b){ var on = b.getAttribute('data-lang') === window.MR_LANG(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    renderDynamic();
+  }
+  document.querySelectorAll('[data-lang]').forEach(function(b){ b.addEventListener('click', function(){ window.MR_SET_LANG(b.getAttribute('data-lang')); }); });
+  document.addEventListener('mr:lang', applyLang);
+  applyLang();
+
+  // Hold the ticker while a finger is on it so a tap lands on the card it aimed for.
+  var tw = document.getElementById('ticker-wrap');
+  tw.addEventListener('touchstart', function(){ tw.classList.add('hold'); }, { passive: true });
+  tw.addEventListener('touchend', function(){ setTimeout(function(){ tw.classList.remove('hold'); }, 1200); });
 
   // Audience switch (patients default; #partners deep-links the partner view)
-  var VIEWS = ['patients','b2b'];
   function apply(view, fromUser){
-    if (VIEWS.indexOf(view) < 0) view = 'patients';
+    if (view !== 'b2b') view = 'patients';
     document.body.setAttribute('data-view', view);
     document.querySelectorAll('[data-aud]').forEach(function(el){ el.hidden = el.getAttribute('data-aud') !== view; });
     document.querySelectorAll('.aud-btn').forEach(function(b){ var on = b.getAttribute('data-go') === view; b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
@@ -577,6 +569,6 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:44px 0 28px
   document.querySelector('[data-tab-back]').addEventListener('click', function(){ document.querySelector('.mc-tab[data-tab="chat"]').click(); });
 })();
 </script>
-<script src="chat.js"></script>
+<script src="chat.js?v=20261001"></script>
 </body>
 </html>
