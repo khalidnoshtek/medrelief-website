@@ -24,6 +24,7 @@
   // Razorpay TEST-mode checkout when the backend only has test keys. Bannered, no real
   // money; ordinary visitors never see it.
   var TEST = false;
+  var API_OK = false;       // the booking API answered — returning-patient lookup available
   try {
     var tp = new URLSearchParams(location.search).get('testpay');
     if (tp === '1') sessionStorage.setItem('mr_testpay', '1');
@@ -35,6 +36,7 @@
     fetch(API + '/public/home-collection/status', { headers: { Accept: 'application/json' } })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (r) {
+        API_OK = !!r;
         TEST = !!(r && !r.online_payment && r.test_payment && wantTest);
         ONLINE = !!(r && r.online_payment) || TEST;
         window.MR_ONLINE = ONLINE;
@@ -113,6 +115,8 @@
   var expect = null;           // { placeholder, type, validate(v) -> error|null, then(v) }
   var B = {};                  // current booking / lead draft
   var queue = Promise.resolve();
+  // The step on screen now, so a language switch can re-ask it without losing the draft.
+  var resume = null;
   var gen = 0;                 // bumped on reset so a flow still 'typing' can't leak into the next one
   function later(fn) { var g = gen; queue = queue.then(function () { if (g === gen) return fn(); }); return queue; }
 
@@ -208,6 +212,7 @@
     return all.filter(function (s) { return s.start > now.getHours() + 1; });
   }
   function pickDay(kind, then) {
+    resume = function () { pickDay(kind, then); };
     var days = [], n = (C.slots && C.slots.daysAhead) || 3;
     for (var i = 0; i <= n; i++) {
       var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + i);
@@ -219,6 +224,7 @@
     }));
   }
   function pickSlot(kind, d, then) {
+    resume = function () { pickSlot(kind, d, then); };
     bot(t('ask_slot'));
     choose(slotsFor(kind, d).map(function (s) { return { l: s.label, go: function () { B.slot = s; then(); } }; }));
   }
@@ -254,10 +260,11 @@
 
   // ── PATIENT: menu ──────────────────────────────────────────────────────────
   function menu(greet) {
+    resume = function () { menu(t('greet_again')); };
     B = {};
-    bot(greet || t('greet'));
+    bot((greet || t('greet')) + '<br><span class="mc-hint">' + t('tap_hint') + '</span>');
     choose([
-      { l: t('m_home'), i: 'home', go: function () { homeStart(); }, p: true },
+      { l: t('m_home'), i: 'home', go: function () { homeStart(); } },
       { l: t('m_visit'), i: 'visit', go: function () { visitStart(); } },
       { l: t('m_track'), i: 'track', go: track },
       { l: t('m_offers'), i: 'tag', go: offers },
@@ -267,6 +274,7 @@
     ]);
   }
   function andThen() {
+    resume = andThen;
     choose([
       { l: t('m_book_home'), i: 'home', go: function () { homeStart(); } },
       { l: t('m_menu'), i: 'back', go: menuAgain }
@@ -277,19 +285,24 @@
   function newKey() { return String(Date.now()) + Math.random().toString(36).slice(2, 8); }
   function homeStart(c) {
     B = { kind: 'home', items: [], key: newKey() };
-    if (c) { B.items = [pkgItem(c)]; bot(t('home_with', { name: esc(nm(c)) })); return homeName(); }
+    if (c) { B.items = [pkgItem(c)]; bot(t('home_with', { name: esc(nm(c)) })); return homeMobile(); }
+    homeWhat();
+  }
+  function homeWhat() {
+    resume = homeWhat;
     bot(t('home_intro', { km: KM }));
     choose([
-      { l: t('o_offer'), i: 'tag', go: function () { pickPackage(homeName); } },
-      { l: t('o_tests'), i: 'list', go: function () { pickTests(homeName); } },
+      { l: t('o_offer'), i: 'tag', go: function () { pickPackage(homeMobile); } },
+      { l: t('o_tests'), i: 'list', go: function () { pickTests(homeMobile); } },
       { l: t('o_rx'), i: 'rx', go: function () {
         bot(t('rx_home')); bot(t('rx_pick'));
-        choose([{ l: t('o_offer'), i: 'tag', go: function () { pickPackage(homeName); } }, { l: t('o_tests'), i: 'list', go: function () { pickTests(homeName); } }, { l: t('m_call'), i: 'phone', go: call }]);
+        choose([{ l: t('o_offer'), i: 'tag', go: function () { pickPackage(homeMobile); } }, { l: t('o_tests'), i: 'list', go: function () { pickTests(homeMobile); } }, { l: t('m_call'), i: 'phone', go: call }]);
       } },
       { l: t('o_notsure'), i: 'help', go: function () { bot(t('notsure_home')); call(); } }
     ]);
   }
   function pickPackage(next) {
+    resume = function () { pickPackage(next); };
     bot(t('pick_offer'));
     later(function () {
       var wrap = h('div', { class: 'mc-pick' });
@@ -307,6 +320,7 @@
     });
   }
   function pickTests(next) {
+    resume = function () { pickTests(next); };
     bot(t('pick_tests'));
     later(function () {
       var chosen = {};
@@ -336,20 +350,73 @@
       log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [box])); scroll();
     });
   }
+  // ── number first: OTP, then pick an existing patient on that number ──────
+  function homeMobile() { mobile(function () { identify(homeName, homeLocation); }); }
+  function visitMobile() { mobile(function () { identify(visitName, summary); }); }
+  function identify(asNew, asKnown) {
+    if (!API_OK) return asNew();
+    var g = gen;
+    fetch(API + '/public/home-collection/lookup/request-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile }) })
+      .then(function (r) {
+        if (g !== gen) return;
+        if (r.status === 404) return asNew();   // older backend without the lookup: just continue
+        if (!r.ok) throw r;
+        askOtp(asNew, asKnown, 0);
+      })
+      .catch(function () { if (g !== gen) return; bot(t('otp_send_fail')); asNew(); });
+  }
+  function askOtp(asNew, asKnown, tries) {
+    resume = function () { askOtp(asNew, asKnown, tries); };
+    bot(t('otp_sent', { m: B.mobile.replace(/(\d{2})\d{6}(\d{2})/, '$1••••••$2') }));
+    choose([{ l: t('otp_skip'), i: 'user', go: function () { expect = null; setPlaceholder(); asNew(); } }]);
+    ask({ placeholder: t('ph_otp'), type: 'number', validate: function (v) { return /^\d{4,8}$/.test(v.trim()) ? null : t('otp_bad'); }, then: function (v) {
+      var g = gen;
+      fetch(API + '/public/home-collection/lookup/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile, code: v.trim() }) })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw j; return j; }); })
+        .then(function (r) {
+          if (g !== gen) return;
+          B.token = r.token;
+          var list = r.patients || [];
+          if (!list.length) { bot(t('new_here')); return asNew(); }
+          pickPatient(list, asNew, asKnown);
+        })
+        .catch(function () {
+          if (g !== gen) return;
+          if (tries >= 2) { bot(t('otp_give_up')); return asNew(); }
+          bot(t('otp_bad')); clearChips(); askOtp(asNew, asKnown, tries + 1);
+        });
+    } });
+  }
+  function pickPatient(list, asNew, asKnown) {
+    resume = function () { pickPatient(list, asNew, asKnown); };
+    bot(t('who_is_it'));
+    choose(list.map(function (p) {
+      var g = p.gender ? t('g_' + p.gender) : '';
+      return { l: p.name + (p.age_years != null ? ' · ' + p.age_years : '') + (g ? ' · ' + g : ''), i: 'user', go: function () {
+        B.patientRef = p.patient_ref; B.name = p.name; B.gender = p.gender || 'OTHER'; B.age = p.age_years != null ? p.age_years : null;
+        bot(t('welcome_back', { name: esc(p.name.split(' ')[0]) })); asKnown();
+      } };
+    }).concat([{ l: t('someone_else'), i: 'help', go: function () { asNew(); } }]));
+  }
+
   function homeName() {
+    resume = homeName;
     bot(t('ask_name'));
     ask({ placeholder: t('ph_name'), type: 'name', validate: vName, then: function (v) { B.name = v.trim(); homeGender(); } });
   }
   function homeGender() {
+    resume = homeGender;
     bot(t('ask_gender'));
     choose(['MALE', 'FEMALE', 'OTHER'].map(function (g) { return { l: t('g_' + g), go: function () { B.gender = g; homeAge(); } }; }));
   }
   function homeAge() {
+    resume = homeAge;
     bot(t('ask_age'));
-    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(v, 10); mobile(homeLocation); } });
+    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(v, 10); homeLocation(); } });
   }
   function mobile(next) {
-    bot(t('ask_mobile'));
+    resume = function () { mobile(next); };
+    bot(t('ask_mobile_first'));
     ask({ placeholder: t('ph_mobile'), type: 'tel', validate: vMobile, then: function (v) { B.mobile = normMobile(v); next(); } });
   }
 
@@ -360,6 +427,7 @@
     return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
   }
   function homeLocation() {
+    resume = homeLocation;
     bot(t('ask_location', { km: KM }));
     choose([
       { l: t('share_loc'), i: 'pin', p: true, go: locate },
@@ -368,6 +436,7 @@
     ]);
   }
   function locFail(key) {
+    resume = function () { locFail(key); };
     bot(t(key));
     choose([{ l: t('try_again'), i: 'pin', p: true, go: locate }, { l: t('btn_visit'), i: 'visit', go: function () { visitStart(); } }, { l: t('m_call'), i: 'phone', go: call }]);
   }
@@ -402,10 +471,12 @@
     }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
   }
   function homeAddress() {
+    resume = homeAddress;
     bot(t('ask_address'));
     ask({ placeholder: t('ph_address'), validate: vText(8), then: function (v) { B.address = v.trim(); homePin(); } });
   }
   function homePin() {
+    resume = homePin;
     bot(t('ask_pin'));
     ask({ placeholder: t('ph_pin'), type: 'number', validate: vPin, then: function (v) { B.pincode = v.replace(/\s/g, ''); pickDay('home', summary); } });
   }
@@ -416,27 +487,34 @@
     if (c) B.items = [pkgItem(c)];
     var centre = (C.centres || []).filter(function (x) { return x.id === centreId; })[0];
     if (centre) { B.centre = centre; bot(t('visit_at', { c: esc(centre.name) })); return pickDay('centre', visitTests); }
+    visitWhere();
+  }
+  function visitWhere() {
+    resume = visitWhere;
     bot(t('ask_centre'));
     choose((C.centres || []).map(function (x) { return { l: x.name, go: function () { B.centre = x; pickDay('centre', visitTests); } }; }));
   }
   function visitTests() {
-    if (B.items.length) return visitName();
+    resume = visitTests;
+    if (B.items.length) return visitMobile();
     bot(t('visit_tests'));
     choose([
-      { l: t('o_offer'), i: 'tag', go: function () { pickPackage(visitName); } },
-      { l: t('o_tests'), i: 'list', go: function () { pickTests(visitName); } },
-      { l: t('o_rx'), i: 'rx', go: function () { B.rx = true; bot(t('rx_visit')); visitName(); } },
-      { l: t('o_decide'), i: 'help', go: visitName }
+      { l: t('o_offer'), i: 'tag', go: function () { pickPackage(visitMobile); } },
+      { l: t('o_tests'), i: 'list', go: function () { pickTests(visitMobile); } },
+      { l: t('o_rx'), i: 'rx', go: function () { B.rx = true; bot(t('rx_visit')); visitMobile(); } },
+      { l: t('o_decide'), i: 'help', go: visitMobile }
     ]);
   }
   function visitName() {
+    resume = visitName;
     bot(t('ask_name_visit'));
-    ask({ placeholder: t('ph_fullname'), type: 'name', validate: vName, then: function (v) { B.name = v.trim(); mobile(summary); } });
+    ask({ placeholder: t('ph_fullname'), type: 'name', validate: vName, then: function (v) { B.name = v.trim(); summary(); } });
   }
 
   // ── SUMMARY ────────────────────────────────────────────────────────────────
   function row(k, v) { return h('div', { class: 'mc-row' }, [h('span', { text: k }), h('b', { text: v })]); }
   function summary() {
+    resume = summary;
     var home = B.kind === 'home';
     bot(home ? t('sum_home') : t('sum_visit'));
     later(function () {
@@ -461,7 +539,7 @@
       var gender = B.gender ? t('g_' + B.gender) : '';
       var card = h('div', { class: 'mc-card mc-summary' }, [
         h('div', { class: 'mc-sum-h', text: home ? t('s_home') : t('s_visit', { c: B.centre.name }) }),
-        row(t('s_patient'), B.name + (home ? ' · ' + B.age + ' · ' + gender : '')),
+        row(t('s_patient'), B.name + (home ? (B.age != null ? ' · ' + B.age : '') + (gender ? ' · ' + gender : '') : '')),
         row(t('s_mobile'), B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2')),
         home ? row(t('s_address'), B.address + ', ' + B.pincode) : row(t('s_centre'), B.centre.address),
         row(t('s_when'), B.dateLabel + ' · ' + B.slot.label),
@@ -486,6 +564,7 @@
     post('/public/home-collection/orders', {
       source: 'WEBSITE_CHAT', language: lang(), test_payment: TEST,
       patient: { name: B.name, mobile: B.mobile, age: B.age, gender: B.gender },
+      patient_token: B.token || null, patient_ref: B.patientRef || null,
       items: B.items.map(function (i) { return { type: i.type, code: i.code }; }),
       address: { line: B.address, pincode: B.pincode },
       location: { lat: B.lat, lng: B.lng },
@@ -584,6 +663,7 @@
 
   // ── TRACK / OFFERS / FAQ / APP / CALL ──────────────────────────────────────
   function track() {
+    resume = track;
     bot(t('track_intro'));
     wide(h('div', { class: 'mc-card' }, [
       h('div', { class: 'mc-step' }, [h('span', { class: 'mc-num', text: '1' }), h('span', { html: t('track_1') })]),
@@ -593,11 +673,13 @@
     choose([{ l: t('m_app'), i: 'app', go: app }, { l: t('m_menu'), i: 'back', go: menuAgain }]);
   }
   function offers() {
+    resume = offers;
     bot(t('offers_intro'));
     campaigns().forEach(function (c) { bot(offerCard(c)); });
     choose([{ l: t('single_tests'), i: 'list', go: function () { homeStart(); } }, { l: t('m_menu'), i: 'back', go: menuAgain }]);
   }
   function showCampaign(code) {
+    resume = function () { showCampaign(code); };
     var c = camp(code);
     if (!c) return offers();
     bot(offerCard(c, { open: true }));
@@ -619,10 +701,12 @@
     { q: 'faq_q6', a: function () { bot(t('faq_a6')); } }
   ];
   function faq() {
+    resume = faq;
     bot(t('faq_intro'));
     choose(FAQ.map(function (f) { return { l: t(f.q), go: function () { f.a(); andThen(); } }; }).concat([{ l: t('m_menu'), i: 'back', go: menuAgain }]));
   }
   function app() {
+    resume = app;
     bot(t('app_intro'));
     wide(h('div', { class: 'mc-card' }, [
       h('div', { class: 'mc-qr' }, [h('img', { src: 'assets/qr-patient-app.svg', alt: 'QR', width: '120', height: '120' }), h('span', { text: t('app_scan') })]),
@@ -764,9 +848,16 @@
     root.querySelector('.mc-title').textContent = titleText();
     if (!silent) { reset(); aud === 'b2b' ? partnerMenu() : menu(); }
   }
+  // Switching language keeps the conversation and everything typed so far; only the
+  // question on screen is asked again in the new language (Khalid 2026-10-01).
   document.addEventListener('mr:lang', function () {
     root.querySelector('.mc-title').textContent = titleText();
-    reset(); showChat(); aud === 'b2b' ? partnerMenu() : menu();
+    setPlaceholder(expect && expect.placeholderKey ? t(expect.placeholderKey) : null, expect && expect.type);
+    if (aud === 'b2b') return;
+    if (!log.children.length) return menu();
+    clearChips(); expect = null; pendingAsks = 0; setPlaceholder();
+    bot(t('lang_continue'));
+    resume ? resume() : menu();
   });
 
   root.querySelectorAll('.mc-tab').forEach(function (x) { x.addEventListener('click', function () { x.getAttribute('data-tab') === 'call' ? showCall() : showChat(); }); });
