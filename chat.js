@@ -20,12 +20,30 @@
   // In-chat payment is on only when the backend says so (live Razorpay keys). Until the
   // status call answers true, every booking hands off to a call.
   var ONLINE = false;
+  // Hidden staff switch: ?testpay=1 (remembered for the tab, ?testpay=0 clears) runs a
+  // Razorpay TEST-mode checkout when the backend only has test keys. Bannered, no real
+  // money; ordinary visitors never see it.
+  var TEST = false;
+  try {
+    var tp = new URLSearchParams(location.search).get('testpay');
+    if (tp === '1') sessionStorage.setItem('mr_testpay', '1');
+    if (tp === '0') sessionStorage.removeItem('mr_testpay');
+  } catch (e) {}
+  var wantTest = false;
+  try { wantTest = sessionStorage.getItem('mr_testpay') === '1'; } catch (e) {}
   if (API) {
     fetch(API + '/public/home-collection/status', { headers: { Accept: 'application/json' } })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (r) {
-        ONLINE = !!(r && r.online_payment);
+        TEST = !!(r && !r.online_payment && r.test_payment && wantTest);
+        ONLINE = !!(r && r.online_payment) || TEST;
         window.MR_ONLINE = ONLINE;
+        if (TEST) {
+          var bar = document.createElement('div');
+          bar.className = 'mc-testbar';
+          bar.textContent = 'TEST MODE — Razorpay test payments, no real money';
+          var head = root.querySelector('.mc-head'); head.parentNode.insertBefore(bar, head.nextSibling);
+        }
         document.dispatchEvent(new CustomEvent('mr:online', { detail: ONLINE }));
       })
       .catch(function () { /* stays in hand-off mode */ });
@@ -466,7 +484,7 @@
     if (!ONLINE) return handoff();
     bot(t('creating'));
     post('/public/home-collection/orders', {
-      source: 'WEBSITE_CHAT', language: lang(),
+      source: 'WEBSITE_CHAT', language: lang(), test_payment: TEST,
       patient: { name: B.name, mobile: B.mobile, age: B.age, gender: B.gender },
       items: B.items.map(function (i) { return { type: i.type, code: i.code }; }),
       address: { line: B.address, pincode: B.pincode },
