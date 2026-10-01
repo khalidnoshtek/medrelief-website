@@ -581,7 +581,7 @@
     { q: 'faq_q1', a: priceList },
     { q: 'faq_q2', a: function () { bot(t('faq_a2')); } },
     { q: 'faq_q3', a: function () { bot(t('faq_a3')); } },
-    { q: 'faq_q4', a: function () { bot(t('faq_a4')); } },
+    { q: 'faq_q4', a: function () { bot(t(API ? 'faq_a4' : 'faq_a4_call')); } },
     { q: 'faq_q5', a: function () { bot(t('faq_a5', { km: KM })); } },
     { q: 'faq_q6', a: function () { bot(t('faq_a6')); } }
   ];
@@ -667,7 +667,7 @@
     [/visit|centre|center|appointment|schedule|slot|branch|सेंटर|विज़िट/i, function () { visitStart(); }],
     [/price|cost|rate|kitna|kitne|charge|fee|₹|rs\.?|कीमत|कितना|दाम/i, function () { priceList(); andThen(); }],
     [/fast|khali|empty stomach|खाली पेट/i, function () { bot(t('faq_a2')); andThen(); }],
-    [/pay|upi|cash|card|भुगतान|पैसा/i, function () { bot(t('faq_a4')); andThen(); }],
+    [/pay|upi|cash|card|भुगतान|पैसा/i, function () { bot(t(API ? 'faq_a4' : 'faq_a4_call')); andThen(); }],
     [/report|result|whatsapp|रिपोर्ट/i, function () { bot(t('faq_a6')); andThen(); }],
     [/app|download|install|qr|ऐप/i, app],
     [/call|phone|agent|human|talk|person|number|कॉल|फ़ोन|फोन|बात/i, call],
