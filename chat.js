@@ -352,7 +352,20 @@
   }
   // ── number first: OTP, then pick an existing patient on that number ──────
   function homeMobile() { mobile(function () { identify(homeName, homeLocation); }); }
-  function visitMobile() { mobile(function () { identify(visitName, summary); }); }
+  // Already know who it is (switched over from home collection): don't ask again.
+  function visitMobile() {
+    if (B.mobile && B.name) return summary();
+    if (B.mobile) return identify(visitName, summary);
+    mobile(function () { identify(visitName, summary); });
+  }
+  // Home collection → centre visit (out of area, or the patient prefers it): keep the
+  // tests and everything already given — mobile, verified identity, name, age, gender.
+  function homeToVisit() {
+    var keep = { items: B.items, mobile: B.mobile, token: B.token, patientRef: B.patientRef, name: B.name, gender: B.gender, age: B.age };
+    visitStart();
+    Object.keys(keep).forEach(function (k) { if (keep[k] != null) B[k] = keep[k]; });
+    if (!B.items) B.items = [];
+  }
   function identify(asNew, asKnown) {
     if (!API_OK) return asNew();
     var g = gen;
@@ -431,14 +444,14 @@
     bot(t('ask_location', { km: KM }));
     choose([
       { l: t('share_loc'), i: 'pin', p: true, go: locate },
-      { l: t('btn_visit'), i: 'visit', go: function () { var keep = B.items; visitStart(); B.items = keep || []; } },
+      { l: t('btn_visit'), i: 'visit', go: homeToVisit },
       { l: t('m_call'), i: 'phone', go: call }
     ]);
   }
   function locFail(key) {
     resume = function () { locFail(key); };
     bot(t(key));
-    choose([{ l: t('try_again'), i: 'pin', p: true, go: locate }, { l: t('btn_visit'), i: 'visit', go: function () { visitStart(); } }, { l: t('m_call'), i: 'phone', go: call }]);
+    choose([{ l: t('try_again'), i: 'pin', p: true, go: locate }, { l: t('btn_visit'), i: 'visit', go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]);
   }
   function locate() {
     if (!navigator.geolocation) return locFail('loc_unsupported');
@@ -453,7 +466,7 @@
         B.distance = Math.round(d * 10) / 10;
         if (!covered) {
           bot(t('loc_far', { d: B.distance, km: KM }));
-          return choose([{ l: t('btn_visit'), i: 'visit', p: true, go: function () { var keep = B.items; visitStart(); B.items = keep || []; } }, { l: t('m_call'), i: 'phone', go: call }]);
+          return choose([{ l: t('btn_visit'), i: 'visit', p: true, go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]);
         }
         bot(t('loc_ok', { d: B.distance }));
         homeAddress();
@@ -576,7 +589,7 @@
       if (Math.round(r.total_inr) !== Math.round(estimate())) bot(t('price_changed', { amt: inr(r.total_inr) }));
       checkout();
     }).catch(function (e) {
-      if (e && e.error === 'OUT_OF_COVERAGE') { bot(t('out_of_coverage', { km: KM })); return choose([{ l: t('btn_visit'), i: 'visit', go: function () { visitStart(); } }, { l: t('m_call'), i: 'phone', go: call }]); }
+      if (e && e.error === 'OUT_OF_COVERAGE') { bot(t('out_of_coverage', { km: KM })); return choose([{ l: t('btn_visit'), i: 'visit', go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]); }
       bot(t('order_fail')); handoff(true);
     });
   }
