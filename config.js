@@ -19,11 +19,11 @@ window.MR_CONFIG = {
   // "send on WhatsApp" hand-off would go nowhere.
   whatsapp: '',
 
-  // Public booking API (medlab). '' = hand-off mode: the chat completes the booking
-  // summary and the patient confirms it by phone. Set to e.g.
-  // 'https://api.medlab.noshtek.ai/api/v1' once the /public/* endpoints ship
-  // (contract: the home-collection workflow spec, §7 — kept outside this public repo).
-  api: { baseUrl: '' },
+  // Public booking API (medlab). On load the site asks GET /public/home-collection/status;
+  // in-chat UPI payment switches on only when it answers online_payment: true (live
+  // Razorpay keys). Unreachable / off = hand-off mode: the patient confirms by phone and
+  // pays the agent at the door. '' disables the API entirely.
+  api: { baseUrl: 'https://api.medlab.noshtek.ai/api/v1' },
 
   apps: {
     patientAndroid: 'https://app.medlab.noshtek.ai/install.html?app=patient&auto=1',
@@ -55,10 +55,10 @@ window.MR_CONFIG = {
 
   // Home collection only within radiusKm of the lab. The browser checks first (shared
   // location); the server re-checks against org_centers.latitude/longitude/
-  // home_collection_radius_km. CONFIRM lab pin: this is Bihar Sharif's city centre, not
-  // yet the exact Bhainsasur Chowk location — keep it identical to the server's value.
+  // home_collection_radius_km (set by migration to the same pin). Lab pin = Google Maps
+  // "Med Relief Diagnostic- Bihar Sharif", Plus Code 6G4C+93H, Kaghzi Mohalla Rd, Bhaisasur.
   homeCollection: {
-    lab: { name: 'Bihar Sharif', lat: 25.200840, lng: 85.523890 },
+    lab: { name: 'Bihar Sharif', lat: 25.205942, lng: 85.520323 },
     radiusKm: 15,
     fee: null               // CONFIRM: null = no separate collection charge shown
   },

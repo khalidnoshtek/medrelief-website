@@ -482,8 +482,8 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 </aside>
 </div><!-- /shell -->
 
-<script src="config.js?v=20261001"></script>
-<script src="i18n.js?v=20261001b"></script>
+<script src="config.js?v=20261001c"></script>
+<script src="i18n.js?v=20261001c"></script>
 <script>
 (function(){
   var C = window.MR_CONFIG || {}, t = window.MR_T;
@@ -533,7 +533,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
     document.querySelectorAll('[data-i18n]').forEach(function(el){
       if (el.closest('main[lang="en"]')) return; // partner view stays English
       // Without the booking API the site can't take payment, so copy that promises online UPI switches to its pay-at-door variant.
-      var key = (!(C.api && C.api.baseUrl) && el.getAttribute('data-i18n-call')) || el.getAttribute('data-i18n');
+      var key = (!window.MR_ONLINE && el.getAttribute('data-i18n-call')) || el.getAttribute('data-i18n');
       el.textContent = el.hasAttribute('data-km') ? t(key, { km: KM }) : t(key);
     });
     document.querySelectorAll('[data-i18n-html]').forEach(function(el){ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
@@ -543,6 +543,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   }
   document.querySelectorAll('[data-lang]').forEach(function(b){ b.addEventListener('click', function(){ window.MR_SET_LANG(b.getAttribute('data-lang')); }); });
   document.addEventListener('mr:lang', applyLang);
+  document.addEventListener('mr:online', applyLang);   // backend switched in-chat payment on
   applyLang();
 
   // Hold the ticker while a finger is on it so a tap lands on the card it aimed for.
@@ -571,6 +572,6 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   document.querySelector('[data-tab-back]').addEventListener('click', function(){ document.querySelector('.mc-tab[data-tab="chat"]').click(); });
 })();
 </script>
-<script src="chat.js?v=20261001b"></script>
+<script src="chat.js?v=20261001c"></script>
 </body>
 </html>

@@ -31,8 +31,8 @@ When you change `config.js`, `i18n.js` or `chat.js`, bump the `?v=` stamp on the
 ## Two modes (set in `config.js → api.baseUrl`)
 | Mode | Home collection | Centre visit / partners |
 |---|---|---|
-| **Hand-off** (`''`, current) | Location check in the browser (≤ `homeCollection.radiusKm` of the lab), then a summary with **Call to confirm** + **Copy summary**; pay the agent at the door. | Summary + call / email. |
-| **API** (medlab `feat/online-home-collection`) | Location → `POST /public/home-collection/coverage`, then `POST /public/home-collection/orders` (server re-prices + re-checks 15 km) → Razorpay Checkout, **UPI only**, inside the chat → `POST /orders/:ref/verify`. The paid order becomes a PAID bill with an **Online order** badge in the staff app. | Unchanged (hand-off) — no public endpoints for these yet. |
+| **Hand-off** (API unreachable, or `online_payment: false`) | Location check in the browser (≤ `homeCollection.radiusKm` of the lab), then a summary with **Call to confirm** + **Copy summary**; pay the agent at the door. | Summary + call / email. |
+| **Online** (`GET /public/home-collection/status` → `online_payment: true`, i.e. live Razorpay keys) | Location → `POST /public/home-collection/coverage`, then `POST /public/home-collection/orders` (server re-prices + re-checks 15 km) → Razorpay Checkout, **UPI only**, inside the chat → `POST /orders/:ref/verify`. The paid order becomes a PAID bill with an **Online order** badge in the staff app. | Unchanged (hand-off) — no public endpoints for these yet. |
 
 API mode was exercised against a local mock of those endpoints (coverage, order, stubbed
 Razorpay handler, verify, dismissed payment, out-of-area). It has not yet run against a
@@ -69,4 +69,4 @@ GitHub Pages serves `main` → pushing to `main` publishes publicly. Work on a b
 - **Prices** — check the five campaigns and the test list against the live rate plan.
 - **Entity** — confirm the legal entity shown in the footer.
 - **iPhone patient app** — shown as "coming soon"; set `apps.patientIos` when it's live.
-- **Lab pin** — `homeCollection.lab` is Bihar Sharif's city centre, not yet the exact Bhainsasur Chowk location; set the real pin here AND on the server.
+- **Lab pin** — 25.205942, 85.520323 (Google Maps "Med Relief Diagnostic- Bihar Sharif", Plus Code 6G4C+93H). Keep it identical to the server's `org_centers` value.

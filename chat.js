@@ -17,6 +17,19 @@
   var t = window.MR_T || function (k) { return k; };
   var lang = function () { return window.MR_LANG ? window.MR_LANG() : 'en'; };
   var API = (C.api && C.api.baseUrl) ? C.api.baseUrl.replace(/\/$/, '') : '';
+  // In-chat payment is on only when the backend says so (live Razorpay keys). Until the
+  // status call answers true, every booking hands off to a call.
+  var ONLINE = false;
+  if (API) {
+    fetch(API + '/public/home-collection/status', { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (r) {
+        ONLINE = !!(r && r.online_payment);
+        window.MR_ONLINE = ONLINE;
+        document.dispatchEvent(new CustomEvent('mr:online', { detail: ONLINE }));
+      })
+      .catch(function () { /* stays in hand-off mode */ });
+  }
   var HC = C.homeCollection || {};
   var KM = HC.radiusKm || 15;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -360,8 +373,10 @@
       };
       if (!API) return decide(local <= KM, local);
       fetch(API + '/public/home-collection/coverage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lat: B.lat, lng: B.lng }) })
-        .then(function (r) { return r.json(); })
-        .then(function (r) { decide(!!r.covered, r.distance_km != null ? r.distance_km : local); })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        // Only a real yes/no from the server overrides the browser's check (an old
+        // backend without this endpoint answers 404 — that is not "out of area").
+        .then(function (r) { if (r && typeof r.covered === 'boolean') decide(r.covered, r.distance_km != null ? r.distance_km : local); else decide(local <= KM, local); })
         .catch(function () { decide(local <= KM, local); });
     }, function (err) {
       if (g !== gen) return;
@@ -415,7 +430,7 @@
       if (B.rx) lines.appendChild(h('div', { class: 'mc-line' }, [h('span', { text: t('s_rx_line') }), h('span', { class: 'mc-muted', text: t('s_rx_counter') })]));
       var cb = h('input', { type: 'checkbox' });
       var go, edit;
-      var payOnline = home && !!API;
+      var payOnline = home && ONLINE;
       var goLabel = payOnline ? t('pay_btn', { amt: inr(est) }) : home ? t('confirm_booking') : t('confirm_visit');
       go = btn(goLabel, payOnline ? 'upi' : 'check', function () {
         if (!cb.checked) return; go.disabled = true; edit.disabled = true; cb.disabled = true;
@@ -448,7 +463,7 @@
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); });
   }
   function payHome() {
-    if (!API) return handoff();
+    if (!ONLINE) return handoff();
     bot(t('creating'));
     post('/public/home-collection/orders', {
       source: 'WEBSITE_CHAT', language: lang(),
@@ -581,7 +596,7 @@
     { q: 'faq_q1', a: priceList },
     { q: 'faq_q2', a: function () { bot(t('faq_a2')); } },
     { q: 'faq_q3', a: function () { bot(t('faq_a3')); } },
-    { q: 'faq_q4', a: function () { bot(t(API ? 'faq_a4' : 'faq_a4_call')); } },
+    { q: 'faq_q4', a: function () { bot(t(ONLINE ? 'faq_a4' : 'faq_a4_call')); } },
     { q: 'faq_q5', a: function () { bot(t('faq_a5', { km: KM })); } },
     { q: 'faq_q6', a: function () { bot(t('faq_a6')); } }
   ];
@@ -667,7 +682,7 @@
     [/visit|centre|center|appointment|schedule|slot|branch|सेंटर|विज़िट/i, function () { visitStart(); }],
     [/price|cost|rate|kitna|kitne|charge|fee|₹|rs\.?|कीमत|कितना|दाम/i, function () { priceList(); andThen(); }],
     [/fast|khali|empty stomach|खाली पेट/i, function () { bot(t('faq_a2')); andThen(); }],
-    [/pay|upi|cash|card|भुगतान|पैसा/i, function () { bot(t(API ? 'faq_a4' : 'faq_a4_call')); andThen(); }],
+    [/pay|upi|cash|card|भुगतान|पैसा/i, function () { bot(t(ONLINE ? 'faq_a4' : 'faq_a4_call')); andThen(); }],
     [/report|result|whatsapp|रिपोर्ट/i, function () { bot(t('faq_a6')); andThen(); }],
     [/app|download|install|qr|ऐप/i, app],
     [/call|phone|agent|human|talk|person|number|कॉल|फ़ोन|फोन|बात/i, call],
