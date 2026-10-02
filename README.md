@@ -34,14 +34,10 @@ When you change `config.js`, `i18n.js` or `chat.js`, bump the `?v=` stamp on the
 | **Hand-off** (API unreachable, or `online_payment: false`) | Location check in the browser (≤ `homeCollection.radiusKm` of the lab), then a summary with **Call to confirm** + **Copy summary**; pay the agent at the door. | Summary + call / email. |
 | **Online** (`GET /public/home-collection/status` → `online_payment: true`, i.e. live Razorpay keys) | Location → `POST /public/home-collection/coverage`, then `POST /public/home-collection/orders` (server re-prices + re-checks 15 km) → Razorpay Checkout, **UPI only**, inside the chat → `POST /orders/:ref/verify`. The paid order becomes a PAID bill with an **Online order** badge in the staff app. | Unchanged (hand-off) — no public endpoints for these yet. |
 
-API mode was exercised against a local mock of those endpoints (coverage, order, stubbed
-Razorpay handler, verify, dismissed payment, out-of-area). It has not yet run against a
-deployed backend + real Razorpay keys. **Razorpay is in TEST mode on production** — the
-flow completes in test mode only until live keys are in.
-
-To switch on: deploy the medlab branch, set the lab pin + radius on `org_centers`
-(`latitude`, `longitude`, `home_collection_radius_km`), keep `config.js → homeCollection.lab`
-identical, then set `api.baseUrl`.
+**Live since 2026-10-02:** production has live Razorpay keys, so `/status` reports
+`online_payment: true` and every visitor gets in-chat UPI payment. For a no-money test
+with test keys (staging), open the site with `?testpay=1` (TEST MODE banner);
+`?testpay=0` clears it. The lab pin and the 15 km radius are set on `org_centers` by migration.
 
 ## Language
 EN / हिंदी switch in the header (remembered per browser). All patient strings live in
