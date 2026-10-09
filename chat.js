@@ -610,7 +610,7 @@
       return later(function () { verify({ razorpay_order_id: rz.order_id, razorpay_payment_id: 'pay_mock_' + Date.now(), razorpay_signature: 'mock' }); });
     }
     loadRazorpay().then(function () {
-      var done = false;
+      var done = false, failed = false;
       var rzp = new window.Razorpay({
         key: rz.key_id, order_id: rz.order_id, amount: rz.amount_paise, currency: rz.currency || 'INR',
         name: 'Med Relief Diagnostics', description: o.order_ref,
@@ -620,9 +620,14 @@
         theme: { color: (C.razorpay && C.razorpay.brandColor) || '#86198F' },
         config: { display: { blocks: { upi: { name: 'UPI', instruments: [{ method: 'upi' }] } }, sequence: ['block.upi'], preferences: { show_default_blocks: false } } },
         handler: function (resp) { done = true; verify(resp); },
-        modal: { ondismiss: function () { if (!done) payCancelled(); } }
+        modal: { ondismiss: function () { if (!done && !failed) payCancelled(); } }
       });
-      rzp.on('payment.failed', function () { /* the modal stays open to retry; ondismiss covers giving up */ });
+      // Razorpay keeps its QR on screen after a failure, so tell the patient here at once.
+      rzp.on('payment.failed', function () {
+        if (failed) return; failed = true;
+        bot(t('pay_failed'));
+        choose([{ l: t('pay_retry'), i: 'upi', p: true, go: checkout }, { l: t('m_call'), i: 'phone', go: call }]);
+      });
       rzp.open();
     }).catch(function () { bot(t('order_fail')); handoff(true); });
   }
