@@ -30,6 +30,10 @@ window.MR_CONFIG = {
   // it false so patients get call-to-confirm instead of a payment Razorpay will refuse
   // (2026-10-10: khalidnoshtek.github.io not registered → payment_risk_check_failed).
   onlinePayments: true,
+  // Razorpay accepts payments only from the website registered on the merchant account.
+  // On any other host (e.g. the GitHub Pages copy) the chat hands off to call-to-confirm
+  // instead of opening a checkout Razorpay will refuse (and flag as a risk event).
+  paymentHosts: ['app.medlab.noshtek.ai'],
 
   apps: {
     patientAndroid: 'https://app.medlab.noshtek.ai/install.html?app=patient&auto=1',

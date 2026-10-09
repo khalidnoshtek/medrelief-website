@@ -37,7 +37,7 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (r) {
         API_OK = !!r;
-        var allowed = C.onlinePayments !== false;
+        var allowed = C.onlinePayments !== false && (C.paymentHosts || []).indexOf(location.hostname) >= 0;
         TEST = allowed && !!(r && !r.online_payment && r.test_payment && wantTest);
         ONLINE = allowed && (!!(r && r.online_payment) || TEST);
         window.MR_ONLINE = ONLINE;
