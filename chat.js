@@ -568,7 +568,7 @@
 
   // ── PAY (home collection) ──────────────────────────────────────────────────
   function post(path, body) {
-    return fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': B.key || '' }, body: JSON.stringify(body) })
+    return fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }  /* only CORS-allowed headers: the API rejects others at preflight */, body: JSON.stringify(body) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); });
   }
   function payHome() {
