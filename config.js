@@ -96,6 +96,14 @@ window.MR_CONFIG = {
   // CAMPAIGNS — the ticker + in-chat offer cards. Add, reorder or set active:false.
   // code = mdm_packages.code, so a booking maps 1:1 onto the package the counter bills.
   campaigns: [
+    // ₹1 live-payment check (Khalid 2026-10-10). testOnly = shown only with the hidden
+    // ?testpay=1 switch. Package MRTEST1 exists on production at ₹1 (one component test).
+    // After each test: Void the bill in the staff app and refund ₹1 in the Razorpay dashboard.
+    { code: 'MRTEST1', active: true, testOnly: true, tag: 'Staff test', tag_hi: 'स्टाफ़ टेस्ट',
+      name: 'Live payment test (₹1)', name_hi: 'लाइव भुगतान टेस्ट (₹1)',
+      blurb: 'For staff only — checks the real payment flow. Void the bill and refund after.',
+      blurb_hi: 'सिर्फ़ स्टाफ़ के लिए — असली भुगतान की जाँच। बाद में बिल रद्द करें और पैसा लौटाएँ।',
+      price: 1, fasting: false, tests: [['Blood Sugar Random', 1]] },
     { code: 'MRD002', active: true, tag_hi: 'सबसे ज़्यादा बुक', name_hi: 'निरोग्यम स्टैंडर्ड', blurb_hi: 'पूरे शरीर की जाँच: ब्लड काउंट, शुगर, लिवर, किडनी, लिपिड, थायरॉइड और पेशाब।', tag: 'Most booked', name: 'Nirogyam Standard',
       blurb: 'A full-body check: blood count, sugar, liver, kidney, lipids, thyroid and urine.',
       price: 1550, fasting: true,

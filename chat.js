@@ -41,10 +41,10 @@
         TEST = allowed && !!(r && !r.online_payment && r.test_payment && wantTest);
         ONLINE = allowed && (!!(r && r.online_payment) || TEST);
         window.MR_ONLINE = ONLINE;
-        if (TEST) {
+        if (TEST || (wantTest && ONLINE)) {
           var bar = document.createElement('div');
           bar.className = 'mc-testbar';
-          bar.textContent = 'TEST MODE — Razorpay test payments, no real money';
+          bar.textContent = TEST ? 'TEST MODE — Razorpay test payments, no real money' : 'STAFF TEST — REAL payments. Use the ₹1 test package; void the bill and refund after.';
           var head = root.querySelector('.mc-head'); head.parentNode.insertBefore(bar, head.nextSibling);
         }
         document.dispatchEvent(new CustomEvent('mr:online', { detail: ONLINE }));
@@ -231,7 +231,8 @@
   }
 
   // ── catalogue ──────────────────────────────────────────────────────────────
-  function campaigns() { return (C.campaigns || []).filter(function (c) { return c.active !== false; }); }
+  // testOnly offers (the ₹1 live-payment check) appear only behind the hidden ?testpay=1 switch.
+  function campaigns() { return (C.campaigns || []).filter(function (c) { return c.active !== false && (!c.testOnly || wantTest); }); }
   function camp(code) { return campaigns().filter(function (c) { return c.code === code; })[0]; }
   function mrpOf(c) { return c.tests.reduce(function (s, x) { return s + x[1]; }, 0); }
   function pkgItem(c) { return { type: 'PACKAGE', code: c.code, name: c.name, name_hi: c.name_hi, price: c.price, mrp: mrpOf(c) }; }

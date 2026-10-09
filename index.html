@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+// The live booking site is served from app.medlab.noshtek.ai/book/ — the domain registered
+// with Razorpay (payments from any other domain are refused). The GitHub Pages copy only
+// forwards there, keeping ?testpay / #partners etc.
+(function () { if (/github\.io$/.test(location.hostname)) location.replace('https://app.medlab.noshtek.ai/book/index.html' + location.search + location.hash); })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Med Relief Diagnostics</title>
 <meta name="description" content="Med Relief Diagnostics, Bihar Sharif (Nalanda) — book home sample collection or a centre visit in a chat, pay by UPI, and get your report on WhatsApp. हिंदी में भी।" />
@@ -484,7 +490,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 </aside>
 </div><!-- /shell -->
 
-<script src="config.js?v=20261010d"></script>
+<script src="config.js?v=20261010e"></script>
 <script src="i18n.js?v=20261010b"></script>
 <script>
 (function(){
@@ -506,7 +512,8 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 
   function renderDynamic(){
     // Offers ticker — rendered twice so the marquee loops seamlessly (copy 2 hidden from AT).
-    var live = (C.campaigns || []).filter(function(c){ return c.active !== false; });
+    var testpay = false; try { testpay = new URLSearchParams(location.search).get('testpay') === '1' || (sessionStorage.getItem('mr_testpay') === '1' && new URLSearchParams(location.search).get('testpay') !== '0'); } catch (e) {}
+    var live = (C.campaigns || []).filter(function(c){ return c.active !== false && (!c.testOnly || testpay); });
     var tk = document.getElementById('ticker');
     function offer(c, dup){
       var mrp = c.tests.reduce(function(s,x){ return s + x[1]; }, 0), save = mrp - c.price;
@@ -574,6 +581,6 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   document.querySelector('[data-tab-back]').addEventListener('click', function(){ document.querySelector('.mc-tab[data-tab="chat"]').click(); });
 })();
 </script>
-<script src="chat.js?v=20261010c"></script>
+<script src="chat.js?v=20261010e"></script>
 </body>
 </html>
