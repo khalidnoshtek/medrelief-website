@@ -37,8 +37,9 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (r) {
         API_OK = !!r;
-        TEST = !!(r && !r.online_payment && r.test_payment && wantTest);
-        ONLINE = !!(r && r.online_payment) || TEST;
+        var allowed = C.onlinePayments !== false;
+        TEST = allowed && !!(r && !r.online_payment && r.test_payment && wantTest);
+        ONLINE = allowed && (!!(r && r.online_payment) || TEST);
         window.MR_ONLINE = ONLINE;
         if (TEST) {
           var bar = document.createElement('div');

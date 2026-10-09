@@ -25,6 +25,12 @@ window.MR_CONFIG = {
   // pays the agent at the door. '' disables the API entirely.
   api: { baseUrl: 'https://api.medlab.noshtek.ai/api/v1' },
 
+  // Master switch for in-chat UPI payment. Razorpay only accepts payments from a website
+  // registered on the merchant account; until this site's domain is approved there, keep
+  // it false so patients get call-to-confirm instead of a payment Razorpay will refuse
+  // (2026-10-10: khalidnoshtek.github.io not registered → payment_risk_check_failed).
+  onlinePayments: false,
+
   apps: {
     patientAndroid: 'https://app.medlab.noshtek.ai/install.html?app=patient&auto=1',
     patientIos: '',                                  // '' = "coming soon"
