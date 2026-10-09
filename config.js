@@ -29,7 +29,7 @@ window.MR_CONFIG = {
   // registered on the merchant account; until this site's domain is approved there, keep
   // it false so patients get call-to-confirm instead of a payment Razorpay will refuse
   // (2026-10-10: khalidnoshtek.github.io not registered → payment_risk_check_failed).
-  onlinePayments: false,
+  onlinePayments: true,
 
   apps: {
     patientAndroid: 'https://app.medlab.noshtek.ai/install.html?app=patient&auto=1',
