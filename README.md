@@ -21,6 +21,7 @@ chat.js        the assistant — flows, validation, hand-off / API adapter
 config.js      EVERYTHING editable: phone, centres, slots, tests, campaigns, lab pin + radius, app links, API
 i18n.js        every patient-facing string in English and Hindi
 privacy.html / terms.html
+branding.html  unlisted (noindex) review page for Mithlesh: logo variants, Staff/Patient/Doctor app-icon options, sample report + invoice · assets/branding/
 assets/logo/   Med Relief heart-in-hands logo (from "Main Logo.svg", 2026-10-10): logo-mark.png 17 KB, favicons, touch icons · assets/qr-patient-app.svg (→ install.html?app=patient&auto=1)
 ```
 The end-to-end workflow spec (website order → proposed bill → desk → agent → payment) and

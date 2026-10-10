@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Med Relief Branding</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta name="description" content="Med Relief logo, app-icon and document options for review." />
+<meta name="theme-color" content="#86198F" />
+<link rel="icon" href="assets/logo/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon-180.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Branding review page (unlisted, noindex). Same Plum tokens as index.html. */
+:root{
+  --mr-primary:#86198F;--mr-primary-deep:#701A75;--mr-primary-bright:#A21CAF;--mr-on-dark:#F0ABFC;--mr-tint:#FDF4FF;
+  --mr-ink:#0F172A;--mr-muted:#64748B;--mr-faint:#94A3B8;--mr-line:#E2E8F0;--mr-bg:#FAFAF8;--mr-white:#FFFFFF;
+  --card:#FFFFFF;--shadow:0 1px 2px rgba(15,23,42,.05),0 14px 30px -20px rgba(112,26,117,.35);
+  --font:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--mr-ink:#F1F5F9;--mr-muted:#A3A9B6;--mr-faint:#7C8494;--mr-line:#2A2F3A;--mr-bg:#111318;--card:#1A1D24;--mr-primary:#E879F9}
+}
+:root[data-theme="dark"]{--mr-ink:#F1F5F9;--mr-muted:#A3A9B6;--mr-faint:#7C8494;--mr-line:#2A2F3A;--mr-bg:#111318;--card:#1A1D24;--mr-primary:#E879F9}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--mr-ink);background:var(--mr-bg);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
+img{display:block;max-width:100%}
+a{color:var(--mr-primary)}
+h1,h2,h3{letter-spacing:-.02em;line-height:1.15}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+@media(min-width:720px){.wrap{padding:0 28px}}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mr-primary)}
+.muted{color:var(--mr-muted)}
+
+header.top{background:linear-gradient(135deg,#701A75,#86198F 55%,#A21CAF);color:#fff;padding:28px 0 30px}
+header.top .row{display:flex;align-items:center;gap:14px}
+header.top .tile{background:#fff;border-radius:14px;padding:8px 10px;flex:none}
+header.top .tile img{height:34px;width:auto}
+header.top h1{font-size:clamp(22px,4vw,30px);font-weight:800}
+header.top p{opacity:.85;margin-top:4px;font-size:14px}
+nav.jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+nav.jump a{color:#fff;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);text-decoration:none}
+
+section{padding:36px 0 8px}
+section h2{font-size:22px;font-weight:800;margin:6px 0 6px}
+section > .wrap > p.lead{color:var(--mr-muted);max-width:720px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--mr-line);border-radius:18px;box-shadow:var(--shadow);padding:16px}
+
+/* Decision box */
+.decide{border:2px solid var(--mr-primary);background:var(--card);border-radius:18px;padding:18px;margin-top:22px}
+.decide ol{padding-left:20px;display:grid;gap:8px;margin-top:10px}
+.decide code{font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(134,25,143,.1);color:var(--mr-primary);padding:1px 6px;border-radius:6px}
+.decide .reply{margin-top:12px;font-size:14px;color:var(--mr-muted)}
+
+/* Logo grid */
+.logos{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.logo-card h3{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--mr-tint);color:#86198F}
+.tag.live{background:#DCFCE7;color:#166534}
+.logo-card p{font-size:13px;color:var(--mr-muted);margin:4px 0 12px}
+.bgs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.bgs div{aspect-ratio:1;border-radius:10px;display:grid;place-items:center;padding:10px;border:1px solid rgba(15,23,42,.08)}
+.bgs img{max-height:100%;object-fit:contain}
+.bgs span{display:block;font-size:10px;text-align:center;color:var(--mr-muted);margin-top:3px}
+.bg-white{background:#fff}.bg-tint{background:#FDF4FF}.bg-plum{background:#86198F}.bg-ink{background:#0F172A}
+.solo{border-radius:14px;overflow:hidden;max-width:220px;border:1px solid var(--mr-line)}
+.sizes{display:flex;align-items:flex-end;gap:12px;margin-top:12px;flex-wrap:wrap}
+.sizes figure{text-align:center;font-size:10px;color:var(--mr-muted)}
+
+/* App icons */
+.icon{position:relative;overflow:hidden;display:grid;place-items:center;border-radius:22.5%;box-shadow:0 1px 2px rgba(0,0,0,.18),0 6px 14px -8px rgba(0,0,0,.45)}
+.round .icon{border-radius:50%}
+.icon img{width:var(--fit,78%);height:var(--fit,78%);object-fit:contain}
+.icon.full img{width:100%;height:100%;object-fit:cover}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.app h3{font-size:17px;font-weight:800}
+.app .who{font-size:13px;color:var(--mr-muted);margin:2px 0 14px}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:start}
+.opt{border:2px solid transparent;border-radius:14px;padding:10px 6px;text-align:center;cursor:pointer;background:none;font:inherit;color:inherit}
+.opt:hover{background:rgba(134,25,143,.06)}
+.opt[aria-pressed="true"]{border-color:var(--mr-primary);background:rgba(134,25,143,.06)}
+.opt .icon{width:72px;height:72px;margin:0 auto 8px}
+.opt b{display:block;font-size:13px}
+.opt small{display:block;font-size:11px;color:var(--mr-muted);line-height:1.3;margin-top:2px}
+.shape{display:inline-flex;border:1px solid var(--mr-line);border-radius:999px;padding:3px;gap:2px;background:var(--card)}
+.shape button{font:inherit;font-size:13px;font-weight:600;border:0;background:none;padding:6px 12px;border-radius:999px;cursor:pointer;color:var(--mr-muted)}
+.shape button[aria-pressed="true"]{background:var(--mr-primary);color:#fff}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.toolbar .lbl{font-size:13px;color:var(--mr-muted);font-weight:600}
+
+/* Phone mockups */
+.phones{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+.phone{width:250px;height:510px;border-radius:40px;background:#0b0b0f;padding:10px;box-shadow:0 30px 60px -30px rgba(15,23,42,.6);flex:none}
+.screen{height:100%;border-radius:31px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.screen .status{display:flex;justify-content:space-between;font-size:11px;font-weight:600;padding:10px 20px 0;color:#fff}
+.wall-light{background:linear-gradient(160deg,#F5D0FE,#FDF4FF 45%,#E0E7FF)}
+.wall-light .status,.wall-light .grid figcaption{color:#0F172A}
+.wall-dark{background:linear-gradient(160deg,#1E1B4B,#0F172A 55%,#3B0764)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 8px;padding:22px 14px 0}
+.grid figure{text-align:center}
+.grid .icon{width:46px;height:46px;margin:0 auto}
+.grid figcaption{font-size:9.5px;color:#fff;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph{width:46px;height:46px;border-radius:22.5%;margin:0 auto;background:rgba(255,255,255,.28)}
+.wall-light .ph{background:rgba(15,23,42,.12)}
+.round .ph{border-radius:50%}
+.dock{margin:auto 10px 12px;background:rgba(255,255,255,.22);border-radius:24px;padding:10px;display:flex;justify-content:space-around}
+.wall-light .dock{background:rgba(255,255,255,.55)}
+.dock .ph,.dock .icon{width:44px;height:44px;margin:0}
+.splash{align-items:center;justify-content:center;gap:16px;text-align:center}
+.splash .big{width:120px;height:120px}
+.splash b{font-size:18px;font-weight:800}
+.splash small{font-size:12px;opacity:.7}
+.phone-cap{text-align:center;font-size:12px;color:var(--mr-muted);margin-top:8px}
+
+/* Documents */
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.doc img{border:1px solid var(--mr-line);border-radius:8px;width:100%;background:#fff}
+.doc h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.doc p{font-size:13px;color:var(--mr-muted);margin-bottom:10px}
+.btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-weight:700;font-size:14px;color:#fff;background:#86198F;padding:9px 14px;border-radius:12px;text-decoration:none}
+footer{padding:36px 0 48px;color:var(--mr-muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="row">
+      <span class="tile"><img src="assets/logo/logo-mark.png" alt="" width="48" height="34"></span>
+      <div>
+        <h1>Med Relief branding: options to decide</h1>
+        <p>Logos, app icons for the three apps, and the restyled report and invoice. Draft for review, 10 Oct 2026.</p>
+      </div>
+    </div>
+    <nav class="jump" aria-label="Sections">
+      <a href="#decide">Decisions</a><a href="#logos">Logos</a><a href="#apps">App icons</a><a href="#phone">On a phone</a><a href="#docs">Report &amp; invoice</a>
+    </nav>
+  </div>
+</header>
+
+<section id="decide">
+  <div class="wrap">
+    <div class="decide">
+      <div class="eyebrow">What we need decided</div>
+      <ol>
+        <li><b>Main mark:</b> <code>Main</code> or <code>Variation</code>. They differ only in the sparkle colour. The website uses <b>Main</b> today.</li>
+        <li><b>Staff app icon:</b> <code>S-A</code>, <code>S-B</code> or <code>S-C</code></li>
+        <li><b>Patient app icon:</b> <code>P-A</code>, <code>P-B</code> or <code>P-C</code></li>
+        <li><b>Doctor app icon:</b> <code>D-A</code>, <code>D-B</code> or <code>D-C</code></li>
+        <li><b>Report and invoice:</b> switch from the current teal to plum with the heart watermark? <code>Yes</code> / <code>No</code></li>
+      </ol>
+      <p class="reply">Reply with the codes, for example <span class="mono">Main, S-A, P-A, D-B, Yes</span>. Tap any icon option below to preview that combination on a phone.</p>
+    </div>
+  </div>
+</section>
+
+<section id="logos">
+  <div class="wrap">
+    <div class="eyebrow">1 · Logos</div>
+    <h2>The logo files we received</h2>
+    <p class="lead">Each mark is shown on our four brand backgrounds: white, plum tint, plum and ink. The plum heart fades on plum and ink, so on dark screens the mark needs a white tile (as in the website footer).</p>
+    <div class="logos" id="logoGrid"></div>
+  </div>
+</section>
+
+<section id="apps">
+  <div class="wrap">
+    <div class="eyebrow">2 · App icons</div>
+    <h2>Icon options for the three apps</h2>
+    <p class="lead">Android launchers cut icons to a circle or squircle, and iOS uses a rounded square. Switch the shape to check that nothing important is cut off. Staff phones carry both the Staff and Patient apps, so those two icons must be easy to tell apart.</p>
+    <div class="toolbar">
+      <span class="lbl">Icon shape</span>
+      <div class="shape" role="group" aria-label="Icon shape">
+        <button type="button" data-shape="square" aria-pressed="true">iOS / rounded</button>
+        <button type="button" data-shape="round" aria-pressed="false">Android circle</button>
+      </div>
+    </div>
+    <div class="apps" id="appGrid"></div>
+  </div>
+</section>
+
+<section id="phone">
+  <div class="wrap">
+    <div class="eyebrow">3 · On a phone</div>
+    <h2>The selected combination</h2>
+    <p class="lead" id="comboText">Home screen on a light and a dark wallpaper, then the opening (splash) screen of each app.</p>
+    <div class="phones" id="homePhones"></div>
+    <div class="phones" id="splashPhones"></div>
+  </div>
+</section>
+
+<section id="docs">
+  <div class="wrap">
+    <div class="eyebrow">4 · Report &amp; invoice</div>
+    <h2>Restyled in plum, with the heart watermark</h2>
+    <p class="lead">Samples made by the real report and invoice generator, recoloured to the website palette with the overlay heart faint behind the content. All patient, doctor and bill details are dummy data. The live app still prints the teal version until this is approved.</p>
+    <div class="docs">
+      <div class="card doc">
+        <h3>Lab report (A4, 4 pages)</h3>
+        <p>Letterhead with the new logo, plum section bars, watermark on every page.</p>
+        <a href="assets/branding/sample-report.pdf" target="_blank" rel="noopener"><img src="assets/branding/rep-preview.png" alt="First page of the sample lab report" loading="lazy"></a>
+        <a class="btn" href="assets/branding/sample-report.pdf" target="_blank" rel="noopener">Open sample report (PDF)</a>
+      </div>
+      <div class="card doc">
+        <h3>Invoice / receipt (A5)</h3>
+        <p>Same palette and watermark. Package billed as one line with ₹0 component tests.</p>
+        <a href="assets/branding/sample-invoice.pdf" target="_blank" rel="noopener"><img src="assets/branding/inv-preview.png" alt="Sample invoice" loading="lazy"></a>
+        <a class="btn" href="assets/branding/sample-invoice.pdf" target="_blank" rel="noopener">Open sample invoice (PDF)</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Draft for internal review. Nothing on this page has been applied to the apps or to printed reports yet.</div>
+</footer>
+
+<script>
+(function () {
+  var A = 'assets/branding/';
+  var LOGOS = [
+    { id: 'Main', file: 'main-logo.png', live: true, note: 'Heart held in two hands, with an ECG line and sparkles. In use on the website now.' },
+    { id: 'Variation', file: 'variation.png', note: 'The same mark with darker plum sparkles instead of the light ones.' },
+    { id: 'Patient', file: 'patient-logo.png', note: 'Lab flask with the heart and hands inside. Reads as "lab tests", well suited to a patient app.' },
+    { id: 'Dr Logo', file: 'dr-logo.png', full: true, note: 'A ready-made dark app tile with a glowing heart in hands.' },
+    { id: 'Dr Variation', file: 'dr-variation.png', full: true, note: 'Dr Logo plus a small caduceus (medical staff) in the corner.' },
+    { id: 'Backup', file: 'backup-logo.png', full: true, note: 'Soft glowing heart inside corner brackets, on a light background.' },
+    { id: 'Overlay', file: 'overlay.png', full: true, note: 'Pixel-dissolve heart. Used faintly as the watermark on the report and invoice, not as a logo.' }
+  ];
+  var APPS = [
+    { key: 'S', name: 'Staff app', label: 'MR Staff', who: 'Reception, phlebotomy, lab and centre heads. Installed on centre phones.', opts: [
+      { code: 'S-A', title: 'Main on ink', note: 'Dark tile. Clearly "work app" and apart from the patient icon', img: 'main-logo.png', bg: '#0F172A', fit: '80%', tile: true },
+      { code: 'S-B', title: 'Main on white', note: 'Same as the website logo', img: 'main-logo.png', bg: '#FFFFFF', fit: '82%' },
+      { code: 'S-C', title: 'Backup', note: 'Bracketed heart, full tile', img: 'backup-logo.png', full: true }
+    ] },
+    { key: 'P', name: 'Patient app', label: 'Med Relief', who: 'Reports, bookings and bills for patients. The most-seen icon.', opts: [
+      { code: 'P-A', title: 'Patient on white', note: 'Flask mark. Says "lab tests" at a glance', img: 'patient-logo.png', bg: '#FFFFFF', fit: '72%' },
+      { code: 'P-B', title: 'Patient on tint', note: 'Flask on soft plum tint', img: 'patient-logo.png', bg: '#FDF4FF', fit: '72%' },
+      { code: 'P-C', title: 'Main on tint', note: 'Matches the website exactly', img: 'main-logo.png', bg: '#FDF4FF', fit: '82%' }
+    ] },
+    { key: 'D', name: 'Doctor app', label: 'MR Doctor', who: 'Referring doctors: their patients’ reports and acquisition.', opts: [
+      { code: 'D-A', title: 'Dr Logo', note: 'Dark glowing tile, as designed', img: 'dr-logo.png', full: true },
+      { code: 'D-B', title: 'Dr Variation', note: 'Adds a caduceus. Small, fades below ~60 px', img: 'dr-variation.png', full: true },
+      { code: 'D-C', title: 'Main on plum tile', note: 'White tile on plum, simpler and brand-led', img: 'main-logo.png', bg: '#86198F', fit: '70%', tile: true }
+    ] }
+  ];
+  var pick = { S: 'S-A', P: 'P-A', D: 'D-B' };
+  try { var saved = JSON.parse(localStorage.getItem('mr-brand-pick') || 'null'); if (saved) pick = saved; } catch (e) {}
+
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function find(code) { for (var i = 0; i < APPS.length; i++) for (var j = 0; j < APPS[i].opts.length; j++) if (APPS[i].opts[j].code === code) return APPS[i].opts[j]; }
+  function icon(o, cls) {
+    var d = el('div', 'icon' + (o.full ? ' full' : '') + (cls ? ' ' + cls : ''));
+    if (o.full) { d.innerHTML = '<img src="' + A + o.img + '" alt="">'; return d; }
+    d.style.background = o.bg;
+    if (o.tile) {
+      // White rounded plate so the plum mark stays visible on a dark tile.
+      d.innerHTML = '<span style="width:' + o.fit + ';height:' + o.fit + ';background:#fff;border-radius:22%;display:grid;place-items:center"><img src="' + A + o.img + '" alt="" style="width:84%;height:84%"></span>';
+    } else {
+      d.style.setProperty('--fit', o.fit); d.innerHTML = '<img src="' + A + o.img + '" alt="">';
+    }
+    return d;
+  }
+
+  // 1. Logos
+  var lg = document.getElementById('logoGrid');
+  LOGOS.forEach(function (l) {
+    var c = el('div', 'card logo-card');
+    c.appendChild(el('h3', '', l.id + (l.live ? ' <span class="tag live">On website</span>' : '')));
+    c.appendChild(el('p', '', l.note));
+    if (l.full) {
+      c.appendChild(el('div', 'solo', '<img src="' + A + l.file + '" alt="' + l.id + '">'));
+    } else {
+      var b = el('div', 'bgs');
+      [['white', 'White'], ['tint', 'Tint'], ['plum', 'Plum'], ['ink', 'Ink']].forEach(function (x) {
+        var w = el('figure'); w.appendChild(el('div', 'bg-' + x[0], '<img src="' + A + l.file + '" alt="">'));
+        w.appendChild(el('span', '', x[1])); b.appendChild(w);
+      });
+      c.appendChild(b);
+    }
+    var s = el('div', 'sizes');
+    [16, 24, 32, 48].forEach(function (px) {
+      s.appendChild(el('figure', '', '<img src="' + A + l.file + '" alt="" style="height:' + px + 'px;width:auto;margin:0 auto 3px">' + px + ' px'));
+    });
+    c.appendChild(s);
+    lg.appendChild(c);
+  });
+
+  // 2. App options
+  var ag = document.getElementById('appGrid');
+  APPS.forEach(function (app) {
+    var c = el('div', 'card app');
+    c.appendChild(el('h3', '', app.name));
+    c.appendChild(el('div', 'who', app.who));
+    var g = el('div', 'opts');
+    app.opts.forEach(function (o) {
+      var b = el('button', 'opt'); b.type = 'button'; b.dataset.code = o.code; b.dataset.app = app.key;
+      b.appendChild(icon(o));
+      b.appendChild(el('b', '', o.code + ' · ' + o.title));
+      b.appendChild(el('small', '', o.note));
+      b.addEventListener('click', function () { pick[app.key] = o.code; save(); render(); });
+      g.appendChild(b);
+    });
+    c.appendChild(g); ag.appendChild(c);
+  });
+
+  function save() { try { localStorage.setItem('mr-brand-pick', JSON.stringify(pick)); } catch (e) {} }
+
+  // 3. Phones
+  function homePhone(wall) {
+    var p = el('div'); var ph = el('div', 'phone'); var sc = el('div', 'screen ' + wall);
+    sc.appendChild(el('div', 'status', '<span>9:41</span><span>5G ▮▮▮</span>'));
+    var g = el('div', 'grid');
+    var mine = [['P', 'Med Relief'], ['S', 'MR Staff'], ['D', 'MR Doctor']];
+    for (var i = 0; i < 16; i++) {
+      var f = el('figure');
+      var slot = i === 5 ? mine[0] : i === 6 ? mine[1] : i === 9 ? mine[2] : null;
+      if (slot) { f.appendChild(icon(find(pick[slot[0]]))); f.appendChild(el('figcaption', '', slot[1])); }
+      else { f.appendChild(el('div', 'ph')); f.appendChild(el('figcaption', '', '&nbsp;')); }
+      g.appendChild(f);
+    }
+    sc.appendChild(g);
+    var dock = el('div', 'dock'); for (var k = 0; k < 4; k++) dock.appendChild(el('div', 'ph')); sc.appendChild(dock);
+    ph.appendChild(sc); p.appendChild(ph);
+    p.appendChild(el('div', 'phone-cap', wall === 'wall-light' ? 'Light wallpaper' : 'Dark wallpaper'));
+    return p;
+  }
+  function splash(appKey) {
+    var app = APPS.filter(function (a) { return a.key === appKey; })[0], o = find(pick[appKey]);
+    var bg = o.full ? (o.img === 'backup-logo.png' ? '#F7F7F5' : '#18091A') : o.bg;
+    var dark = ['#0F172A', '#86198F', '#18091A'].indexOf(bg) >= 0;
+    var p = el('div'); var ph = el('div', 'phone');
+    var sc = el('div', 'screen splash'); sc.style.background = bg; sc.style.color = dark ? '#fff' : '#0F172A';
+    sc.appendChild(icon(o, 'big'));
+    sc.appendChild(el('div', '', '<b>' + app.label + '</b><br><small>Med Relief Diagnostics</small>'));
+    ph.appendChild(sc); p.appendChild(ph);
+    p.appendChild(el('div', 'phone-cap', app.name + ' · ' + o.code + ' opening screen'));
+    return p;
+  }
+  function render() {
+    document.querySelectorAll('.opt').forEach(function (b) { b.setAttribute('aria-pressed', String(pick[b.dataset.app] === b.dataset.code)); });
+    var hp = document.getElementById('homePhones'); hp.innerHTML = '';
+    hp.appendChild(homePhone('wall-light')); hp.appendChild(homePhone('wall-dark'));
+    var sp = document.getElementById('splashPhones'); sp.innerHTML = '';
+    ['P', 'S', 'D'].forEach(function (k) { sp.appendChild(splash(k)); });
+    document.getElementById('comboText').innerHTML = 'Showing <b>' + pick.S + '</b> (Staff), <b>' + pick.P + '</b> (Patient) and <b>' + pick.D +
+      '</b> (Doctor). Change any of them in section 2. Home screen on a light and a dark wallpaper, then each app’s opening screen.';
+  }
+
+  document.querySelectorAll('.shape button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.shape button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      document.body.classList.toggle('round', b.dataset.shape === 'round');
+    });
+  });
+  render();
+})();
+</script>
+</body>
+</html>
