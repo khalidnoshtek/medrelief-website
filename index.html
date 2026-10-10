@@ -6,9 +6,9 @@
 <title>Med Relief Diagnostics</title>
 <meta name="description" content="Med Relief Diagnostics, Bihar Sharif (Nalanda) — book home sample collection or a centre visit in a chat, pay by UPI, and get your report on WhatsApp. हिंदी में भी।" />
 <meta name="theme-color" content="#86198F" />
-<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
-<link rel="icon" href="assets/brand/favicon-32.png" sizes="32x32" type="image/png" />
-<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon-180.png" />
+<link rel="icon" href="assets/logo/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="assets/logo/favicon-48.png" sizes="48x48" type="image/png" />
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon-180.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -52,7 +52,10 @@ html[lang="hi"] .eyebrow{letter-spacing:.02em;font-size:14px}
 /* ---- header ---- */
 .hdr{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--mr-line)}
 .hdr .wrap{display:flex;align-items:center;gap:10px;min-height:62px}
-.hdr .logo img{height:34px;width:auto}
+.hdr .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.hdr .logo img{height:40px;width:auto}
+.lw b{display:block;font:700 19px/1.05 var(--font);color:var(--mr-primary-deep);letter-spacing:-.01em}
+.lw small{display:block;font:600 9.5px/1.2 var(--font);letter-spacing:.2em;text-transform:uppercase;color:var(--mr-muted);margin-top:2px}
 .hdr-sp{flex:1}
 .seg{display:inline-flex;padding:3px;border-radius:999px;background:var(--mr-tint);border:1px solid rgba(134,25,143,.18)}
 .seg button{appearance:none;border:0;background:none;cursor:pointer;min-height:34px;padding:0 12px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--mr-primary-deep)}
@@ -171,7 +174,10 @@ html[lang="hi"] .offer-tag{text-transform:none;letter-spacing:0;font-size:12.5px
 
 /* ---- footer ---- */
 footer{background:var(--mr-primary-deep);color:rgba(255,255,255,.8);padding:32px 0 26px;font-size:14px}
-footer .flogo{height:34px;width:auto}
+footer .flogo{display:inline-flex;align-items:center;gap:10px}
+footer .flogo span.t{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:#fff}
+footer .flogo img{height:34px;width:auto}
+footer .flogo b{font:700 19px/1.1 var(--font);color:#fff}
 .foot-grid{display:grid;gap:24px;grid-template-columns:repeat(2,minmax(0,1fr))}
 .foot-about{grid-column:1/-1}
 @media(min-width:900px){.foot-grid{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr))}.foot-about{grid-column:auto}}
@@ -304,7 +310,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 <div class="page">
 
 <header class="hdr"><div class="wrap">
-  <a href="#" class="logo" aria-label="Med Relief Diagnostics"><img src="assets/brand/medrelief-horizontal-descriptor-plum.svg" alt="Med Relief Diagnostics" width="173" height="35" /></a>
+  <a href="#" class="logo" aria-label="Med Relief Diagnostics"><img src="assets/logo/logo-mark.png" alt="" width="57" height="40" /><span class="lw"><b>Med Relief</b><small>Diagnostics</small></span></a>
   <span class="hdr-sp"></span>
   <div class="seg" role="group" aria-label="Language / भाषा" data-aud="patients">
     <button type="button" data-lang="en" aria-pressed="true">EN</button>
@@ -425,7 +431,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="foot-about">
-      <img class="flogo" src="assets/brand/medrelief-horizontal-white.svg" alt="Med Relief" width="168" height="34" />
+      <span class="flogo"><span class="t"><img src="assets/logo/logo-mark.png" alt="" width="48" height="34" /></span><b>Med Relief</b></span>
       <p data-i18n="footer_about">A diagnostic laboratory serving Bihar Sharif, Nalanda and Madhubani.</p>
     </div>
     <div><h4 data-i18n="f_patients">Patients</h4><div class="foot-links"><button data-chat="home" data-i18n="f_home">Home collection</button><button data-chat="visit" data-i18n="f_visit">Book a centre visit</button><button data-chat="track" data-i18n="f_track">Track a report</button><button data-chat="offers" data-i18n="f_offers">Offers &amp; packages</button></div></div>
@@ -451,7 +457,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   <div class="mc-panel">
     <div class="mc-head">
       <div class="mc-id">
-        <span class="mc-avatar"><img src="assets/brand/medrelief-mark-plum.svg" alt="" /></span>
+        <span class="mc-avatar"><img src="assets/logo/logo-mark.png" alt="" /></span>
         <div><b class="mc-title">Med Relief assistant</b><small><span class="mc-live"></span><span data-i18n="chat_status">Online · replies instantly</span></small></div>
         <div class="sp">
           <button type="button" class="mc-icbtn mc-restart" aria-label="Start over" data-i18n-aria="restart"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
@@ -575,6 +581,6 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   document.querySelector('[data-tab-back]').addEventListener('click', function(){ document.querySelector('.mc-tab[data-tab="chat"]').click(); });
 })();
 </script>
-<script src="chat.js?v=20261010f"></script>
+<script src="chat.js?v=20261010g"></script>
 </body>
 </html>

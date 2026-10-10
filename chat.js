@@ -616,7 +616,7 @@
       var rzp = new window.Razorpay({
         key: rz.key_id, order_id: rz.order_id, amount: rz.amount_paise, currency: rz.currency || 'INR',
         name: 'Med Relief Diagnostics', description: o.order_ref,
-        image: new URL('assets/brand/maskable-192.png', location.href).href,
+        image: new URL('assets/logo/maskable-192.png', location.href).href,
         prefill: { name: B.name, contact: '+91' + B.mobile },
         notes: { order_ref: o.order_ref },
         theme: { color: (C.razorpay && C.razorpay.brandColor) || '#86198F' },
