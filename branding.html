@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
+<script>try{var t=localStorage.getItem("mr-brand-theme");if(t==="auto")document.documentElement.removeAttribute("data-theme");else if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Med Relief Branding</title>
@@ -42,6 +43,9 @@ header.top .tile img{height:34px;width:auto}
 header.top h1{font-size:clamp(22px,4vw,30px);font-weight:800}
 header.top p{opacity:.85;margin-top:4px;font-size:14px}
 nav.jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.theme{display:inline-flex;margin-top:14px;background:rgba(255,255,255,.14);border-radius:999px;padding:3px;gap:2px}
+.theme button{font:inherit;font-size:12.5px;font-weight:600;border:0;background:none;color:#fff;opacity:.8;padding:5px 12px;border-radius:999px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:#fff;color:#701A75;opacity:1}
 nav.jump a{color:#fff;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);text-decoration:none}
 
 section{padding:36px 0 8px}
@@ -118,6 +122,8 @@ section > .wrap > p.lead{color:var(--mr-muted);max-width:720px;margin-bottom:18p
 /* Documents */
 .docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .doc img{border:1px solid var(--mr-line);border-radius:8px;width:100%;background:#fff}
+.doc .narrow{max-width:210px;margin:0 auto}
+.doc ul{font-size:13px;color:var(--mr-muted);padding-left:18px;margin:0 0 10px}
 .doc h3{font-size:16px;font-weight:700;margin-bottom:4px}
 .doc p{font-size:13px;color:var(--mr-muted);margin-bottom:10px}
 .btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-weight:700;font-size:14px;color:#fff;background:#86198F;padding:9px 14px;border-radius:12px;text-decoration:none}
@@ -132,12 +138,15 @@ footer{padding:36px 0 48px;color:var(--mr-muted);font-size:13px}
       <span class="tile"><img src="assets/logo/logo-mark.png" alt="" width="48" height="34"></span>
       <div>
         <h1>Med Relief branding: options to decide</h1>
-        <p>Logos, app icons for the three apps, and the restyled report and invoice. Draft for review, 10 Oct 2026.</p>
+        <p>Logos, app icons for the three apps, and the restyled report, invoice and receipt. Draft for review, 10 Oct 2026.</p>
       </div>
     </div>
     <nav class="jump" aria-label="Sections">
-      <a href="#decide">Decisions</a><a href="#logos">Logos</a><a href="#apps">App icons</a><a href="#phone">On a phone</a><a href="#docs">Report &amp; invoice</a>
+      <a href="#decide">Decisions</a><a href="#logos">Logos</a><a href="#apps">App icons</a><a href="#phone">On a phone</a><a href="#docs">Report, invoice &amp; receipt</a>
     </nav>
+    <div class="theme" role="group" aria-label="Page theme">
+      <button type="button" data-theme-set="light">Light</button><button type="button" data-theme-set="dark">Dark</button><button type="button" data-theme-set="auto">Auto</button>
+    </div>
   </div>
 </header>
 
@@ -150,7 +159,7 @@ footer{padding:36px 0 48px;color:var(--mr-muted);font-size:13px}
         <li><b>Staff app icon:</b> <code>S-A</code>, <code>S-B</code> or <code>S-C</code></li>
         <li><b>Patient app icon:</b> <code>P-A</code>, <code>P-B</code> or <code>P-C</code></li>
         <li><b>Doctor app icon:</b> <code>D-A</code>, <code>D-B</code> or <code>D-C</code></li>
-        <li><b>Report and invoice:</b> switch from the current teal to plum with the heart watermark? <code>Yes</code> / <code>No</code></li>
+        <li><b>Report, invoice and receipt:</b> switch from the current teal to plum, with the new logo and the heart watermark? <code>Yes</code> / <code>No</code></li>
       </ol>
       <p class="reply">Reply with the codes, for example <span class="mono">Main, S-A, P-A, D-B, Yes</span>. Tap any icon option below to preview that combination on a phone.</p>
     </div>
@@ -194,9 +203,9 @@ footer{padding:36px 0 48px;color:var(--mr-muted);font-size:13px}
 
 <section id="docs">
   <div class="wrap">
-    <div class="eyebrow">4 · Report &amp; invoice</div>
-    <h2>Restyled in plum, with the heart watermark</h2>
-    <p class="lead">Samples made by the real report and invoice generator, recoloured to the website palette with the overlay heart faint behind the content. All patient, doctor and bill details are dummy data. The live app still prints the teal version until this is approved.</p>
+    <div class="eyebrow">4 · Report, invoice &amp; receipt</div>
+    <h2>Restyled in plum, with the new logo</h2>
+    <p class="lead">The invoice and receipt follow the staff app's current print layout (the 9 Oct redesign) field for field, and change only the colours and logo and add the watermark. The report comes from the real report generator. All patient, doctor and bill details are dummy data. The live app still prints the teal version until this is approved.</p>
     <div class="docs">
       <div class="card doc">
         <h3>Lab report (A4, 4 pages)</h3>
@@ -205,10 +214,24 @@ footer{padding:36px 0 48px;color:var(--mr-muted);font-size:13px}
         <a class="btn" href="assets/branding/sample-report.pdf" target="_blank" rel="noopener">Open sample report (PDF)</a>
       </div>
       <div class="card doc">
-        <h3>Invoice / receipt (A5)</h3>
-        <p>Same palette and watermark. Package billed as one line with ₹0 component tests.</p>
-        <a href="assets/branding/sample-invoice.pdf" target="_blank" rel="noopener"><img src="assets/branding/inv-preview.png" alt="Sample invoice" loading="lazy"></a>
+        <h3>Invoice (A4, "A4 Invoice" button)</h3>
+        <ul>
+          <li>Patient ID, mobile, referring doctor, sample ID, payment mode</li>
+          <li>"Scan this QR to view your report" + PAID IN FULL status</li>
+          <li>"Scan to download the Medrelief Patient app" QR + Google Play badge</li>
+          <li>Bill disclaimer and data-use consent notice</li>
+        </ul>
+        <a href="assets/branding/sample-invoice.pdf" target="_blank" rel="noopener"><img src="assets/branding/inv-preview.png" alt="Sample A4 invoice" loading="lazy"></a>
         <a class="btn" href="assets/branding/sample-invoice.pdf" target="_blank" rel="noopener">Open sample invoice (PDF)</a>
+      </div>
+      <div class="card doc">
+        <h3>Payment receipt (80 mm thermal)</h3>
+        <ul>
+          <li>Same fields, report QR, Play QR + badge and disclaimers</li>
+          <li>Thermal paper prints black only: the logo comes out grey and there is no watermark</li>
+        </ul>
+        <a href="assets/branding/sample-receipt.pdf" target="_blank" rel="noopener"><img class="narrow" src="assets/branding/rcpt-preview.png" alt="Sample 80 mm thermal receipt" loading="lazy"></a>
+        <a class="btn" href="assets/branding/sample-receipt.pdf" target="_blank" rel="noopener">Open sample receipt (PDF)</a>
       </div>
     </div>
   </div>
@@ -357,6 +380,17 @@ footer{padding:36px 0 48px;color:var(--mr-muted);font-size:13px}
     });
   });
   render();
+
+  function setTheme(t) {
+    var r = document.documentElement;
+    if (t === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', t);
+    try { localStorage.setItem('mr-brand-theme', t); } catch (e) {}
+    document.querySelectorAll('[data-theme-set]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.themeSet === t)); });
+  }
+  document.querySelectorAll('[data-theme-set]').forEach(function (b) {
+    b.addEventListener('click', function () { setTheme(b.dataset.themeSet); });
+  });
+  setTheme(document.documentElement.getAttribute('data-theme') || 'auto');
 })();
 </script>
 </body>
