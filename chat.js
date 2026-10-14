@@ -864,7 +864,7 @@
   function titleText() { return aud === 'b2b' ? t('chat_title_b2b') : t('chat_title'); }
   function setAudience(a, silent) {
     aud = a === 'b2b' ? 'b2b' : 'patients';
-    root.setAttribute('data-aud', aud);
+    root.setAttribute('data-chat-aud', aud);   // not data-aud: the page's view switch hides every [data-aud] that isn't the current view
     root.querySelector('.mc-title').textContent = titleText();
     if (!silent) { reset(); aud === 'b2b' ? partnerMenu() : menu(); }
   }
