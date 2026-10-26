@@ -77,7 +77,9 @@ window.MR_CONFIG = {
   // Razorpay Standard Checkout (loaded only when the patient taps Pay).
   razorpay: { script: 'https://checkout.razorpay.com/v1/checkout.js', brandColor: '#86198F' },
 
-  // Common single tests the chat can quote. code = catalogue code (case-insensitive).
+  // Common single tests the chat can quote. code = the EXACT catalogue code (case-insensitive) —
+  // the server re-prices by code at checkout, so a code that isn't an exact match fails
+  // (Widal's catalogue code is 'WIDAL TEST *', checked 2026-10-27).
   tests: [
     { code: 'CBC',   name: 'Complete Blood Count (CBC)', name_hi: 'कम्प्लीट ब्लड काउंट (CBC)', mrp: 400 },
     { code: 'BSF',   name: 'Blood Sugar Fasting', name_hi: 'फ़ास्टिंग ब्लड शुगर', mrp: 50, fasting: true },
@@ -93,7 +95,7 @@ window.MR_CONFIG = {
     { code: 'Urine Routine', name: 'Urine Routine', name_hi: 'पेशाब की जाँच (रूटीन)', mrp: 100 },
     { code: 'CRP',   name: 'C-Reactive Protein (CRP)', name_hi: 'CRP (सूजन की जाँच)', mrp: 500 },
     { code: 'Uric Acid', name: 'Uric Acid', name_hi: 'यूरिक एसिड', mrp: 200 },
-    { code: 'Widal', name: 'Widal Test (typhoid)', name_hi: 'विडाल टेस्ट (टाइफ़ाइड)', mrp: 200 },
+    { code: 'WIDAL TEST *', name: 'Widal Test (typhoid)', name_hi: 'विडाल टेस्ट (टाइफ़ाइड)', mrp: 200 },
     { code: 'DENGUE NS1', name: 'Dengue Profile', name_hi: 'डेंगू प्रोफ़ाइल', mrp: 900 },
     { code: 'Malaria Parasite', name: 'Malaria Parasite', name_hi: 'मलेरिया जाँच', mrp: 200 }
   ],
