@@ -1,0 +1,59 @@
+# Publish the public site to medrelief.co.in (S3 + CloudFront in the Medrelief
+# prod AWS account) on every push to main. The role is defined in medlab
+# infra/envs/prod (aws_iam_role.website_deploy) and trusts only this repo's main.
+# Only the public site goes out; review pages (branding.html, assets/branding/)
+# stay on GitHub Pages.
+name: Deploy website (medrelief.co.in)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: website-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      BUCKET: ${{ vars.WEBSITE_BUCKET }}
+      DISTRIBUTION: ${{ vars.WEBSITE_DISTRIBUTION_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_WEBSITE_DEPLOY_ROLE_ARN }}
+          aws-region: ap-south-1
+
+      - name: Stage the public files
+        run: |
+          set -euo pipefail
+          mkdir -p out/assets/logo
+          cp index.html chat.js config.js i18n.js privacy.html terms.html out/
+          cp assets/qr-patient-app.svg out/assets/
+          cp assets/logo/* out/assets/logo/
+          find out -type f | sort
+
+      - name: Upload
+        run: |
+          set -euo pipefail
+          # Pages and scripts revalidate on every load (scripts carry ?v= stamps);
+          # logos and the QR may be cached for a day.
+          aws s3 sync out/ "s3://$BUCKET/" --delete --exclude "assets/*" \
+            --cache-control "public, max-age=0, must-revalidate"
+          aws s3 sync out/assets/ "s3://$BUCKET/assets/" --delete \
+            --cache-control "public, max-age=86400"
+
+      - name: Refresh CloudFront
+        run: |
+          set -euo pipefail
+          id=$(aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION" --paths '/*' --query Invalidation.Id --output text)
+          aws cloudfront wait invalidation-completed --distribution-id "$DISTRIBUTION" --id "$id"
+          echo "Live: https://medrelief.co.in/"
