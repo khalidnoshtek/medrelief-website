@@ -57,7 +57,12 @@ python3 -m http.server 8791   # then open http://localhost:8791
 ```
 
 ## Deploy
-GitHub Pages serves `main` → pushing to `main` publishes publicly. Work on a branch.
+Pushing to `main` publishes everywhere — work on a branch:
+- **https://medrelief.co.in** (the real site): `.github/workflows/deploy-aws.yml` syncs the public files to S3 + CloudFront in the Medrelief AWS account (repo variables `AWS_WEBSITE_DEPLOY_ROLE_ARN`, `WEBSITE_BUCKET`, `WEBSITE_DISTRIBUTION_ID`). Review pages (`branding.html`, `assets/branding/`) are not published there.
+- **GitHub Pages** keeps a copy (and the branding review page); it has no in-chat payment.
+- The old `app.medlab.noshtek.ai/book/` copy forwards to medrelief.co.in (2026-10-27); there is nothing to sync into medlab any more.
+
+In-chat UPI opens only on `config.paymentHosts` — domains registered on the Razorpay account.
 
 ## Confirm before going live
 - **Slots / hours** — `config.slots` are placeholders; the centres' real windows are not stated anywhere.
