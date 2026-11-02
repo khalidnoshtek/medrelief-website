@@ -44,7 +44,7 @@ window.MR_CONFIG = {
   },
 
   centres: [
-    { id: 'bihar-sharif', name: 'Bihar Sharif', tag: 'Main centre & lab',
+    { id: 'bihar-sharif', name: 'Bihar Sharif', tag: 'Centre & lab',
       address: '50 m North of Bhainsasur Chowk, Opp. Sudha Dairy, Bihar Sharif (Nalanda) — 803101',
       phones: ['+91 92638 40556', '061124 53327'] },
     { id: 'rajgir', name: 'Rajgir', tag: 'Collection centre',
