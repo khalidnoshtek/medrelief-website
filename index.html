@@ -529,7 +529,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
     // Centres
     document.getElementById('centre-list').innerHTML = (C.centres || []).map(function(x, i){
       var home = C.homeCollection && C.homeCollection.lab && C.homeCollection.lab.name === x.name;
-      return '<article class="card loc"><div class="loc-top"><h3>' + esc(x.name) + '</h3>' + (i === 0 ? '<span class="pill">' + t('main_lab') + '</span>' : '') + '</div>' +
+      return '<article class="card loc"><div class="loc-top"><h3>' + esc(x.name) + '</h3>' + '' + '</div>' +
         '<div class="loc-row">' + pin + '<span>' + esc(x.address) + '</span></div>' +
         '<div class="loc-row">' + ph + '<span class="mono">' + x.phones.map(esc).join(' · ') + '</span></div>' +
         (home ? '<div class="loc-row">' + hom + '<span>' + t('home_radius_note', { km: KM }) + '</span></div>' : '') +
