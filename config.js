@@ -14,6 +14,14 @@ window.MR_CONFIG = {
   phoneDisplay: '+91 92638 40556',
   email: 'hi@medrelief.co.in',
 
+  // Our social handles (one set for all of Med Relief, not per centre). Shown in the footer.
+  social: {
+    handle: '@medreliefdiagnostics',
+    instagram: 'https://www.instagram.com/medreliefdiagnostics/',
+    facebook: 'https://www.facebook.com/medreliefdiagnostics',
+    youtube: 'https://www.youtube.com/@medreliefdiagnostics',
+  },
+
   // A WhatsApp number that a PERSON reads. Leave '' if the business number is registered
   // on the WhatsApp Business API: messages to an API number have no human inbox, so a
   // "send on WhatsApp" hand-off would go nowhere.
