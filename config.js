@@ -58,7 +58,8 @@ window.MR_CONFIG = {
     { id: 'rajgir', name: 'Rajgir', tag: 'Collection centre',
       address: 'Rajgir, Nalanda district, Bihar', phones: ['+91 92638 40556'] },
     { id: 'ekangarsarai', name: 'Ekangarsarai', tag: 'Centre',
-      address: 'Ekangarsarai, Nalanda district, Bihar', phones: ['+91 92638 40556'] },
+      address: 'SAK Tower, Near Railway Fatak, Ekangarsarai (Nalanda) — 801301',
+      phones: ['+91 88935 13340'] },
     { id: 'madhubani', name: 'Madhubani', tag: 'Centre',
       address: 'Madhubani, Bihar', phones: ['+91 92638 40556'] }
   ],
