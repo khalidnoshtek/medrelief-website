@@ -898,6 +898,16 @@
 
   window.MRChat = { open: open, close: close, setAudience: setAudience };
   setAudience(document.body.getAttribute('data-view') === 'b2b' ? 'b2b' : 'patients', true);
+
+  // Ad / QR deep link (2026-11-07): ?book=home | visit | offers | track | centre:<id> opens the chat
+  // straight in that flow, e.g. https://medrelief.co.in/?book=centre:ekangarsarai&utm_source=facebook…
+  try {
+    var bk = new URLSearchParams(location.search).get('book');
+    var okCentre = function (id) { return (C.centres || []).some(function (c) { return c.id === id; }); };
+    if (bk && (/^(home|visit|offers|track)$/.test(bk) || (/^centre:[a-z-]+$/.test(bk) && okCentre(bk.slice(7))))) {
+      later(function () { open(bk); measure('chat_open', { intent: bk.split(':')[0], where: 'link' }); });
+    }
+  } catch (e) {}
   setPlaceholder();
   aud === 'b2b' ? partnerMenu() : menu();
 })();
