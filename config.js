@@ -30,7 +30,9 @@ window.MR_CONFIG = {
   // Campaign measurement (analytics.js). Empty = off: no banner, nothing loads.
   // ga4 = the GA4 Measurement ID ('G-XXXXXXX'); metaPixel = the Meta dataset (Pixel) ID.
   // Both load only after the visitor taps Allow on the consent banner.
-  analytics: { ga4: '', metaPixel: '' },
+  // GA4 property 'medrelief.co.in' (account Med Relief Diagnostics, Medrelief Marketing Google login);
+  // Meta dataset 'medrelief.co.in website' in the Medrelief business portfolio (created 2026-11-07).
+  analytics: { ga4: 'G-1Q7195C36E', metaPixel: '1133682649647706' },
 
   // Public booking API (medlab). On load the site asks GET /public/home-collection/status;
   // in-chat UPI payment switches on only when it answers online_payment: true (live
