@@ -569,6 +569,8 @@
   }
 
   // ── PAY (home collection) ──────────────────────────────────────────────────
+  // Campaign measurement: amounts and the opaque order ref only, never patient or test details.
+  function measure(name, params) { try { if (window.mrTrack) window.mrTrack(name, params); } catch (e) {} }
   function post(path, body) {
     return fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }  /* only CORS-allowed headers: the API rejects others at preflight */, body: JSON.stringify(body) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); });
@@ -588,6 +590,7 @@
       consent: { policy: 'privacy.html', accepted_at: new Date().toISOString() }
     }).then(function (r) {
       B.order = r;
+      measure('order_created', { value: r.total_inr });
       if (Math.round(r.total_inr) !== Math.round(estimate())) bot(t('price_changed', { amt: inr(r.total_inr) }));
       checkout();
     }).catch(function (e) {
@@ -643,11 +646,13 @@
     var when = B.dateLabel + ' · ' + B.slot.label;
     post('/public/home-collection/orders/' + encodeURIComponent(o.order_ref) + '/verify', resp)
       .then(function (r) {
+        measure('purchase', { value: o.total_inr, transaction_id: r.order_ref || o.order_ref });
         bot(t('paid_ok', { ref: esc(r.order_ref || o.order_ref), when: esc(when), bill: r.bill_number ? t('paid_bill', { b: esc(r.bill_number) }) : '' }));
         andThen();
       })
       .catch(function () {
         // The Razorpay webhook completes the booking even if this call fails.
+        measure('purchase', { value: o.total_inr, transaction_id: o.order_ref });
         bot(t('paid_pending', { ref: esc(o.order_ref), phone: C.phoneDisplay }));
         andThen();
       });
@@ -667,6 +672,7 @@
     ].filter(Boolean).join('\n');
   }
   function handoff(afterError) {
+    measure('booking_request', { kind: B.kind === 'home' ? 'home' : 'visit' });
     if (!afterError) bot(t('handoff', { name: esc(B.name.split(' ')[0]) }));
     later(function () {
       var txt = summaryText();
