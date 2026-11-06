@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p out/assets/logo
-          cp index.html chat.js config.js i18n.js privacy.html terms.html out/
+          cp index.html chat.js config.js i18n.js analytics.js privacy.html terms.html out/
           cp assets/qr-patient-app.svg out/assets/
           cp assets/logo/* out/assets/logo/
           find out -type f | sort
