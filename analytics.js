@@ -70,9 +70,9 @@
 
   // ── events: name → GA4 event + Meta standard event ──
   var MAP = {
-    click_call:       { ga: 'click_call',     px: 'Contact' },
-    click_whatsapp:   { ga: 'click_whatsapp', px: 'Contact' },
-    chat_open:        { ga: 'chat_open' },
+    click_call:       { ga: 'call_click',     px: 'Contact' },        // names as in the launch plan
+    click_whatsapp:   { ga: 'whatsapp_click', px: 'Contact' },
+    chat_open:        { ga: 'booking_start' },                        // the chat opens (intent = home/visit/track/…)
     booking_request:  { ga: 'generate_lead',  px: 'Lead' },             // call-to-confirm hand-off
     order_created:    { ga: 'begin_checkout', px: 'InitiateCheckout' }, // home-collection order made, before UPI
     purchase:         { ga: 'purchase',       px: 'Purchase' }          // UPI payment confirmed
