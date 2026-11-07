@@ -212,11 +212,16 @@
     if (isoDay(date) !== isoDay(now)) return all;
     return all.filter(function (s) { return s.start > now.getHours() + 1; });
   }
+  function dayAt(i) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + i); return d; }
   function pickDay(kind, then) {
     resume = function () { pickDay(kind, then); };
     var days = [], n = (C.slots && C.slots.daysAhead) || 3;
-    for (var i = 0; i <= n; i++) {
-      var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + i);
+    // A centre that opens later (config bookFrom): the first day offered is its opening day.
+    var from = (kind === 'centre' && window.MR_BOOK_FROM) ? window.MR_BOOK_FROM(B.centre) : '';
+    var start = 0;
+    while (from && start < 60 && isoDay(dayAt(start)) < from) start++;
+    for (var i = start; i <= start + n; i++) {
+      var d = dayAt(i);
       if (slotsFor(kind, d).length) days.push({ d: d, i: i });
     }
     bot(t('ask_day'));
@@ -501,14 +506,19 @@
     B = { kind: 'visit', items: [], key: newKey() };
     if (c) B.items = [pkgItem(c)];
     var centre = (C.centres || []).filter(function (x) { return x.id === centreId; })[0];
-    if (centre) { B.centre = centre; bot(t('visit_at', { c: esc(centre.name) })); return pickDay('centre', visitTests); }
+    if (centre) { B.centre = centre; bot(t('visit_at', { c: esc(centre.name) })); centreNote(centre); return pickDay('centre', visitTests); }
     visitWhere();
   }
   function visitWhere() {
     resume = visitWhere;
     bot(t('ask_centre'));
-    choose((C.centres || []).map(function (x) { return { l: x.name, go: function () { B.centre = x; pickDay('centre', visitTests); } }; }));
+    choose((C.centres || []).map(function (x) { return { l: x.name, go: function () { B.centre = x; centreNote(x); pickDay('centre', visitTests); } }; }));
   }
+  // Not taking bookings yet (config bookFrom): say so, in Hindi and English, before the days.
+  function centreNote(centre) {
+    if (window.MR_BOOK_FROM && window.MR_BOOK_FROM(centre) && centre.bookFromNote) bot('<b>' + esc(centre.bookFromNote) + '</b>');
+  }
+  function centreAddress(centre) { return (lang() === 'hi' && centre.address_hi) || centre.address; }
   function visitTests() {
     resume = visitTests;
     if (B.items.length) return visitMobile();
@@ -556,7 +566,7 @@
         h('div', { class: 'mc-sum-h', text: home ? t('s_home') : t('s_visit', { c: B.centre.name }) }),
         row(t('s_patient'), B.name + (home ? (B.age != null ? ' · ' + B.age : '') + (gender ? ' · ' + gender : '') : '')),
         row(t('s_mobile'), B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2')),
-        home ? row(t('s_address'), B.address + ', ' + B.pincode) : row(t('s_centre'), B.centre.address),
+        home ? row(t('s_address'), B.address + ', ' + B.pincode) : row(t('s_centre'), centreAddress(B.centre)),
         row(t('s_when'), B.dateLabel + ' · ' + B.slot.label),
         lines,
         (B.items && B.items.length) ? h('div', { class: 'mc-total' }, [h('span', { text: payOnline ? t('s_total') : B.rx ? t('s_est_sofar') : t('s_est') }), h('span', {}, [mrp > est ? h('s', { text: inr(mrp) }) : null, ' ', h('b', { text: inr(est) })])]) : null,

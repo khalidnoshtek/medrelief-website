@@ -5,7 +5,7 @@
  *   2. the visitor taps "Allow" on the banner (the choice is remembered on this device;
  *      "Cookie choices" in the footer asks again).
  *
- * What is sent: page views, taps on Call / WhatsApp / the chat, and booking events with an
+ * What is sent: page views, taps on Call / WhatsApp / the chat / the /links buttons, and booking events with an
  * amount and our opaque order reference. NEVER names, mobile numbers, addresses, ages or
  * test/package names (DPDP, and Meta's rules for health-related advertisers).
  *
@@ -75,7 +75,8 @@
     chat_open:        { ga: 'booking_start' },                        // the chat opens (intent = home/visit/track/…)
     booking_request:  { ga: 'generate_lead',  px: 'Lead' },             // call-to-confirm hand-off
     order_created:    { ga: 'begin_checkout', px: 'InitiateCheckout' }, // home-collection order made, before UPI
-    purchase:         { ga: 'purchase',       px: 'Purchase' }          // UPI payment confirmed
+    purchase:         { ga: 'purchase',       px: 'Purchase' },         // UPI payment confirmed
+    link_click:       { ga: 'link_click' }                              // /links taps: kind = book/location/social/website, intent = centre or platform
   };
   var SAFE = { where: 1, intent: 1, kind: 1, value: 1, currency: 1, transaction_id: 1 };
   window.mrTrack = function (name, params) {
@@ -96,12 +97,14 @@
 
   // Taps anywhere on the page (page links and the chat's buttons alike).
   document.addEventListener('click', function (e) {
-    var el = e.target && e.target.closest && e.target.closest('a[href^="tel:"], a[href*="wa.me/"], [data-chat]');
+    var el = e.target && e.target.closest && e.target.closest('a[href^="tel:"], a[href*="wa.me/"], [data-chat], [data-track]');
     if (!el) return;
-    var where = (el.closest('footer') && 'footer') || (el.closest('#mr-chat') && 'chat') || 'page';
+    var area = el.closest('[data-where]');   // e.g. the /links page
+    var where = (el.closest('footer') && 'footer') || (el.closest('#mr-chat') && 'chat') || (area && area.getAttribute('data-where')) || 'page';
     if (el.matches('a[href^="tel:"]')) window.mrTrack('click_call', { where: where });
     else if (el.matches('a[href*="wa.me/"]')) window.mrTrack('click_whatsapp', { where: where });
-    else window.mrTrack('chat_open', { intent: String(el.getAttribute('data-chat') || '').split(':')[0], where: where });
+    else if (el.hasAttribute('data-chat')) window.mrTrack('chat_open', { intent: String(el.getAttribute('data-chat') || '').split(':')[0], where: where });
+    else window.mrTrack('link_click', { kind: el.getAttribute('data-track'), intent: el.getAttribute('data-intent') || '', where: where });
   }, true);
 
   if (!GA && !PX) return;   // nothing configured: no banner, nothing loads
