@@ -21,13 +21,19 @@ chat.js        the assistant — flows, validation, hand-off / API adapter
 config.js      EVERYTHING editable: phone, centres, slots, tests, campaigns, lab pin + radius, app links, API
 i18n.js        every patient-facing string in English and Hindi
 privacy.html / terms.html
+links.html     link-in-bio page for Instagram, served at /links: book online, per-centre Call / Location / Book here, socials (from config.js; booking links carry utm_source=instagram&utm_medium=bio&utm_campaign=linkinbio)
 branding.html  unlisted (noindex) review page for Mithlesh: logo variants, Staff/Patient/Doctor app-icon options, sample report, A4 invoice + 80mm receipt (mirror the staff ReceiptPage print layout) · assets/branding/
 assets/logo/   Med Relief heart-in-hands logo (from "Main Logo.svg", 2026-10-10): logo-mark.png 17 KB, favicons, touch icons · assets/qr-patient-app.svg (→ install.html?app=patient&auto=1)
 ```
 The end-to-end workflow spec (website order → proposed bill → desk → agent → payment) and
 the API contract live outside this repo — this repo is public and served as-is.
 No build step, no dependencies. Only external request: Google Fonts.
-When you change `config.js`, `i18n.js` or `chat.js`, bump the `?v=` stamp on their `<script>` tags in `index.html` so browsers don't mix a cached old file with a new one.
+When you change `config.js`, `i18n.js` or `chat.js`, bump the `?v=` stamp on their `<script>` tags in `index.html` (and `links.html` for `config.js` / `analytics.js`) so browsers don't mix a cached old file with a new one.
+
+**A centre that opens later:** set `bookFrom: 'YYYY-MM-DD'` and `bookFromNote` on it in `config.js`. Until that
+date (India time) the centre card, `/links` and the chat show the note, and the chat's first bookable day is
+`bookFrom`; from that date both switch off by themselves. `maps` on a centre = its Google Business Profile link
+for `/links` (empty = a Google Maps search for name + address).
 
 ## Two modes (set in `config.js → api.baseUrl`)
 | Mode | Home collection | Centre visit / partners |
@@ -58,7 +64,7 @@ python3 -m http.server 8791   # then open http://localhost:8791
 
 ## Deploy
 Pushing to `main` publishes everywhere — work on a branch:
-- **https://medrelief.co.in** (the real site): `.github/workflows/deploy-aws.yml` syncs the public files to S3 + CloudFront in the Medrelief AWS account (repo variables `AWS_WEBSITE_DEPLOY_ROLE_ARN`, `WEBSITE_BUCKET`, `WEBSITE_DISTRIBUTION_ID`). Review pages (`branding.html`, `assets/branding/`) are not published there.
+- **https://medrelief.co.in** (the real site): `.github/workflows/deploy-aws.yml` syncs the public files to S3 + CloudFront in the Medrelief AWS account (repo variables `AWS_WEBSITE_DEPLOY_ROLE_ARN`, `WEBSITE_BUCKET`, `WEBSITE_DISTRIBUTION_ID`). Review pages (`branding.html`, `assets/branding/`) are not published there. `links.html` also goes up as the extensionless key `links` (type set to text/html), because the private S3 origin has no index rewrite and CloudFront answers any missing path with the home page.
 - **GitHub Pages** keeps a copy (and the branding review page); it has no in-chat payment.
 - The old `app.medlab.noshtek.ai/book/` copy forwards to medrelief.co.in (2026-10-27); there is nothing to sync into medlab any more.
 

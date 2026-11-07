@@ -58,17 +58,27 @@ window.MR_CONFIG = {
     partnerPortal: 'https://doctor.medlab.noshtek.ai'
   },
 
+  // address_hi = the address in Hindi (shown in हिंदी mode; '' or missing = the English one).
+  // maps = the centre's Google Business Profile / Google Maps share link, used by /links
+  //        ('' = a Google Maps search for the centre's name + address).
+  // bookFrom / bookFromNote = a centre that is not taking bookings yet: until bookFrom
+  //        ('YYYY-MM-DD', India time) the site shows the note and the chat's earliest day is
+  //        bookFrom. Both switch off by themselves on that date — nothing to remove later.
   centres: [
     { id: 'bihar-sharif', name: 'Bihar Sharif', tag: 'Centre & lab',
       address: '50 m North of Bhainsasur Chowk, Opp. Sudha Dairy, Bihar Sharif (Nalanda) — 803101',
-      phones: ['+91 92638 40556', '061124 53327'] },
+      phones: ['+91 92638 40556', '061124 53327'], maps: '' },
     { id: 'rajgir', name: 'Rajgir', tag: 'Collection centre',
-      address: 'Rajgir, Nalanda district, Bihar', phones: ['+91 92638 40556'] },
+      address: 'Rajgir, Nalanda district, Bihar', phones: ['+91 92638 40556'], maps: '' },
     { id: 'ekangarsarai', name: 'Ekangarsarai', tag: 'Centre',
       address: 'SAK Tower, Near Railway Fatak, Ekangarsarai (Nalanda) — 801301',
-      phones: ['+91 88935 13340'] },
+      phones: ['+91 88935 13340'], maps: '',
+      bookFrom: '2026-11-11',
+      bookFromNote: 'एकंगरसराय में बुकिंग 11 नवंबर से / Ekangarsarai bookings start from 11 November' },
     { id: 'madhubani', name: 'Madhubani', tag: 'Centre',
-      address: 'Madhubani, Bihar', phones: ['+91 92638 40556'] }
+      address: 'Ground Floor, Bhramdev Complex, In front of Watson High School (Behind Bazar India Mall / Domino\'s Pizza), Madhubani, Bihar 847211',
+      address_hi: 'ग्राउंड फ़्लोर, ब्रह्मदेव कॉम्प्लेक्स, वॉटसन हाई स्कूल के सामने (बाज़ार इंडिया मॉल / डोमिनोज़ पिज़्ज़ा के पीछे), मधुबनी, बिहार 847211',
+      phones: ['+91 91421 55427'], maps: '' }
   ],
 
   // CONFIRM: operating windows. Placeholders until the centres confirm their hours.
@@ -147,4 +157,19 @@ window.MR_CONFIG = {
       tests: [['Complete Blood Count', 400], ['Blood Sugar Fasting', 50], ['Cholesterol', 200],
               ['SGPT', 200], ['Creatinine', 200], ['TSH', 300]] }
   ]
+};
+
+// Today's date in India (Asia/Kolkata) as 'YYYY-MM-DD', whatever time zone the visitor's phone is set to.
+window.MR_TODAY_IST = function () {
+  try {
+    var p = {};
+    new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' })
+      .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    if (p.year && p.month && p.day) return p.year + '-' + p.month + '-' + p.day;
+  } catch (e) {}
+  return new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10);   // IST = UTC+5:30, no DST
+};
+// A centre not taking bookings yet → its first bookable day ('YYYY-MM-DD'); '' once that day has come.
+window.MR_BOOK_FROM = function (centre) {
+  return (centre && centre.bookFrom && window.MR_TODAY_IST() < centre.bookFrom) ? centre.bookFrom : '';
 };
