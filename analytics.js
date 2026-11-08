@@ -15,6 +15,14 @@
  *
  * Other scripts report events through window.mrTrack(name, params); it is a no-op until
  * the visitor allows measurement.
+ *
+ * Anonymous visit count (2026-11-09) — runs for EVERY visitor, no consent needed because
+ * nothing personal is sent or kept: once per browser tab, the landing page, the UTM tags
+ * above and the referring site's host name (e.g. instagram.com) go to our own API
+ * (POST /public/web-visits). No cookie is set (a sessionStorage flag stops a second count
+ * in the same tab) and the server stores no IP address, device ID or user agent — only
+ * "day × tags × page → a number". This is how the staff app's Reports → Patient sources
+ * shows real Facebook / Instagram traffic; GA4 and the Pixel only see people who tap Allow.
  */
 (function () {
   var C = (window.MR_CONFIG && window.MR_CONFIG.analytics) || {};
@@ -37,6 +45,28 @@
     else utm = JSON.parse(sessionStorage.getItem(UTM_KEY) || '{}') || {};
   } catch (e) { utm = {}; }
   window.MR_UTM = function () { return utm; };
+
+  // ── anonymous visit count (see the header: no cookie, nothing personal) ──
+  (function countVisit() {
+    try {
+      if (sessionStorage.getItem('mr_counted')) return;
+      sessionStorage.setItem('mr_counted', '1');
+    } catch (e) { return; }   // storage blocked: skip, rather than count every page of the visit
+    var api = (window.MR_CONFIG && window.MR_CONFIG.api && window.MR_CONFIG.api.baseUrl) || '';
+    if (!api) return;
+    var ref = '';
+    try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) { ref = ''; }
+    var body = JSON.stringify({
+      page: location.pathname,
+      utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '',
+      utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '',
+      ref: ref,
+    });
+    var url = api + '/public/web-visits';
+    try { if (navigator.sendBeacon && navigator.sendBeacon(url, body)) return; } catch (e) {}
+    // Fallback: a plain-text POST (no custom headers, so no CORS preflight), no cookies.
+    try { fetch(url, { method: 'POST', body: body, keepalive: true, mode: 'cors', credentials: 'omit' }).catch(function () {}); } catch (e) {}
+  })();
 
   // ── loaders ──
   function loadGA() {
