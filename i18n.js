@@ -142,6 +142,10 @@ window.MR_I18N = {
     out_of_coverage: 'That address is outside our {km} km home-collection area. You can visit a centre, or call us.',
     handoff: 'Thanks, {name}. One last step: <b>call our desk to confirm your slot</b> — it takes under a minute. Keep this summary handy for the call.',
     copy: 'Copy summary', copied: 'Copied', call_phone: 'Call {phone}',
+    hc_eyebrow: 'Your nearest centre', hc_book: 'Book a visit', hc_call: 'Call',
+    hc_rx: 'Bring your prescription — no need to know test names, we’ll read it at the counter.',
+    loc_far_near: 'Sorry — home collection covers {km} km of our Bihar Sharif lab, and you’re about <b>{d} km</b> away. Our nearest centre to you is <b>{c}</b> (about {n} km): book a visit there, or call us.',
+    visit_nearest: 'Visit {c} centre',
     request_saved: '<b>Request received.</b> Our team will call you shortly to confirm your slot (ref {ref}). You can also call us now.',
     visit_booked: 'Done! Your visit reference is <b class="mc-mono">{ref}</b>. Show it at the counter.',
 
@@ -306,6 +310,10 @@ window.MR_I18N = {
     out_of_coverage: 'यह पता हमारे {km} किमी के कलेक्शन क्षेत्र से बाहर है। आप सेंटर आ सकते हैं, या हमें कॉल करें।',
     handoff: 'धन्यवाद, {name}। बस एक काम: <b>अपना समय पक्का करने के लिए हमें कॉल करें</b> — एक मिनट से कम लगेगा। कॉल पर यह जानकारी पास रखें।',
     copy: 'जानकारी कॉपी करें', copied: 'कॉपी हो गया', call_phone: '{phone} पर कॉल करें',
+    hc_eyebrow: 'आपका नज़दीकी सेंटर', hc_book: 'विज़िट बुक करें', hc_call: 'कॉल करें',
+    hc_rx: 'पर्चा लेकर आइए — टेस्ट के नाम जानने की ज़रूरत नहीं, काउंटर पर हम पढ़ लेंगे।',
+    loc_far_near: 'माफ़ कीजिए — घर से कलेक्शन बिहार शरीफ लैब से {km} किमी तक है, और आप लगभग <b>{d} किमी</b> दूर हैं। आपके सबसे पास हमारा <b>{c}</b> सेंटर है (लगभग {n} किमी): वहाँ विज़िट बुक करें, या हमें कॉल करें।',
+    visit_nearest: '{c} सेंटर पर आएँ',
     request_saved: '<b>आपका अनुरोध मिल गया।</b> हमारी टीम जल्द ही आपको कॉल करके समय पक्का करेगी (संदर्भ {ref})। आप अभी हमें कॉल भी कर सकते हैं।',
     visit_booked: 'हो गया! आपकी विज़िट संख्या <b class="mc-mono">{ref}</b> है। काउंटर पर दिखाएँ।',
 
@@ -340,7 +348,25 @@ window.MR_I18N = {
 (function () {
   var KEY = 'mr_lang';
   var lang = 'en';
-  try { if (localStorage.getItem(KEY) === 'hi') lang = 'hi'; } catch (e) {}
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved === 'hi') lang = 'hi';
+  // No choice made yet: a phone set to Hindi gets Hindi (2026-11-14). The visitor's tap on
+  // EN / हिं is remembered and always wins.
+  else if (saved !== 'en') {
+    try {
+      var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']);
+      if (String(langs[0] || '').toLowerCase().indexOf('hi') === 0) lang = 'hi';
+    } catch (e) {}
+  }
+  // The Hindi font (Mukta) is fetched only when Hindi is on: English visitors never pay for it.
+  function hindiFont() {
+    if (lang !== 'hi' || document.getElementById('mr-font-hi')) return;
+    var l = document.createElement('link');
+    l.id = 'mr-font-hi'; l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&display=swap';
+    (document.head || document.documentElement).appendChild(l);
+  }
   function t(key, vars) {
     var s = (window.MR_I18N[lang] && window.MR_I18N[lang][key]);
     if (s == null) s = window.MR_I18N.en[key];
@@ -354,7 +380,9 @@ window.MR_I18N = {
     lang = l === 'hi' ? 'hi' : 'en';
     try { localStorage.setItem(KEY, lang); } catch (e) {}
     document.documentElement.lang = lang === 'hi' ? 'hi' : 'en';
+    hindiFont();
     document.dispatchEvent(new CustomEvent('mr:lang', { detail: lang }));
   };
   document.documentElement.lang = lang === 'hi' ? 'hi' : 'en';
+  hindiFont();
 })();

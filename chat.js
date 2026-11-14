@@ -197,6 +197,20 @@
     return p ? { display: p, tel: 'tel:' + p.replace(/[^\d+]/g, '') } : { display: C.phoneDisplay, tel: tel() };
   }
   function nm(o) { return (lang() === 'hi' && o.name_hi) || o.name; }
+  // हिंदी mode (2026-11-14): centre names, slot labels and the tests inside a package.
+  function cname(x) { return (x && lang() === 'hi' && x.name_hi) || (x && x.name) || ''; }
+  function slotLabel(s) { return (s && lang() === 'hi' && s.label_hi) || (s && s.label) || ''; }
+  function tn(name) { return (lang() === 'hi' && C.testNamesHi && C.testNamesHi[name]) || name; }
+  // The closest centre to a shared location (config lat / lng), for "visit us instead".
+  function nearestCentre(lat, lng) {
+    var best = null;
+    (C.centres || []).forEach(function (c) {
+      if (c.lat == null || c.lng == null || (window.MR_BOOK_FROM && window.MR_BOOK_FROM(c))) return;
+      var km = distanceKm(lat, lng, c.lat, c.lng);
+      if (!best || km < best.km) best = { c: c, km: km };
+    });
+    return best;
+  }
   function menuAgain() { menu(t('greet_again')); }
 
   // ── validators ─────────────────────────────────────────────────────────────
@@ -239,7 +253,7 @@
   function pickSlot(kind, d, then) {
     resume = function () { pickSlot(kind, d, then); };
     bot(t('ask_slot'));
-    choose(slotsFor(kind, d).map(function (s) { return { l: s.label, go: function () { B.slot = s; then(); } }; }));
+    choose(slotsFor(kind, d).map(function (s) { return { l: slotLabel(s), go: function () { B.slot = s; then(); } }; }));
   }
 
   // ── catalogue ──────────────────────────────────────────────────────────────
@@ -253,7 +267,7 @@
   function offerCard(c, opts) {
     var mrp = mrpOf(c), save = mrp - c.price, hi = lang() === 'hi';
     var list = h('ul', { class: 'mc-inc' });
-    c.tests.forEach(function (x) { list.appendChild(h('li', {}, [h('span', { text: x[0] }), h('span', { class: 'mc-inc-p', text: inr(x[1]) })])); });
+    c.tests.forEach(function (x) { list.appendChild(h('li', {}, [h('span', { text: tn(x[0]) }), h('span', { class: 'mc-inc-p', text: inr(x[1]) })])); });
     return h('div', { class: 'mc-card mc-offer' }, [
       h('div', { class: 'mc-offer-top' }, [h('span', { class: 'mc-tag', text: (hi && c.tag_hi) || c.tag || 'Offer' }), h('span', { class: 'mc-offer-n', text: t('tests_n', { n: c.tests.length }) })]),
       h('div', { class: 'mc-offer-name', text: nm(c) }),
@@ -297,11 +311,15 @@
 
   // ── HOME COLLECTION ────────────────────────────────────────────────────────
   function newKey() { return String(Date.now()) + Math.random().toString(36).slice(2, 8); }
+  // Coverage FIRST (2026-11-14): home collection is only within KM of the Bihar Sharif lab, so
+  // the location is checked before the tests, number, OTP or name are asked. Out of area, the
+  // visitor is offered their nearest centre straight away (Ekangarsarai is ~29 km away).
   function homeStart(c) {
     B = { kind: 'home', items: [], key: newKey() };
-    if (c) { B.items = [pkgItem(c)]; bot(t('home_with', { name: esc(nm(c)) })); return homeMobile(); }
-    homeWhat();
+    if (c) { B.items = [pkgItem(c)]; bot(t('home_with', { name: esc(nm(c)) })); }
+    homeLocation();
   }
+  function homeAfterCoverage() { if (B.items && B.items.length) return homeMobile(); homeWhat(); }
   function homeWhat() {
     resume = homeWhat;
     bot(t('home_intro', { km: KM }));
@@ -365,7 +383,7 @@
     });
   }
   // ── number first: OTP, then pick an existing patient on that number ──────
-  function homeMobile() { mobile(function () { identify(homeName, homeLocation); }); }
+  function homeMobile() { mobile(function () { identify(homeName, homeAddress); }); }
   // Already know who it is (switched over from home collection): don't ask again.
   function visitMobile() {
     if (B.mobile && B.name) return summary();
@@ -374,9 +392,9 @@
   }
   // Home collection → centre visit (out of area, or the patient prefers it): keep the
   // tests and everything already given — mobile, verified identity, name, age, gender.
-  function homeToVisit() {
+  function homeToVisit(centreId) {
     var keep = { items: B.items, mobile: B.mobile, token: B.token, patientRef: B.patientRef, name: B.name, gender: B.gender, age: B.age };
-    visitStart();
+    visitStart(typeof centreId === 'string' ? centreId : undefined);
     Object.keys(keep).forEach(function (k) { if (keep[k] != null) B[k] = keep[k]; });
     if (!B.items) B.items = [];
   }
@@ -439,7 +457,7 @@
   function homeAge() {
     resume = homeAge;
     bot(t('ask_age'));
-    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(v, 10); homeLocation(); } });
+    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(v, 10); homeAddress(); } });
   }
   function mobile(next) {
     resume = function () { mobile(next); };
@@ -479,11 +497,20 @@
       var decide = function (covered, d) {
         B.distance = Math.round(d * 10) / 10;
         if (!covered) {
+          var near = nearestCentre(B.lat, B.lng);
+          if (near) {
+            bot(t('loc_far_near', { d: B.distance, km: KM, c: esc(cname(near.c)), n: Math.max(1, Math.round(near.km)) }));
+            return choose([
+              { l: t('visit_nearest', { c: cname(near.c) }), i: 'visit', p: true, go: function () { homeToVisit(near.c.id); } },
+              { l: t('btn_visit'), i: 'visit', go: homeToVisit },
+              { l: t('m_call'), i: 'phone', go: call }
+            ]);
+          }
           bot(t('loc_far', { d: B.distance, km: KM }));
           return choose([{ l: t('btn_visit'), i: 'visit', p: true, go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]);
         }
         bot(t('loc_ok', { d: B.distance }));
-        homeAddress();
+        homeAfterCoverage();
       };
       if (!API) return decide(local <= KM, local);
       fetch(API + '/public/home-collection/coverage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lat: B.lat, lng: B.lng }) })
@@ -513,13 +540,13 @@
     B = { kind: 'visit', items: [], key: newKey() };
     if (c) B.items = [pkgItem(c)];
     var centre = (C.centres || []).filter(function (x) { return x.id === centreId; })[0];
-    if (centre) { B.centre = centre; bot(t('visit_at', { c: esc(centre.name) })); centreNote(centre); return pickDay('centre', visitTests); }
+    if (centre) { B.centre = centre; bot(t('visit_at', { c: esc(cname(centre)) })); centreNote(centre); return pickDay('centre', visitTests); }
     visitWhere();
   }
   function visitWhere() {
     resume = visitWhere;
     bot(t('ask_centre'));
-    choose((C.centres || []).map(function (x) { return { l: x.name, go: function () { B.centre = x; centreNote(x); pickDay('centre', visitTests); } }; }));
+    choose((C.centres || []).map(function (x) { return { l: cname(x), go: function () { B.centre = x; centreNote(x); pickDay('centre', visitTests); } }; }));
   }
   // Not taking bookings yet (config bookFrom): say so, in Hindi and English, before the days.
   function centreNote(centre) {
@@ -570,11 +597,11 @@
       edit = btn(t('start_again'), 'back', function () { go.disabled = true; edit.disabled = true; me(t('start_again')); home ? homeStart() : visitStart(); });
       var gender = B.gender ? t('g_' + B.gender) : '';
       var card = h('div', { class: 'mc-card mc-summary' }, [
-        h('div', { class: 'mc-sum-h', text: home ? t('s_home') : t('s_visit', { c: B.centre.name }) }),
+        h('div', { class: 'mc-sum-h', text: home ? t('s_home') : t('s_visit', { c: cname(B.centre) }) }),
         row(t('s_patient'), B.name + (home ? (B.age != null ? ' · ' + B.age : '') + (gender ? ' · ' + gender : '') : '')),
         row(t('s_mobile'), B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2')),
         home ? row(t('s_address'), B.address + ', ' + B.pincode) : row(t('s_centre'), centreAddress(B.centre)),
-        row(t('s_when'), B.dateLabel + ' · ' + B.slot.label),
+        row(t('s_when'), B.dateLabel + ' · ' + slotLabel(B.slot)),
         lines,
         (B.items && B.items.length) ? h('div', { class: 'mc-total' }, [h('span', { text: payOnline ? t('s_total') : B.rx ? t('s_est_sofar') : t('s_est') }), h('span', {}, [mrp > est ? h('s', { text: inr(mrp) }) : null, ' ', h('b', { text: inr(est) })])]) : null,
         h('p', { class: 'mc-note', text: payOnline ? t('note_home') : home ? t('note_home_call') : t('note_visit') }),
@@ -660,7 +687,7 @@
   function verify(resp) {
     bot(t('verifying'));
     var o = B.order;
-    var when = B.dateLabel + ' · ' + B.slot.label;
+    var when = B.dateLabel + ' · ' + slotLabel(B.slot);
     post('/public/home-collection/orders/' + encodeURIComponent(o.order_ref) + '/verify', resp)
       .then(function (r) {
         measure('purchase', { value: o.total_inr, transaction_id: r.order_ref || o.order_ref });
@@ -683,7 +710,7 @@
       'Patient: ' + B.name + (home ? ' (' + B.age + ', ' + B.gender.charAt(0) + B.gender.slice(1).toLowerCase() + ')' : ''),
       'Mobile: ' + B.mobile,
       home ? 'Address: ' + B.address + ', ' + B.pincode + (B.distance != null ? ' (' + B.distance + ' km from lab)' : '') : null,
-      'When: ' + B.date + ', ' + B.slot.label,
+      'When: ' + B.dateLabel + ', ' + slotLabel(B.slot),
       'Tests: ' + ((B.items && B.items.length) ? B.items.map(function (i) { return i.name; }).join(', ') : B.rx ? 'As per prescription' : 'To decide at the centre'),
       (B.items && B.items.length) ? 'Estimate: ' + inr(estimate()) : null,
       home ? null : 'Centre phone: ' + contact().display
@@ -721,7 +748,10 @@
         if (navigator.clipboard) navigator.clipboard.writeText(txt).then(ok, function () {}); else ok();
       });
       var acts = [linkBtn(t('call_phone', { phone: c.display }), 'phone', c.tel, 'mc-btn-pri'), copyBtn];
-      if (C.whatsapp) acts.push(linkBtn('WhatsApp', 'msg', 'https://wa.me/' + C.whatsapp.replace(/\D/g, '') + '?text=' + encodeURIComponent(txt)));
+      // WhatsApp: the chosen centre's own WhatsApp Business number (config.js centres[].whatsapp;
+      // only Ekangarsarai today), else the brand one (empty = no button).
+      var wa = (B.kind === 'visit' && B.centre && B.centre.whatsapp) || C.whatsapp;
+      if (wa) acts.push(linkBtn('WhatsApp', 'msg', 'https://wa.me/' + String(wa).replace(/\D/g, '') + '?text=' + encodeURIComponent(txt)));
       // Shown once the request is saved: the desk will call; the Call button stays.
       var saved = h('p', { class: 'mc-note mc-saved', hidden: true });
       log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [h('div', { class: 'mc-card' }, [h('pre', { class: 'mc-pre', text: txt }), saved, h('div', { class: 'mc-actions' }, acts)])])); scroll();
@@ -952,10 +982,15 @@
   window.MRChat = { open: open, close: close, setAudience: setAudience };
   setAudience(document.body.getAttribute('data-view') === 'b2b' ? 'b2b' : 'patients', true);
 
+  // A tap made before this script arrived (index.html keeps it, 2026-11-14): act on it now.
+  var queued = null;
+  try { queued = window.MR_TAKE_QUEUED ? window.MR_TAKE_QUEUED() : null; } catch (e) {}
+  if (queued) later(function () { open(queued); });
+
   // Ad / QR deep link (2026-11-07): ?book=home | visit | offers | track | centre:<id> opens the chat
   // straight in that flow, e.g. https://medrelief.co.in/?book=centre:ekangarsarai&utm_source=facebook…
   try {
-    var bk = new URLSearchParams(location.search).get('book');
+    var bk = queued ? null : new URLSearchParams(location.search).get('book');
     var okCentre = function (id) { return (C.centres || []).some(function (c) { return c.id === id; }); };
     if (bk && (/^(home|visit|offers|track)$/.test(bk) || (/^centre:[a-z-]+$/.test(bk) && okCentre(bk.slice(7))))) {
       later(function () { open(bk); measure('chat_open', { intent: bk.split(':')[0], where: 'link' }); });

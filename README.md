@@ -29,7 +29,11 @@ assets/logo/   Med Relief heart-in-hands logo (from "Main Logo.svg", 2026-10-10)
 The end-to-end workflow spec (website order → proposed bill → desk → agent → payment) and
 the API contract live outside this repo — this repo is public and served as-is.
 No build step, no dependencies. Only external request: Google Fonts.
-When you change `config.js`, `i18n.js` or `chat.js`, bump the `?v=` stamp on their `<script>` tags in `index.html` (and `links.html` for `config.js` / `analytics.js`) so browsers don't mix a cached old file with a new one.
+Script versions are automatic (2026-11-14): the deploy rewrites every `?v=` stamp to the file's content hash, and scripts are cached for a year (pages revalidate every time; CloudFront keeps them until the deploy's invalidation). The `?v=` in the repo is only a placeholder.
+
+**Landing for one centre:** `?book=centre:<id>` (or an `utm_campaign` starting `eka`/`eks` → Ekangarsarai) puts that centre first in the hero (name, address, Book a visit, Call) instead of home collection; `utm_content=scan_the_prescription` adds "bring your prescription". A centre's `whatsapp` in `config.js` (only Ekangarsarai today) adds a WhatsApp button to its visit hand-off; `lat`/`lng` pick the nearest centre when a home-collection address is out of area (marked CONFIRM where approximate).
+
+**Speed:** chat.js is preloaded and taps made before it is ready are replayed; fonts are not render-blocking; Mukta (Hindi) loads only in हिंदी mode; a phone set to Hindi starts in Hindi until the visitor picks EN / हिं.
 
 **A centre that opens later:** set `bookFrom: 'YYYY-MM-DD'` and `bookFromNote` on it in `config.js`. Until that
 date (India time) the centre card, `/links` and the chat show the note, and the chat's first bookable day is

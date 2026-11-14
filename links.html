@@ -17,7 +17,9 @@
 <link rel="apple-touch-icon" href="assets/logo/apple-touch-icon-180.png?v=2" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Not render-blocking (2026-11-14): the page paints with the system font, then swaps. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Mukta:wght@400;500;600;700&display=swap"></noscript>
 <style>
 /* Link-in-bio page for Instagram (/links). Same brand tokens as index.html (Plum v1.0). */
 :root{

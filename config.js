@@ -65,28 +65,37 @@ window.MR_CONFIG = {
   //        ('YYYY-MM-DD', India time) the site shows the note and the chat's earliest day is
   //        bookFrom. Both switch off by themselves on that date — nothing to remove later.
   centres: [
-    { id: 'bihar-sharif', name: 'Bihar Sharif', tag: 'Centre & lab',
+    { id: 'bihar-sharif', name: 'Bihar Sharif', name_hi: 'बिहार शरीफ', tag: 'Centre & lab',
       address: '50 m North of Bhainsasur Chowk, Opp. Sudha Dairy, Bihar Sharif (Nalanda) — 803101',
-      phones: ['+91 92638 40556', '061124 53327'], maps: '' },
-    { id: 'rajgir', name: 'Rajgir', tag: 'Collection centre',
-      address: 'Rajgir, Nalanda district, Bihar', phones: ['+91 92638 40556'], maps: '' },
-    { id: 'ekangarsarai', name: 'Ekangarsarai', tag: 'Centre',
+      address_hi: 'भैंसासुर चौक से 50 मीटर उत्तर, सुधा डेयरी के सामने, बिहार शरीफ (नालंदा) — 803101',
+      phones: ['+91 92638 40556', '061124 53327'], maps: '', whatsapp: '',
+      lat: 25.205942, lng: 85.520323 },
+    { id: 'rajgir', name: 'Rajgir', name_hi: 'राजगीर', tag: 'Collection centre',
+      address: 'Rajgir, Nalanda district, Bihar', address_hi: 'राजगीर, नालंदा ज़िला, बिहार',
+      phones: ['+91 92638 40556'], maps: '', whatsapp: '',
+      lat: 25.0283, lng: 85.4206 },     // CONFIRM: approximate (town centre)
+    { id: 'ekangarsarai', name: 'Ekangarsarai', name_hi: 'एकंगरसराय', tag: 'Centre',
       address: 'SAK Tower, Near Railway Fatak, Ekangarsarai (Nalanda) — 801301',
+      address_hi: 'SAK टावर, रेलवे फाटक के पास, एकंगरसराय (नालंदा) — 801301',
       phones: ['+91 88935 13340'], maps: '',
+      // On WhatsApp Business (Khalid 2026-11-14): the visit hand-off offers a WhatsApp button.
+      whatsapp: '+91 88935 13340',
+      lat: 25.2238, lng: 85.2340,       // CONFIRM: approximate (near the railway crossing)
       bookFrom: '2026-11-11',
       bookFromNote: 'एकंगरसराय में बुकिंग 11 नवंबर से / Ekangarsarai bookings start from 11 November' },
     { id: 'madhubani', name: 'Madhubani', tag: 'Centre',
       address: 'Ground Floor, Bhramdev Complex, In front of Watson High School (Behind Bazar India Mall / Domino\'s Pizza), Madhubani, Bihar 847211',
       address_hi: 'ग्राउंड फ़्लोर, ब्रह्मदेव कॉम्प्लेक्स, वॉटसन हाई स्कूल के सामने (बाज़ार इंडिया मॉल / डोमिनोज़ पिज़्ज़ा के पीछे), मधुबनी, बिहार 847211',
-      phones: ['+91 91421 55427'], maps: '' }
+      phones: ['+91 91421 55427'], maps: '', whatsapp: '',
+      lat: 26.3537, lng: 86.0718 }      // CONFIRM: approximate (town centre)
   ],
 
   // CONFIRM: operating windows. Placeholders until the centres confirm their hours.
   slots: {
-    home:   [ { label: '7 – 9 AM', start: 7 }, { label: '9 – 11 AM', start: 9 },
-              { label: '11 AM – 1 PM', start: 11 }, { label: '4 – 6 PM', start: 16 } ],
-    centre: [ { label: '8 – 10 AM', start: 8 }, { label: '10 AM – 12 PM', start: 10 },
-              { label: '12 – 2 PM', start: 12 }, { label: '4 – 6 PM', start: 16 } ],
+    home:   [ { label: '7 – 9 AM', label_hi: 'सुबह 7 – 9 बजे', start: 7 }, { label: '9 – 11 AM', label_hi: 'सुबह 9 – 11 बजे', start: 9 },
+              { label: '11 AM – 1 PM', label_hi: 'सुबह 11 – दोपहर 1 बजे', start: 11 }, { label: '4 – 6 PM', label_hi: 'शाम 4 – 6 बजे', start: 16 } ],
+    centre: [ { label: '8 – 10 AM', label_hi: 'सुबह 8 – 10 बजे', start: 8 }, { label: '10 AM – 12 PM', label_hi: 'सुबह 10 – दोपहर 12 बजे', start: 10 },
+              { label: '12 – 2 PM', label_hi: 'दोपहर 12 – 2 बजे', start: 12 }, { label: '4 – 6 PM', label_hi: 'शाम 4 – 6 बजे', start: 16 } ],
     daysAhead: 3            // Today (if a slot is still ahead) + the next days
   },
 
@@ -127,6 +136,16 @@ window.MR_CONFIG = {
   ],
 
   // CAMPAIGNS — the ticker + in-chat offer cards. Add, reorder or set active:false.
+  // Hindi names of the tests inside the packages below (shown in हिंदी mode).
+  testNamesHi: {
+    'Complete Blood Count': 'कम्प्लीट ब्लड काउंट (CBC)', 'HbA1c': 'HbA1c (3 महीने की शुगर)',
+    'Blood Sugar Fasting': 'फ़ास्टिंग ब्लड शुगर', 'Lipid Profile': 'लिपिड प्रोफ़ाइल (कोलेस्ट्रॉल)',
+    'Liver Function Test': 'लिवर फ़ंक्शन टेस्ट (LFT)', 'Kidney Function Test': 'किडनी फ़ंक्शन टेस्ट (KFT)',
+    'Thyroid Profile': 'थायरॉइड प्रोफ़ाइल', 'Urine Routine': 'पेशाब की जाँच (रूटीन)',
+    'Vitamin D3 (25 Hydroxy)': 'विटामिन D3', 'TSH': 'TSH (थायरॉइड)', 'Creatinine': 'क्रिएटिनिन',
+    'Cholesterol': 'कोलेस्ट्रॉल', 'SGPT': 'SGPT (लिवर)'
+  },
+
   // code = mdm_packages.code, so a booking maps 1:1 onto the package the counter bills.
   campaigns: [
     { code: 'MRD002', active: true, tag_hi: 'सबसे ज़्यादा बुक', name_hi: 'निरोग्यम स्टैंडर्ड', blurb_hi: 'पूरे शरीर की जाँच: ब्लड काउंट, शुगर, लिवर, किडनी, लिपिड, थायरॉइड और पेशाब।', tag: 'Most booked', name: 'Nirogyam Standard',

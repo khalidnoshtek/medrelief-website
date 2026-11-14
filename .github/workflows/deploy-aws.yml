@@ -36,13 +36,21 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p out/assets/logo
-          cp index.html chat.js config.js i18n.js analytics.js privacy.html terms.html links.html out/
+          cp index.html chat.js config.js i18n.js analytics.js privacy.html terms.html links.html ig.html out/
+          # Scripts are cached for a year (2026-11-14), so every ?v= stamp in the pages becomes
+          # that file's content hash: a changed script always gets a new URL, an unchanged one
+          # keeps its cache. (Nobody has to remember to bump ?v= any more.)
+          for f in config.js i18n.js analytics.js chat.js; do
+            v=$(sha256sum "out/$f" | cut -c1-10)
+            sed -i -E "s#${f%.js}\.js\?v=[A-Za-z0-9]+#${f}?v=${v}#g" out/*.html
+          done
+          grep -ho '[a-z0-9]*\.js?v=[A-Za-z0-9]*' out/*.html | sort -u
           # /links (Instagram bio): the bucket is a private S3 origin with no index-document
           # rewrite, and CloudFront answers a missing key with the home page, so the page also
           # goes up under the extensionless key "links".
-          cp links.html out/links
+          cp out/links.html out/links
           # /ig = the short Instagram bio link (redirects to /links with the bio's tags).
-          cp ig.html out/ig
+          cp out/ig.html out/ig
           cp assets/qr-patient-app.svg out/assets/
           cp assets/logo/* out/assets/logo/
           find out -type f | sort
@@ -50,16 +58,18 @@ jobs:
       - name: Upload
         run: |
           set -euo pipefail
-          # Pages and scripts revalidate on every load (scripts carry ?v= stamps);
-          # logos and the QR may be cached for a day.
-          aws s3 sync out/ "s3://$BUCKET/" --delete --exclude "assets/*" --exclude "links" --exclude "ig" \
-            --cache-control "public, max-age=0, must-revalidate"
-          # "links" has no extension, so its type is set here (CloudFront sends nosniff).
-          # Excluded from the sync above, so --delete never removes it between deploys.
-          aws s3 cp out/links "s3://$BUCKET/links" --content-type "text/html; charset=utf-8" \
-            --cache-control "public, max-age=0, must-revalidate"
-          aws s3 cp out/ig "s3://$BUCKET/ig" --content-type "text/html; charset=utf-8" \
-            --cache-control "public, max-age=0, must-revalidate"
+          # Pages: browsers revalidate every time; CloudFront may keep them a day (s-maxage),
+          # because every deploy invalidates /* below. Scripts: content-hashed ?v= (above), so a
+          # browser keeps each version for a year. Logos and the QR: a day.
+          PAGE_CC="public, max-age=0, s-maxage=86400, must-revalidate"
+          aws s3 sync out/ "s3://$BUCKET/" --delete --exclude "assets/*" --exclude "links" --exclude "ig" --exclude "*.js" \
+            --cache-control "$PAGE_CC"
+          aws s3 sync out/ "s3://$BUCKET/" --exclude "*" --include "*.js" \
+            --cache-control "public, max-age=31536000, immutable"
+          # "links" and "ig" have no extension, so their type is set here (CloudFront sends nosniff).
+          # Excluded from the sync above, so --delete never removes them between deploys.
+          aws s3 cp out/links "s3://$BUCKET/links" --content-type "text/html; charset=utf-8" --cache-control "$PAGE_CC"
+          aws s3 cp out/ig "s3://$BUCKET/ig" --content-type "text/html; charset=utf-8" --cache-control "$PAGE_CC"
           aws s3 sync out/assets/ "s3://$BUCKET/assets/" --delete \
             --cache-control "public, max-age=86400"
 

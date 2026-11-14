@@ -167,13 +167,18 @@
   function tx() { var l = (window.MR_LANG && window.MR_LANG()) === 'hi' ? 'hi' : 'en'; return TXT[l]; }
 
   var css = document.createElement('style');
-  // Sits above the chat launcher bar so it never hides "Chat with Med Relief" or Call.
-  css.textContent = '.mr-consent{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:2147483000;max-width:560px;margin:0 auto;' +
+  // Docked (2026-11-14): sits above the chat launcher bar, BELOW the open chat (z-index 60) and
+  // hidden while the chat is open, and the page gets bottom padding so nothing stays covered
+  // (it used to sit on top of everything and swallow taps at the OTP step and on /links).
+  css.textContent = '.mr-consent{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:55;max-width:560px;margin:0 auto;' +
     'background:#fff;color:#1f1f1f;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.18);padding:14px 16px;font:14px/1.45 var(--font,system-ui,sans-serif)}' +
     '.mr-consent p{margin:0 0 10px}.mr-consent a{color:var(--mr-primary,#701A75)}' +
     '.mr-consent .mr-c-row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}' +
     '.mr-consent button{border:0;border-radius:10px;padding:9px 16px;font:600 14px/1 inherit;cursor:pointer}' +
-    '.mr-consent .mr-c-yes{background:var(--mr-primary,#701A75);color:#fff}.mr-consent .mr-c-no{background:#f1eef2;color:#1f1f1f}';
+    '.mr-consent .mr-c-yes{background:var(--mr-primary,#701A75);color:#fff}.mr-consent .mr-c-no{background:#f1eef2;color:#1f1f1f}' +
+    'html.mc-locked .mr-consent{display:none}' +
+    '.mr-consent.mr-c-bare{bottom:calc(12px + env(safe-area-inset-bottom,0px))}' +
+    '.mr-consent p{font-size:13.5px}.mr-consent button{min-height:44px}';
   document.head.appendChild(css);
 
   function banner() {
@@ -186,10 +191,18 @@
     var row = document.createElement('div'); row.className = 'mr-c-row';
     var no = document.createElement('button'); no.type = 'button'; no.className = 'mr-c-no'; no.textContent = t.no;
     var yes = document.createElement('button'); yes.type = 'button'; yes.className = 'mr-c-yes'; yes.textContent = t.yes;
-    no.onclick = function () { set(KEY, 'denied'); box.remove(); };
-    yes.onclick = function () { set(KEY, 'granted'); box.remove(); start(); };
+    function done() { box.remove(); document.body.style.paddingBottom = ''; }
+    no.onclick = function () { set(KEY, 'denied'); done(); };
+    yes.onclick = function () { set(KEY, 'granted'); done(); start(); };
     row.appendChild(no); row.appendChild(yes); box.appendChild(p); box.appendChild(row);
+    // A page without the chat bar (e.g. /links): docked at the very bottom.
+    if (!document.getElementById('mr-chat')) box.className += ' mr-c-bare';
     document.body.appendChild(box);
+    // Room under the page's last item, so every button can be scrolled clear of the banner.
+    try {
+      var r = box.getBoundingClientRect();
+      document.body.style.paddingBottom = Math.ceil(window.innerHeight - r.top + 12) + 'px';
+    } catch (e) {}
   }
 
   function footerLink() {
