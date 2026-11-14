@@ -142,6 +142,7 @@ window.MR_I18N = {
     out_of_coverage: 'That address is outside our {km} km home-collection area. You can visit a centre, or call us.',
     handoff: 'Thanks, {name}. One last step: <b>call our desk to confirm your slot</b> — it takes under a minute. Keep this summary handy for the call.',
     copy: 'Copy summary', copied: 'Copied', call_phone: 'Call {phone}',
+    request_saved: '<b>Request received.</b> Our team will call you shortly to confirm your slot (ref {ref}). You can also call us now.',
     visit_booked: 'Done! Your visit reference is <b class="mc-mono">{ref}</b>. Show it at the counter.',
 
     // ── chat: track, offers, faq, app, call ──
@@ -305,6 +306,7 @@ window.MR_I18N = {
     out_of_coverage: 'यह पता हमारे {km} किमी के कलेक्शन क्षेत्र से बाहर है। आप सेंटर आ सकते हैं, या हमें कॉल करें।',
     handoff: 'धन्यवाद, {name}। बस एक काम: <b>अपना समय पक्का करने के लिए हमें कॉल करें</b> — एक मिनट से कम लगेगा। कॉल पर यह जानकारी पास रखें।',
     copy: 'जानकारी कॉपी करें', copied: 'कॉपी हो गया', call_phone: '{phone} पर कॉल करें',
+    request_saved: '<b>आपका अनुरोध मिल गया।</b> हमारी टीम जल्द ही आपको कॉल करके समय पक्का करेगी (संदर्भ {ref})। आप अभी हमें कॉल भी कर सकते हैं।',
     visit_booked: 'हो गया! आपकी विज़िट संख्या <b class="mc-mono">{ref}</b> है। काउंटर पर दिखाएँ।',
 
     track_intro: 'पैथोलॉजिस्ट के साइन करते ही रिपोर्ट आपके WhatsApp पर आ जाती है। अभी रिपोर्ट कहाँ है, यह देखने के लिए:',

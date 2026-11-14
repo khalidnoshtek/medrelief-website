@@ -189,6 +189,13 @@
     return a;
   }
   function tel() { return 'tel:' + C.phone; }
+  // Who the patient calls (2026-11-14): for a centre visit, that centre's own desk (its
+  // first number in config.js); otherwise the brand number. Every Meta ad lands on
+  // ?book=centre:ekangarsarai, and those visitors used to be sent to Bihar Sharif's number.
+  function contact() {
+    var p = B && B.kind === 'visit' && B.centre && B.centre.phones && B.centre.phones[0];
+    return p ? { display: p, tel: 'tel:' + p.replace(/[^\d+]/g, '') } : { display: C.phoneDisplay, tel: tel() };
+  }
   function nm(o) { return (lang() === 'hi' && o.name_hi) || o.name; }
   function menuAgain() { menu(t('greet_again')); }
 
@@ -678,21 +685,51 @@
       home ? 'Address: ' + B.address + ', ' + B.pincode + (B.distance != null ? ' (' + B.distance + ' km from lab)' : '') : null,
       'When: ' + B.date + ', ' + B.slot.label,
       'Tests: ' + ((B.items && B.items.length) ? B.items.map(function (i) { return i.name; }).join(', ') : B.rx ? 'As per prescription' : 'To decide at the centre'),
-      (B.items && B.items.length) ? 'Estimate: ' + inr(estimate()) : null
+      (B.items && B.items.length) ? 'Estimate: ' + inr(estimate()) : null,
+      home ? null : 'Centre phone: ' + contact().display
     ].filter(Boolean).join('\n');
+  }
+  // Save a centre-visit request so the desk can call the patient back and we can count
+  // website conversions (POST /public/visit-requests, 2026-11-14). Only what the chat
+  // asked for, never prices. Silent on any failure (no API, an older backend, offline):
+  // the patient still has the Call button and the summary.
+  function saveVisitRequest() {
+    if (!API || B.kind !== 'visit' || !B.centre || !B.mobile || !B.name) return Promise.resolve(null);
+    var u = {};
+    try { u = (window.MR_UTM && window.MR_UTM()) || {}; } catch (e) {}
+    try {
+      return post('/public/visit-requests', {
+        source: 'WEBSITE_CHAT', language: lang(), centre: B.centre.id,
+        patient: { name: B.name, mobile: B.mobile, age: B.age != null ? B.age : null, gender: B.gender || null },
+        items: (B.items || []).map(function (i) { return { type: i.type, code: i.code }; }),
+        has_prescription: !!B.rx,
+        slot: B.slot ? { date: B.date, label: B.slot.label } : null,
+        utm: { utm_source: u.utm_source || null, utm_medium: u.utm_medium || null, utm_campaign: u.utm_campaign || null, utm_content: u.utm_content || null },
+        consent: { policy: 'privacy.html', accepted_at: new Date().toISOString() }
+      }).then(function (r) { return r && r.request_ref ? r : null; }, function () { return null; });
+    } catch (e) { return Promise.resolve(null); }
   }
   function handoff(afterError) {
     measure('booking_request', { kind: B.kind === 'home' ? 'home' : 'visit' });
+    var saving = saveVisitRequest();
     if (!afterError) bot(t('handoff', { name: esc(B.name.split(' ')[0]) }));
     later(function () {
       var txt = summaryText();
+      var c = contact();
       var copyBtn = btn(t('copy'), 'copy', function () {
         var ok = function () { copyBtn.querySelector('span').textContent = t('copied'); };
         if (navigator.clipboard) navigator.clipboard.writeText(txt).then(ok, function () {}); else ok();
       });
-      var acts = [linkBtn(t('call_phone', { phone: C.phoneDisplay }), 'phone', tel(), 'mc-btn-pri'), copyBtn];
+      var acts = [linkBtn(t('call_phone', { phone: c.display }), 'phone', c.tel, 'mc-btn-pri'), copyBtn];
       if (C.whatsapp) acts.push(linkBtn('WhatsApp', 'msg', 'https://wa.me/' + C.whatsapp.replace(/\D/g, '') + '?text=' + encodeURIComponent(txt)));
-      log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [h('div', { class: 'mc-card' }, [h('pre', { class: 'mc-pre', text: txt }), h('div', { class: 'mc-actions' }, acts)])])); scroll();
+      // Shown once the request is saved: the desk will call; the Call button stays.
+      var saved = h('p', { class: 'mc-note mc-saved', hidden: true });
+      log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [h('div', { class: 'mc-card' }, [h('pre', { class: 'mc-pre', text: txt }), saved, h('div', { class: 'mc-actions' }, acts)])])); scroll();
+      saving.then(function (r) {
+        if (!r) return;
+        saved.innerHTML = t('request_saved', { ref: esc(r.request_ref) });
+        saved.hidden = false; scroll();
+      });
     });
     andThen();
   }
@@ -754,7 +791,13 @@
     andThen();
   }
   function call() { showCall(); bot(t('call_msg')); andThen(); }
-  function showCall() { root.classList.add('calling'); callPane.hidden = false; chatPane.hidden = true; tab('call'); }
+  function showCall() {
+    // The call card shows the chosen centre's own number during a centre visit, else the brand number.
+    var c = contact();
+    callPane.querySelectorAll('.cfg-phone').forEach(function (e) { e.textContent = c.display; });
+    callPane.querySelectorAll('.cfg-tel').forEach(function (e) { e.setAttribute('href', c.tel); });
+    root.classList.add('calling'); callPane.hidden = false; chatPane.hidden = true; tab('call');
+  }
   function showChat() { root.classList.remove('calling'); callPane.hidden = true; chatPane.hidden = false; tab('chat'); }
   function tab(which) {
     root.querySelectorAll('.mc-tab').forEach(function (x) { var on = x.getAttribute('data-tab') === which; x.classList.toggle('on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
@@ -836,7 +879,7 @@
   function route(text) {
     var list = aud === 'b2b' ? PARTNER_INTENTS : INTENTS;
     for (var i = 0; i < list.length; i++) if (list[i][0].test(text)) { clearChips(); return list[i][1](); }
-    bot(t('didnt_get', { phone: C.phoneDisplay }));
+    bot(t('didnt_get', { phone: contact().display }));
     return aud === 'b2b' ? partnerMenu('Here’s what I can help with:') : menu(t('here_is_help'));
   }
 
