@@ -291,22 +291,37 @@
     resume = function () { menu(t('greet_again')); };
     B = {};
     bot((greet || t('greet')) + '<br><span class="mc-hint">' + t('tap_hint') + '</span>');
-    choose([
-      { l: t('m_home'), i: 'home', go: function () { homeStart(); } },
-      { l: t('m_visit'), i: 'visit', go: function () { visitStart(); } },
+    var home = { l: t('m_home'), i: 'home', go: function () { homeStart(); } };
+    var visit = { l: t('m_visit'), i: 'visit', go: function () { visitStart(); } };
+    var lc = landingCentre();
+    choose((lc && !nearLab(lc) ? [visit, home] : [home, visit]).concat([
       { l: t('m_track'), i: 'track', go: track },
       { l: t('m_offers'), i: 'tag', go: offers },
       { l: t('m_faq'), i: 'help', go: faq },
       { l: t('m_app'), i: 'app', go: app },
       { l: t('m_call'), i: 'phone', go: call }
-    ]);
+    ]));
+  }
+  // Home collection is only within KM of the Bihar Sharif lab (2026-11-14): never offered
+  // right after booking a centre outside that area (Ekangarsarai, Rajgir, Madhubani), nor
+  // first to a visitor who landed on such a centre's link.
+  function nearLab(c) {
+    var lab = HC.lab || {};
+    return !!c && c.lat != null && lab.lat != null && distanceKm(c.lat, c.lng, lab.lat, lab.lng) <= KM;
+  }
+  function landingCentre() {
+    var id = document.documentElement.getAttribute('data-landing');
+    return id ? (C.centres || []).filter(function (x) { return x.id === id; })[0] || null : null;
+  }
+  function homeFarFromHere() {
+    if (B && B.kind === 'visit' && B.centre) return !nearLab(B.centre);
+    var lc = landingCentre();
+    return !!lc && !nearLab(lc);
   }
   function andThen() {
     resume = andThen;
-    choose([
-      { l: t('m_book_home'), i: 'home', go: function () { homeStart(); } },
-      { l: t('m_menu'), i: 'back', go: menuAgain }
-    ]);
+    choose((homeFarFromHere() ? [] : [{ l: t('m_book_home'), i: 'home', go: function () { homeStart(); } }])
+      .concat([{ l: t('m_menu'), i: 'back', go: menuAgain }]));
   }
 
   // ── HOME COLLECTION ────────────────────────────────────────────────────────
@@ -703,17 +718,20 @@
   }
 
   // ── hand-off (no API / API down / centre visit) ────────────────────────────
-  function summaryText() {
+  // The hand-off summary, in the visitor's language (2026-11-14): shown on the card and
+  // pre-filled into WhatsApp. The desk reads Hindi as well as English.
+  function summaryText(ref) {
     var home = B.kind === 'home';
     return [
-      home ? 'HOME COLLECTION REQUEST' : 'CENTRE VISIT REQUEST — ' + B.centre.name,
-      'Patient: ' + B.name + (home ? ' (' + B.age + ', ' + B.gender.charAt(0) + B.gender.slice(1).toLowerCase() + ')' : ''),
-      'Mobile: ' + B.mobile,
-      home ? 'Address: ' + B.address + ', ' + B.pincode + (B.distance != null ? ' (' + B.distance + ' km from lab)' : '') : null,
-      'When: ' + B.dateLabel + ', ' + slotLabel(B.slot),
-      'Tests: ' + ((B.items && B.items.length) ? B.items.map(function (i) { return i.name; }).join(', ') : B.rx ? 'As per prescription' : 'To decide at the centre'),
-      (B.items && B.items.length) ? 'Estimate: ' + inr(estimate()) : null,
-      home ? null : 'Centre phone: ' + contact().display
+      home ? t('sx_home') : t('sx_visit', { c: cname(B.centre) }),
+      ref ? t('sx_ref') + ': ' + ref : null,
+      t('s_patient') + ': ' + B.name + (home ? ' (' + B.age + ', ' + t('g_' + B.gender) + ')' : ''),
+      t('s_mobile') + ': ' + B.mobile,
+      home ? t('s_address') + ': ' + B.address + ', ' + B.pincode + (B.distance != null ? ' (' + t('sx_km', { d: B.distance }) + ')' : '') : null,
+      t('s_when') + ': ' + B.dateLabel + ', ' + slotLabel(B.slot),
+      t('sx_tests') + ': ' + ((B.items && B.items.length) ? B.items.map(function (i) { return nm(i); }).join(', ') : B.rx ? t('sx_tests_rx') : t('sx_tests_decide')),
+      (B.items && B.items.length) ? t('s_est') + ': ' + inr(estimate()) : null,
+      home ? null : t('sx_centre_phone') + ': ' + contact().display
     ].filter(Boolean).join('\n');
   }
   // Save a centre-visit request so the desk can call the patient back and we can count
@@ -736,30 +754,38 @@
       }).then(function (r) { return r && r.request_ref ? r : null; }, function () { return null; });
     } catch (e) { return Promise.resolve(null); }
   }
+  // The hand-off (2026-11-14): wait for the save, then say ONE thing. Saved: our team will
+  // call to confirm; Call / WhatsApp are there for anyone in a hurry. Not saved (no API, an
+  // older backend, offline, slow): please call us, as before. The save gives up after 10 s.
   function handoff(afterError) {
     measure('booking_request', { kind: B.kind === 'home' ? 'home' : 'visit' });
     var saving = saveVisitRequest();
-    if (!afterError) bot(t('handoff', { name: esc(B.name.split(' ')[0]) }));
+    var timeout = new Promise(function (res) { setTimeout(function () { res(null); }, 10000); });
     later(function () {
-      var txt = summaryText();
+      return Promise.race([saving, timeout]).then(function (r) { handoffShow(r, afterError); });
+    });
+  }
+  function handoffShow(r, afterError) {
+    var first = esc(B.name.split(' ')[0]);
+    if (!afterError) bot(r ? t('handoff_saved', { name: first, ref: esc(r.request_ref) }) : t('handoff', { name: first }));
+    later(function () {
+      var txt = summaryText(r && r.request_ref);
       var c = contact();
       var copyBtn = btn(t('copy'), 'copy', function () {
         var ok = function () { copyBtn.querySelector('span').textContent = t('copied'); };
         if (navigator.clipboard) navigator.clipboard.writeText(txt).then(ok, function () {}); else ok();
       });
-      var acts = [linkBtn(t('call_phone', { phone: c.display }), 'phone', c.tel, 'mc-btn-pri'), copyBtn];
+      // Saved: calling is optional, so the Call button is not the primary one.
+      var acts = [linkBtn(t('call_phone', { phone: c.display }), 'phone', c.tel, r ? '' : 'mc-btn-pri'), copyBtn];
       // WhatsApp: the chosen centre's own WhatsApp Business number (config.js centres[].whatsapp;
       // only Ekangarsarai today), else the brand one (empty = no button).
       var wa = (B.kind === 'visit' && B.centre && B.centre.whatsapp) || C.whatsapp;
       if (wa) acts.push(linkBtn('WhatsApp', 'msg', 'https://wa.me/' + String(wa).replace(/\D/g, '') + '?text=' + encodeURIComponent(txt)));
-      // Shown once the request is saved: the desk will call; the Call button stays.
-      var saved = h('p', { class: 'mc-note mc-saved', hidden: true });
-      log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [h('div', { class: 'mc-card' }, [h('pre', { class: 'mc-pre', text: txt }), saved, h('div', { class: 'mc-actions' }, acts)])])); scroll();
-      saving.then(function (r) {
-        if (!r) return;
-        saved.innerHTML = t('request_saved', { ref: esc(r.request_ref) });
-        saved.hidden = false; scroll();
-      });
+      log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [h('div', { class: 'mc-card' }, [
+        h('pre', { class: 'mc-pre', text: txt }),
+        r ? h('p', { class: 'mc-note mc-saved', text: t('handoff_hurry') }) : null,
+        h('div', { class: 'mc-actions' }, acts)
+      ])])); scroll();
     });
     andThen();
   }

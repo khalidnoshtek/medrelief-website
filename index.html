@@ -124,6 +124,9 @@ html[lang="hi"] .hero p{font-size:18px}
 .hero-centre{display:none;padding:18px;border-radius:22px;border:1px solid var(--mr-line);background:#fff;box-shadow:0 20px 40px -24px rgba(112,26,117,.55)}
 html[data-landing] .hero-centre{display:block;min-height:176px}
 html[data-landing] .act-main{display:none}
+/* Until the page script has written the centre's header and intro, don't flash Bihar Sharif's. */
+html[data-landing]:not([data-hero-done]) .hero [data-i18n="hero_eyebrow"],
+html[data-landing]:not([data-hero-done]) .hero [data-i18n="hero_lede"]{visibility:hidden}
 .hero-centre .hc-n{font-size:22px;font-weight:700;margin:4px 0 6px}
 .hero-centre .hc-a{display:flex;gap:6px;color:var(--mr-muted);font-size:14.5px;line-height:1.45}
 .hero-centre .hc-rx{margin-top:10px;font-size:14.5px;line-height:1.45;color:var(--mr-primary-deep);background:var(--mr-tint);border-radius:12px;padding:9px 11px}
@@ -339,7 +342,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 .mc-muted{color:var(--mr-muted);font-size:13px}
 .mc-consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--mr-muted);line-height:1.45;cursor:pointer}
 .mc-consent input{width:20px;height:20px;flex:0 0 auto;margin-top:1px;accent-color:var(--mr-primary)}
-.mc-pre{white-space:pre-wrap;font:500 12.5px/1.55 var(--mono);background:var(--mr-bg);border:1px solid var(--mr-line);border-radius:10px;padding:10px}
+.mc-pre{white-space:pre-wrap;font:500 14px/1.55 var(--font);background:var(--mr-bg);border:1px solid var(--mr-line);border-radius:10px;padding:10px}
 .mc-step{display:flex;gap:10px;font-size:14px;line-height:1.5}
 .mc-num{width:24px;height:24px;border-radius:50%;background:var(--mr-tint);color:var(--mr-primary-deep);display:grid;place-items:center;font-size:12px;font-weight:700;flex:0 0 auto}
 .mc-qr{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--mr-muted)}
@@ -635,6 +638,17 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
     });
     document.querySelectorAll('[data-i18n-html]').forEach(function(el){ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
     document.querySelectorAll('[data-i18n-aria]').forEach(function(el){ el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+    // A link or campaign that names a centre (2026-11-14): the header and intro speak about
+    // that centre, not Bihar Sharif's home collection and UPI.
+    var lcId = document.documentElement.getAttribute('data-landing');
+    var lcc = lcId && (C.centres || []).filter(function(x){ return x.id === lcId; })[0];
+    if (lcc) {
+      var cn = (hi() && lcc.name_hi) || lcc.name;
+      var eb = document.querySelector('.hero [data-i18n="hero_eyebrow"]'), ld = document.querySelector('.hero [data-i18n="hero_lede"]');
+      if (eb) eb.textContent = t('hero_eyebrow_c', { c: cn });
+      if (ld) ld.textContent = t('hero_lede_c', { c: cn });
+    }
+    document.documentElement.setAttribute('data-hero-done', '');
     document.querySelectorAll('[data-lang]').forEach(function(b){ var on = b.getAttribute('data-lang') === window.MR_LANG(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     renderDynamic();
   }
