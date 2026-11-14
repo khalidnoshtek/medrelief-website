@@ -35,16 +35,35 @@
   function set(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
 
   // ── campaign tags (kept even without consent: they stay in this browser) ──
+  // The FIRST set seen in this visit wins (2026-11-14): a link on our own pages (e.g. the
+  // /links "Book here" buttons) must not overwrite the ad tags the visitor arrived with.
   var utm = {};
   try {
     var q = new URLSearchParams(location.search);
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id', 'fbclid', 'gclid'].forEach(function (k) {
       var v = q.get(k); if (v) utm[k] = v.slice(0, 100);
     });
-    if (Object.keys(utm).length) sessionStorage.setItem(UTM_KEY, JSON.stringify(utm));
-    else utm = JSON.parse(sessionStorage.getItem(UTM_KEY) || '{}') || {};
+    var kept = JSON.parse(sessionStorage.getItem(UTM_KEY) || '{}') || {};
+    if (Object.keys(kept).length) utm = kept;
+    else if (Object.keys(utm).length) sessionStorage.setItem(UTM_KEY, JSON.stringify(utm));
   } catch (e) { utm = {}; }
   window.MR_UTM = function () { return utm; };
+
+  // ── anonymous tap count (2026-11-14), same rules as the visit count below: no consent
+  // needed because nothing personal is sent — the page, which button (action), its centre
+  // or app, and the visit's UTM tags (POST /public/web-events). Fails silently. ──
+  window.mrCount = function (action, centre) {
+    var api = (window.MR_CONFIG && window.MR_CONFIG.api && window.MR_CONFIG.api.baseUrl) || '';
+    if (!api || !action) return;
+    var body = JSON.stringify({
+      page: location.pathname, action: String(action), centre: String(centre || ''),
+      utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '',
+      utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '',
+    });
+    var url = api + '/public/web-events';
+    try { if (navigator.sendBeacon && navigator.sendBeacon(url, body)) return; } catch (e) {}
+    try { fetch(url, { method: 'POST', body: body, keepalive: true, mode: 'cors', credentials: 'omit' }).catch(function () {}); } catch (e) {}
+  };
 
   // ── anonymous visit count (see the header: no cookie, nothing personal) ──
   (function countVisit() {
@@ -106,9 +125,10 @@
     booking_request:  { ga: 'generate_lead',  px: 'Lead' },             // call-to-confirm hand-off
     order_created:    { ga: 'begin_checkout', px: 'InitiateCheckout' }, // home-collection order made, before UPI
     purchase:         { ga: 'purchase',       px: 'Purchase' },         // UPI payment confirmed
-    link_click:       { ga: 'link_click' }                              // /links taps: kind = book/location/social/website, intent = centre or platform
+    link_click:       { ga: 'link_click' },                             // /links taps: kind = book/location/social/website, intent = centre or platform
+    links_click:      { ga: 'links_click' }                             // every /links button: centre (or app) + action (call, maps, book, …)
   };
-  var SAFE = { where: 1, intent: 1, kind: 1, value: 1, currency: 1, transaction_id: 1 };
+  var SAFE = { where: 1, intent: 1, kind: 1, value: 1, currency: 1, transaction_id: 1, centre: 1, action: 1 };
   window.mrTrack = function (name, params) {
     if (!on) return;
     var m = MAP[name]; if (!m) return;

@@ -21,7 +21,8 @@ chat.js        the assistant — flows, validation, hand-off / API adapter
 config.js      EVERYTHING editable: phone, centres, slots, tests, campaigns, lab pin + radius, app links, API
 i18n.js        every patient-facing string in English and Hindi
 privacy.html / terms.html
-links.html     link-in-bio page for Instagram, served at /links: book online, per-centre Call / Location / Book here, socials (from config.js; booking links carry utm_source=instagram&utm_medium=bio&utm_campaign=linkinbio)
+links.html     link-in-bio page for Instagram, served at /links: book online, per-centre Call / Location / Book here, socials (from config.js; when the visit came without tags, booking links carry utm_source=instagram&utm_medium=social&utm_campaign=link_in_bio). Every button tap is counted (GA4 `links_click` after Allow, plus the anonymous `mrCount` → POST /public/web-events)
+ig.html        the short Instagram bio link, served at /ig: redirects to /links?utm_source=instagram&utm_medium=social&utm_campaign=link_in_bio (no analytics on it, so the visit counts once, on /links)
 branding.html  unlisted (noindex) review page for Mithlesh: logo variants, Staff/Patient/Doctor app-icon options, sample report, A4 invoice + 80mm receipt (mirror the staff ReceiptPage print layout) · assets/branding/
 assets/logo/   Med Relief heart-in-hands logo (from "Main Logo.svg", 2026-10-10): logo-mark.png 17 KB, favicons, touch icons · assets/qr-patient-app.svg (→ install.html?app=patient&auto=1)
 ```

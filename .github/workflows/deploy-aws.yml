@@ -41,6 +41,8 @@ jobs:
           # rewrite, and CloudFront answers a missing key with the home page, so the page also
           # goes up under the extensionless key "links".
           cp links.html out/links
+          # /ig = the short Instagram bio link (redirects to /links with the bio's tags).
+          cp ig.html out/ig
           cp assets/qr-patient-app.svg out/assets/
           cp assets/logo/* out/assets/logo/
           find out -type f | sort
@@ -50,11 +52,13 @@ jobs:
           set -euo pipefail
           # Pages and scripts revalidate on every load (scripts carry ?v= stamps);
           # logos and the QR may be cached for a day.
-          aws s3 sync out/ "s3://$BUCKET/" --delete --exclude "assets/*" --exclude "links" \
+          aws s3 sync out/ "s3://$BUCKET/" --delete --exclude "assets/*" --exclude "links" --exclude "ig" \
             --cache-control "public, max-age=0, must-revalidate"
           # "links" has no extension, so its type is set here (CloudFront sends nosniff).
           # Excluded from the sync above, so --delete never removes it between deploys.
           aws s3 cp out/links "s3://$BUCKET/links" --content-type "text/html; charset=utf-8" \
+            --cache-control "public, max-age=0, must-revalidate"
+          aws s3 cp out/ig "s3://$BUCKET/ig" --content-type "text/html; charset=utf-8" \
             --cache-control "public, max-age=0, must-revalidate"
           aws s3 sync out/assets/ "s3://$BUCKET/assets/" --delete \
             --cache-control "public, max-age=86400"

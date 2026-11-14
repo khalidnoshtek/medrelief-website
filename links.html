@@ -108,7 +108,7 @@ body .mr-consent{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
   </header>
 
   <a class="lk-btn lk-pri" data-track="book" data-intent="home"
-     href="./?book=home&amp;utm_source=instagram&amp;utm_medium=bio&amp;utm_campaign=linkinbio&amp;utm_content=book-online">
+     href="./?book=home&amp;utm_source=instagram&amp;utm_medium=social&amp;utm_campaign=link_in_bio&amp;utm_content=book-online">
     <span class="lk-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6.5L4.6 18.2A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-2.8L14 9.5V3"/><path d="M7.5 15h9"/></svg></span>
     <span><b>Book a test online</b><small>Home sample collection</small><small lang="hi">ऑनलाइन जाँच बुक करें · घर से सैंपल</small></span>
     <svg class="lk-go" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
@@ -150,7 +150,7 @@ body .mr-consent{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 
   <footer>
     <div class="foot-bot">
-      <span><a href="./?utm_source=instagram&amp;utm_medium=bio&amp;utm_campaign=linkinbio&amp;utm_content=website" data-track="website" data-intent="home">medrelief.co.in</a> · © 2026 Med Relief Healthcare Pvt. Ltd.</span>
+      <span><a href="./?utm_source=instagram&amp;utm_medium=social&amp;utm_campaign=link_in_bio&amp;utm_content=website" data-track="website" data-intent="home">medrelief.co.in</a> · © 2026 Med Relief Healthcare Pvt. Ltd.</span>
       <span><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a></span>
     </div>
   </footer>
@@ -161,11 +161,16 @@ body .mr-consent{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
   // analytics.js asks for the visitor's language (consent banner); same choice as the main site.
   window.MR_LANG = function () { try { return localStorage.getItem('mr_lang') === 'hi' ? 'hi' : 'en'; } catch (e) { return 'en'; } };
 </script>
-<script src="analytics.js?v=20261109a"></script>
+<script src="analytics.js?v=20261114a"></script>
 <script>
 (function () {
   var C = window.MR_CONFIG || {};
-  var UTM = 'utm_source=instagram&utm_medium=bio&utm_campaign=linkinbio';
+  // Tags for a visit that arrived here WITHOUT any (e.g. /links typed or shared). A visit
+  // that came with tags (an ad, or the /ig bio link) keeps them: the links below then carry
+  // none, so analytics.js keeps the session's first set (2026-11-14).
+  var UTM_IG = 'utm_source=instagram&utm_medium=social&utm_campaign=link_in_bio';
+  var tagged = false;
+  try { tagged = !!(window.MR_UTM && Object.keys(window.MR_UTM()).length); } catch (e) {}
   var ORDER = ['bihar-sharif', 'ekangarsarai', 'madhubani', 'rajgir'];
   var NAME_HI = { 'bihar-sharif': 'बिहार शरीफ', ekangarsarai: 'एकंगरसराय', madhubani: 'मधुबनी', rajgir: 'राजगीर' };
   var TAG_HI = { 'Centre & lab': 'सेंटर और लैब', 'Collection centre': 'कलेक्शन सेंटर', 'Centre': 'सेंटर' };
@@ -185,7 +190,13 @@ body .mr-consent{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
     var q = 'Med Relief Diagnostics ' + c.name + ', ' + String(c.address || '').replace(/\s*—\s*/g, ', ');
     return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
   }
-  function bookUrl(intent, content) { return './?book=' + intent + '&' + UTM + '&utm_content=' + content; }
+  function bookUrl(intent, content) { return './?book=' + intent + (tagged ? '' : '&' + UTM_IG + '&utm_content=' + content); }
+  // The two links written in the page: drop their tags when the visit already has some.
+  if (tagged) document.querySelectorAll('a[href*="utm_source="]').forEach(function (a) {
+    var u = a.getAttribute('href').split('?'), q = new URLSearchParams(u[1] || '');
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) { q.delete(k); });
+    a.setAttribute('href', u[0] + (q.toString() ? '?' + q.toString() : ''));
+  });
 
   // Socials, same source as the site footer.
   var S = C.social || {};
@@ -222,6 +233,29 @@ body .mr-consent{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
         '<a class="lk-act pri" href="' + esc(bookUrl('centre:' + c.id, 'book-' + c.id)) + '" data-track="book" data-intent="' + esc(c.id) + '">' + I.cal + '<b>Book here</b><small lang="hi">यहाँ बुक करें</small></a>' +
       '</div></article>';
   }).join('');
+
+  // Every button tap (2026-11-14): GA4 links_click {centre, action} for visitors who allowed
+  // measurement, and an anonymous count for everyone (window.mrCount: no consent needed,
+  // nothing personal). centre = the centre card's id, or the app for a store button.
+  document.querySelector('main.lk').addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var track = a.getAttribute('data-track') || '', intent = a.getAttribute('data-intent') || '';
+    var card = a.closest('[id^="centre-"]');
+    var centre = card ? card.id.slice(7) : '';
+    var action = '';
+    if (href.indexOf('tel:') === 0) action = 'call';
+    else if (href.indexOf('wa.me/') >= 0) action = 'whatsapp';
+    else if (track === 'location') action = 'maps';
+    else if (track === 'book') action = intent === 'home' ? 'book_online' : 'book';
+    else if (track === 'app') { action = /appstore/.test(intent) ? 'app_store' : 'google_play'; centre = intent.split('-')[0]; }
+    else if (track === 'social') action = intent;
+    else if (track === 'website') action = 'website';
+    if (!action) return;
+    try { if (window.mrTrack) window.mrTrack('links_click', { centre: centre, action: action }); } catch (err) {}
+    try { if (window.mrCount) window.mrCount(action, centre); } catch (err) {}
+  }, true);
 })();
 </script>
 </body>
