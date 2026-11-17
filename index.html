@@ -91,6 +91,10 @@ html[lang="hi"] .eyebrow{letter-spacing:.02em;font-size:14px}
 .seg button{appearance:none;border:0;background:none;cursor:pointer;min-height:44px;min-width:48px;padding:0 14px;border-radius:999px;font-size:15px;font-weight:700;color:var(--mr-primary-deep)}
 .seg button.on{background:var(--mr-primary);color:#fff}
 .seg .hi{font-size:16px}
+/* EN / हिं inside the full-screen chat header (2026-11-17: ads open the chat, the page header is hidden) */
+.mc-seg{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);margin-right:6px}
+.mc-seg button{min-height:34px;min-width:38px;padding:0 9px;font-size:13px;color:#fff}
+.mc-seg button.on{background:#fff;color:var(--mr-primary-deep)}
 .icbtn{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;border:1px solid var(--mr-line);background:#fff;color:var(--mr-primary);flex:0 0 auto}
 .audbar{background:#fff;border-bottom:1px solid var(--mr-line)}
 .audbar .wrap{display:flex;gap:6px;padding-top:6px;padding-bottom:6px}
@@ -410,7 +414,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
     <button class="act" data-chat="app"><span class="ai"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span><span data-i18n="tile_app_t">Get the app</span></button>
   </div>
   <div class="card app-card">
-    <img src="assets/qr-patient-app.svg" alt="QR code: install the Med Relief patient app" width="92" height="92" />
+    <img src="assets/qr-patient-app.svg" alt="QR code: Med Relief patient app on Google Play" width="92" height="92" />
     <div><b data-i18n="tile_app_t">Get the app</b><p data-i18n="tile_app_s">Scan with your phone camera to install the patient app.</p></div>
   </div>
 </div>
@@ -528,6 +532,10 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
         <span class="mc-avatar"><img src="assets/logo/logo-mark.png?v=2" alt="" /></span>
         <div><b class="mc-title">Med Relief assistant</b><small><span class="mc-live"></span><span data-i18n="chat_status">Online · replies instantly</span></small></div>
         <div class="sp">
+          <div class="seg mc-seg" role="group" aria-label="Language / भाषा">
+            <button type="button" data-lang="en" aria-pressed="true">EN</button>
+            <button type="button" data-lang="hi" class="hi" aria-pressed="false">हिं</button>
+          </div>
           <button type="button" class="mc-icbtn mc-restart" aria-label="Start over" data-i18n-aria="restart"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
           <button type="button" class="mc-icbtn mc-close" aria-label="Minimise" data-i18n-aria="minimise"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
         </div>
