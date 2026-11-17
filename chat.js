@@ -850,7 +850,9 @@
   function signupStart() {
     resume = signupStart;
     B = { kind: 'signup' };
-    if (!aoLive() || !API_OK) { bot(t('su_closed')); return choose(aoChoices()); }
+    // Not gated on API_OK: a QR scan opens this before the status check answers; a down API
+    // shows up as the WhatsApp-code error instead.
+    if (!aoLive()) { bot(t('su_closed')); return choose(aoChoices()); }
     bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
     measure('signup_start', {});
     mobile(signupOtp);
