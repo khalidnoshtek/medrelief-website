@@ -75,7 +75,7 @@
     <li>Several screens use AI assistance — prescription OCR, voice-to-text dictation, conversation-mode form filling, and suggested test bundles by specialty. Each of these has a manual fallback that is always one tap away.</li>
     <li><strong>Voice / speech recognition:</strong> when you or our staff use voice input, the speech recognition built into the phone or browser turns the audio into text. On Android and in Chrome the audio may be processed by Google; on iPhone and in Safari it may be processed by Apple. We never receive the audio ourselves — only the resulting text reaches our servers. Audio is not stored by Med Relief at any point.</li>
     <li>Once a transcript exists, Medrelief sends only that text (no audio) to an AI service to pick out the relevant fields (your name, age, mobile, tests, etc.) so staff can fill the form faster. The receptionist confirms every extracted value before it is saved.</li>
-    <li>The AI services we use are Google Gemini (our main provider), Anthropic Claude and OpenAI. If Gemini is unavailable, a request may go to one of the others. They are used to read prescription photos, to turn staff dictation into form fields, to read result sheets for our lab staff, and for optional report summaries that a doctor can ask for (these send only age, gender and result values, never your name or mobile number).</li>
+    <li>The AI service we use is Google Gemini. It is used to read prescription photos, to turn staff dictation into form fields, to read result sheets for our lab staff, and for optional report summaries that a doctor can ask for (these send only age, gender and result values, never your name or mobile number).</li>
     <li>We send each AI service only what the task needs. What is hidden depends on the task: report summaries for doctors send only age, gender and result values; the billing assistant masks your mobile number. A prescription photo is sent as it was captured, with whatever is written on it (including your name), because the AI has to read it. Dictated text is sent as spoken, because the AI has to pick out your details from it. Each provider processes the data under its own API terms.</li>
     <li>Every AI call is logged with a fingerprint of the request, the response, the confidence score and the cost, and is available for audit on request.</li>
   </ul>
@@ -84,7 +84,7 @@
   <ul>
     <li>All personal and clinical data is stored in a PostgreSQL database on Amazon Web Services (Amazon RDS) in the ap-south-1 (Mumbai) region of India, encrypted at rest.</li>
     <li>Report PDFs and prescription photos are stored in Amazon S3 in the same Mumbai region, encrypted at rest. Backups also stay in the Mumbai region.</li>
-    <li><strong>AI processing happens outside India:</strong> the AI services named in section 4 run on servers outside India. We send them only what each task needs (see section 4).</li>
+    <li><strong>AI processing happens outside India:</strong> Google Gemini processes the data on Google's servers, which may be outside India. We send it only what each task needs (see section 4).</li>
     <li>WhatsApp messages we send you (report links, receipts, one-time passwords) are delivered through our provider Gupshup and pass through Meta's WhatsApp servers.</li>
   </ul>
 
@@ -103,7 +103,7 @@
     <li><strong>Your referring doctor, if you registered with one:</strong> they receive a copy of your report through our B2B portal.</li>
     <li>Payment processors (Razorpay) and communication providers (Gupshup for WhatsApp, whose messages pass through Meta's WhatsApp service; MSG91/Fast2SMS for SMS) — only the minimum data needed to complete the transaction.</li>
     <li>Speech-recognition providers (the service built into the phone or browser: Google on Android and Chrome, Apple on iPhone and Safari) — only the audio of what is said into the microphone, used to produce a text transcript. We do not receive the audio.</li>
-    <li>AI service providers (Google Gemini, Anthropic Claude, OpenAI) — only for the tasks in section 4, with only the data each task needs. These providers process the data outside India.</li>
+    <li>Our AI service provider (Google Gemini) — only for the tasks in section 4, with only the data each task needs. Google may process the data outside India. If we add or change an AI provider, we will update this policy first.</li>
     <li>Authorities, on lawful written request (court order, statutory notice). We will inform you unless we are legally barred from doing so.</li>
     <li>We do NOT sell your data or share it with advertisers.</li>
   </ul>
