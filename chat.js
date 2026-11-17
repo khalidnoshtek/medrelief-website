@@ -294,7 +294,8 @@
     var home = { l: t('m_home'), i: 'home', go: function () { homeStart(); } };
     var visit = { l: t('m_visit'), i: 'visit', go: function () { visitStart(); } };
     var lc = landingCentre();
-    choose((lc && !nearLab(lc) ? [visit, home] : [home, visit]).concat([
+    choose((aoLive() ? [{ l: t('m_signup', { tp: AO.testPct }), i: 'tag', go: signupStart }] : [])
+      .concat(lc && !nearLab(lc) ? [visit, home] : [home, visit]).concat([
       { l: t('m_track'), i: 'track', go: track },
       { l: t('m_offers'), i: 'tag', go: offers },
       { l: t('m_faq'), i: 'help', go: faq },
@@ -834,6 +835,136 @@
     bot(t('faq_intro'));
     choose(FAQ.map(function (f) { return { l: t(f.q), go: function () { f.a(); andThen(); } }; }).concat([{ l: t('m_menu'), i: 'back', go: menuAgain }]));
   }
+  // ── ONLINE SIGN-UP OFFER (Ekangarsarai, Khalid 2026-11-16) ─────────────────
+  // A NEW customer who registers here gets AO.testPct% off lab tests and AO.packagePct% off
+  // health packages at the offer centre on every visit until AO.until. The counter applies it
+  // by the mobile number (POST /public/app-signup). The number MUST be verified by the
+  // WhatsApp code: no "skip", unlike booking. The backend decides "new customer" (never
+  // billed at any Medrelief centre, not staff); the chat only shows what it answers.
+  var AO = C.appOffer || null;
+  function aoLive() { return !!(AO && AO.active && API && Date.now() <= Date.parse(AO.until)); }
+  function aoCentre() { return (C.centres || []).filter(function (x) { return x.id === AO.centre; })[0] || null; }
+  function aoChoices(more) {
+    return (more || []).concat([{ l: t('m_call'), i: 'phone', go: call }, { l: t('m_menu'), i: 'back', go: menuAgain }]);
+  }
+  function signupStart() {
+    resume = signupStart;
+    B = { kind: 'signup' };
+    // Not gated on API_OK: a QR scan opens this before the status check answers; a down API
+    // shows up as the WhatsApp-code error instead.
+    if (!aoLive()) { bot(t('su_closed')); return choose(aoChoices()); }
+    bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
+    measure('signup_start', {});
+    mobile(signupOtp);
+  }
+  function signupOtp() {
+    var g = gen;
+    fetch(API + '/public/home-collection/lookup/request-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile }) })
+      .then(function (r) { if (g !== gen) return; if (!r.ok) throw r; signupCode(0); })
+      .catch(function (e) {
+        if (g !== gen) return;
+        bot(e && e.status === 429 ? t('su_otp_wait') : t('su_otp_fail'));
+        choose(aoChoices());
+      });
+  }
+  function signupCode(tries) {
+    resume = function () { signupCode(tries); };
+    bot(t('otp_sent', { m: B.mobile.replace(/(\d{2})\d{6}(\d{2})/, '$1••••••$2') }));
+    ask({ placeholder: t('ph_otp'), type: 'number', validate: function (v) { return /^\d{4,8}$/.test(v.trim()) ? null : t('otp_bad'); }, then: function (v) {
+      var g = gen;
+      fetch(API + '/public/home-collection/lookup/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile, code: v.trim() }) })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw j; return j; }); })
+        .then(function (r) {
+          if (g !== gen) return;
+          B.token = r.token;
+          var list = r.patients || [];
+          if (!list.length) return signupName();
+          pickPatient(list, signupName, signupConfirm);
+        })
+        .catch(function () {
+          if (g !== gen) return;
+          if (tries >= 2) { bot(t('su_otp_give_up')); return choose(aoChoices()); }
+          bot(t('otp_bad')); signupCode(tries + 1);
+        });
+    } });
+  }
+  function signupName() {
+    resume = signupName;
+    bot(t('ask_name'));
+    ask({ placeholder: t('ph_name'), type: 'name', validate: vName, then: function (v) { B.name = v.trim(); B.patientRef = null; signupGender(); } });
+  }
+  function signupGender() {
+    resume = signupGender;
+    bot(t('ask_gender'));
+    choose(['MALE', 'FEMALE', 'OTHER'].map(function (g) { return { l: t('g_' + g), go: function () { B.gender = g; signupAge(); } }; }));
+  }
+  function signupAge() {
+    resume = signupAge;
+    bot(t('ask_age'));
+    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(v, 10); signupConfirm(); } });
+  }
+  function signupConfirm() {
+    resume = signupConfirm;
+    if (B.age == null) return signupAge();
+    later(function () {
+      var cb = h('input', { type: 'checkbox' });
+      var go = btn(t('su_register'), 'check', function () { go.disabled = true; cb.disabled = true; me(t('su_register')); signupSend(); }, 'mc-btn-pri');
+      go.disabled = true;
+      cb.addEventListener('change', function () { go.disabled = !cb.checked; });
+      var c = aoCentre();
+      var card = h('div', { class: 'mc-card mc-summary' }, [
+        h('div', { class: 'mc-sum-h', text: t('su_card_h', { c: cname(c) }) }),
+        row(t('s_patient'), B.name + (B.age != null ? ' · ' + B.age : '') + (B.gender ? ' · ' + t('g_' + B.gender) : '')),
+        row(t('s_mobile'), B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2')),
+        h('p', { class: 'mc-note', text: t('su_terms', { tp: AO.testPct, pp: AO.packagePct, c: cname(c) }) }),
+        h('label', { class: 'mc-consent' }, [cb, h('span', { html: t('su_consent') })]),
+        h('div', { class: 'mc-actions mc-actions-col' }, [go])
+      ]);
+      log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [card])); scroll();
+    });
+  }
+  function signupSend() {
+    var u = {};
+    try { u = (window.MR_UTM && window.MR_UTM()) || {}; } catch (e) {}
+    var g = gen;
+    bot(t('su_saving'));
+    fetch(API + '/public/app-signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + B.token },
+      body: JSON.stringify({
+        name: B.name, gender: B.gender || 'OTHER', age_years: B.age, centre_code: AO.centre, consent: true,
+        utm: { utm_source: u.utm_source || null, utm_medium: u.utm_medium || null, utm_campaign: u.utm_campaign || null, utm_content: u.utm_content || null }
+      })
+    })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); })
+      .then(function (r) {
+        if (g !== gen) return;
+        measure('signup_done', { new_customer: !!r.new_customer, offer: !!r.offer });
+        var c = aoCentre();
+        var visitHere = { l: t('su_book_visit', { c: cname(c) }), i: 'visit', go: function () {
+          var keep = { mobile: B.mobile, token: B.token, patientRef: r.patient_ref || B.patientRef, name: B.name, gender: B.gender, age: B.age };
+          visitStart(AO.centre);
+          Object.keys(keep).forEach(function (k) { if (keep[k] != null) B[k] = keep[k]; });
+        } };
+        if (r.new_customer && r.offer) {
+          // The live promotion's numbers (Admin → Promotions), falling back to config.js.
+          var tp = r.offer.test_pct != null ? r.offer.test_pct : AO.testPct;
+          var pp = r.offer.package_pct != null ? r.offer.package_pct : AO.packagePct;
+          bot(t(r.already_registered ? 'su_done_again' : 'su_done', { tp: tp, pp: pp, c: esc(cname(c)), m: B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2') }));
+          return choose([visitHere, { l: t('m_app'), i: 'app', go: app }, { l: t('m_menu'), i: 'back', go: menuAgain }]);
+        }
+        if (r.new_customer) { bot(t('su_done_no_offer')); return choose(aoChoices([visitHere])); }
+        bot(t('su_not_new', { c: esc(cname(c)) }));
+        choose(aoChoices([visitHere]));
+      })
+      .catch(function (e) {
+        if (g !== gen) return;
+        if (e && e.error === 'VERIFY_AGAIN') { bot(t('su_verify_again')); return signupOtp(); }
+        if (e && e.status === 429) { bot(t('su_otp_wait')); return choose(aoChoices()); }
+        bot(t('su_fail')); choose(aoChoices());
+      });
+  }
+
   function app() {
     resume = app;
     bot(t('app_intro'));
@@ -972,6 +1103,7 @@
     else if (k === 'campaign') showCampaign(arg);
     else if (k === 'faq') faq();
     else if (k === 'app') app();
+    else if (k === 'register') { if (aoLive()) signupStart(); else menu(); }
     else if (k === 'call') { menu(); showCall(); }
     else menu();
   }
@@ -1013,12 +1145,17 @@
   try { queued = window.MR_TAKE_QUEUED ? window.MR_TAKE_QUEUED() : null; } catch (e) {}
   if (queued) later(function () { open(queued); });
 
-  // Ad / QR deep link (2026-11-07): ?book=home | visit | offers | track | centre:<id> opens the chat
+  // Ad / QR deep link (2026-11-07): ?book=home | visit | offers | track | register | centre:<id> opens the chat
   // straight in that flow, e.g. https://medrelief.co.in/?book=centre:ekangarsarai&utm_source=facebook…
   try {
-    var bk = queued ? null : new URLSearchParams(location.search).get('book');
+    var qs = new URLSearchParams(location.search);
+    var bk = queued ? null : qs.get('book');
+    // The EKS print QR (rickshaw banner, A5 flyer) carries utm_campaign=eks-app-offer and no
+    // ?book: open the sign-up straight away while the offer runs, so the printed QR never
+    // has to change (2026-11-17).
+    if (!queued && !bk && qs.get('utm_campaign') === 'eks-app-offer' && aoLive()) bk = 'register';
     var okCentre = function (id) { return (C.centres || []).some(function (c) { return c.id === id; }); };
-    if (bk && (/^(home|visit|offers|track)$/.test(bk) || (/^centre:[a-z-]+$/.test(bk) && okCentre(bk.slice(7))))) {
+    if (bk && (/^(home|visit|offers|track|register)$/.test(bk) || (/^centre:[a-z-]+$/.test(bk) && okCentre(bk.slice(7))))) {
       later(function () { open(bk); measure('chat_open', { intent: bk.split(':')[0], where: 'link' }); });
     }
   } catch (e) {}

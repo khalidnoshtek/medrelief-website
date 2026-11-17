@@ -148,6 +148,16 @@ window.MR_CONFIG = {
     'Cholesterol': 'कोलेस्ट्रॉल', 'SGPT': 'SGPT (लिवर)'
   },
 
+  // Online sign-up offer (Khalid 2026-11-16, Mithlesh approved): a NEW customer who registers
+  // here (mobile verified by the WhatsApp code) gets testPct% off lab tests and packagePct%
+  // off health packages at this centre, every visit until `until`. The counter applies it
+  // automatically by the mobile number (backend billing.app_offer_*); this only shows it.
+  // OFF until prod can honour it (2026-11-17): prod needs Promotions (#1520: /public/app-signup +
+  // the counter applying the offer) released and the APP promotion switched ON in Admin → Promotions.
+  // Then set active: true here. While OFF the menu item, the flyer QR auto-open and ?book=register
+  // are all hidden (register falls back to the menu).
+  appOffer: { active: false, centre: 'ekangarsarai', testPct: 60, packagePct: 20, until: '2026-12-31T23:59:59+05:30' },
+
   // code = mdm_packages.code, so a booking maps 1:1 onto the package the counter bills.
   campaigns: [
     { code: 'MRD002', active: true, tag_hi: 'सबसे ज़्यादा बुक', name_hi: 'निरोग्यम स्टैंडर्ड', blurb_hi: 'पूरे शरीर की जाँच: ब्लड काउंट, शुगर, लिवर, किडनी, लिपिड, थायरॉइड और पेशाब।', tag: 'Most booked', name: 'Nirogyam Standard',
