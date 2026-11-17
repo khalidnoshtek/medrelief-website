@@ -67,16 +67,16 @@ window.MR_CONFIG = {
   //        ('YYYY-MM-DD', India time) the site shows the note and the chat's earliest day is
   //        bookFrom. Both switch off by themselves on that date — nothing to remove later.
   centres: [
-    { id: 'bihar-sharif', name: 'Bihar Sharif', name_hi: 'बिहार शरीफ', tag: 'Centre & lab',
+    { id: 'bihar-sharif', code: 'BSH', name: 'Bihar Sharif', name_hi: 'बिहार शरीफ', tag: 'Centre & lab',
       address: '50 m North of Bhainsasur Chowk, Opp. Sudha Dairy, Bihar Sharif (Nalanda) — 803101',
       address_hi: 'भैंसासुर चौक से 50 मीटर उत्तर, सुधा डेयरी के सामने, बिहार शरीफ (नालंदा) — 803101',
       phones: ['+91 92638 40556', '061124 53327'], maps: '', whatsapp: '',
       lat: 25.205942, lng: 85.520323 },
-    { id: 'rajgir', name: 'Rajgir', name_hi: 'राजगीर', tag: 'Collection centre',
+    { id: 'rajgir', code: 'RJG', name: 'Rajgir', name_hi: 'राजगीर', tag: 'Collection centre',
       address: 'Rajgir, Nalanda district, Bihar', address_hi: 'राजगीर, नालंदा ज़िला, बिहार',
       phones: ['+91 92638 40556'], maps: '', whatsapp: '',
       lat: 25.0283, lng: 85.4206 },     // approximate (town centre); Khalid OK'd as is 2026-11-17
-    { id: 'ekangarsarai', name: 'Ekangarsarai', name_hi: 'एकंगरसराय', tag: 'Centre',
+    { id: 'ekangarsarai', code: 'EKS', name: 'Ekangarsarai', name_hi: 'एकंगरसराय', tag: 'Centre',
       address: 'SAK Tower, Near Railway Fatak, Ekangarsarai (Nalanda) — 801301',
       address_hi: 'SAK टावर, रेलवे फाटक के पास, एकंगरसराय (नालंदा) — 801301',
       phones: ['+91 88935 13340'], maps: '',
@@ -85,7 +85,7 @@ window.MR_CONFIG = {
       lat: 25.2238, lng: 85.2340,       // approximate (near the railway crossing); Khalid OK'd as is 2026-11-17
       bookFrom: '2026-11-11',
       bookFromNote: 'एकंगरसराय में बुकिंग 11 नवंबर से / Ekangarsarai bookings start from 11 November' },
-    { id: 'madhubani', name: 'Madhubani', tag: 'Centre',
+    { id: 'madhubani', code: 'MDB', name: 'Madhubani', name_hi: 'मधुबनी', tag: 'Centre',
       address: 'Ground Floor, Bhramdev Complex, In front of Watson High School (Behind Bazar India Mall / Domino\'s Pizza), Madhubani, Bihar 847211',
       address_hi: 'ग्राउंड फ़्लोर, ब्रह्मदेव कॉम्प्लेक्स, वॉटसन हाई स्कूल के सामने (बाज़ार इंडिया मॉल / डोमिनोज़ पिज़्ज़ा के पीछे), मधुबनी, बिहार 847211',
       phones: ['+91 91421 55427'], maps: '', whatsapp: '',
@@ -101,12 +101,15 @@ window.MR_CONFIG = {
     daysAhead: 3            // Today (if a slot is still ahead) + the next days
   },
 
-  // Home collection only within radiusKm of the lab. The browser checks first (shared
-  // location); the server re-checks against org_centers.latitude/longitude/
-  // home_collection_radius_km (set by migration to the same pin). Lab pin = Google Maps
-  // "Med Relief Diagnostic- Bihar Sharif", Plus Code 6G4C+93H, Kaghzi Mohalla Rd, Bhaisasur.
+  // Home collection only within radiusKm of a lab that serves it. WHICH labs serve comes from
+  // the booking API (GET /public/home-collection/status → centres, = org_centers with a pin +
+  // home_collection_radius_km), so the site never promises a centre the backend doesn't serve.
+  // `centres` (codes from centres[].code above) is only the fallback when the API can't be
+  // reached; the browser's pre-check uses each serving centre's lat/lng above, and the server
+  // re-checks every booking. Bihar Sharif pin = Google Maps "Med Relief Diagnostic- Bihar
+  // Sharif", Plus Code 6G4C+93H, Kaghzi Mohalla Rd, Bhaisasur.
   homeCollection: {
-    lab: { name: 'Bihar Sharif', lat: 25.205942, lng: 85.520323 },
+    centres: ['BSH'],
     radiusKm: 15,
     fee: null               // CONFIRM: null = no separate collection charge shown
   },

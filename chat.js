@@ -37,6 +37,8 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (r) {
         API_OK = !!r;
+        // The labs that serve home collection (names in the copy, the browser pre-check).
+        if (r && window.MR_HC) window.MR_HC.set(r.centres);
         var allowed = C.onlinePayments !== false && (C.paymentHosts || []).indexOf(location.hostname) >= 0;
         TEST = allowed && !!(r && !r.online_payment && r.test_payment && wantTest);
         ONLINE = allowed && (!!(r && r.online_payment) || TEST);
@@ -52,7 +54,9 @@
       .catch(function () { /* stays in hand-off mode */ });
   }
   var HC = C.homeCollection || {};
-  var KM = HC.radiusKm || 15;
+  // Home collection radius + the serving labs' names, from index.html's MR_HC (API-driven).
+  function hcKm() { return window.MR_HC ? window.MR_HC.km() : (HC.radiusKm || 15); }
+  function hcLabs() { return esc(window.MR_HC ? window.MR_HC.names() : 'Bihar Sharif'); }
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ── tiny DOM helpers ───────────────────────────────────────────────────────
@@ -291,7 +295,7 @@
     resume = function () { menu(t('greet_again')); };
     B = {};
     bot((greet || t('greet')) + '<br><span class="mc-hint">' + t('tap_hint') + '</span>');
-    var home = { l: t('m_home'), i: 'home', go: function () { homeStart(); } };
+    var home = { l: t('m_home', { labs: hcLabs() }), i: 'home', go: function () { homeStart(); } };
     var visit = { l: t('m_visit'), i: 'visit', go: function () { visitStart(); } };
     var lc = landingCentre();
     choose((aoLive() ? [{ l: t('m_signup', { tp: AO.testPct }), i: 'tag', go: signupStart }] : [])
@@ -303,13 +307,10 @@
       { l: t('m_call'), i: 'phone', go: call }
     ]));
   }
-  // Home collection is only within KM of the Bihar Sharif lab (2026-11-14): never offered
-  // right after booking a centre outside that area (Ekangarsarai, Rajgir, Madhubani), nor
-  // first to a visitor who landed on such a centre's link.
-  function nearLab(c) {
-    var lab = HC.lab || {};
-    return !!c && c.lat != null && lab.lat != null && distanceKm(c.lat, c.lng, lab.lat, lab.lng) <= KM;
-  }
+  // Home collection is only within the radius of a lab that serves it (2026-11-14; which labs
+  // serve comes from the API since 2026-11-17): never offered right after booking a centre
+  // outside every serving area, nor first to a visitor who landed on such a centre's link.
+  function nearLab(c) { return !!window.MR_HC && window.MR_HC.covers(c); }
   function landingCentre() {
     var id = document.documentElement.getAttribute('data-landing');
     return id ? (C.centres || []).filter(function (x) { return x.id === id; })[0] || null : null;
@@ -321,13 +322,13 @@
   }
   function andThen() {
     resume = andThen;
-    choose((homeFarFromHere() ? [] : [{ l: t('m_book_home'), i: 'home', go: function () { homeStart(); } }])
+    choose((homeFarFromHere() ? [] : [{ l: t('m_book_home', { labs: hcLabs() }), i: 'home', go: function () { homeStart(); } }])
       .concat([{ l: t('m_menu'), i: 'back', go: menuAgain }]));
   }
 
   // ── HOME COLLECTION ────────────────────────────────────────────────────────
   function newKey() { return String(Date.now()) + Math.random().toString(36).slice(2, 8); }
-  // Coverage FIRST (2026-11-14): home collection is only within KM of the Bihar Sharif lab, so
+  // Coverage FIRST (2026-11-14): home collection is only within the radius of a serving lab, so
   // the location is checked before the tests, number, OTP or name are asked. Out of area, the
   // visitor is offered their nearest centre straight away (Ekangarsarai is ~29 km away).
   function homeStart(c) {
@@ -338,7 +339,7 @@
   function homeAfterCoverage() { if (B.items && B.items.length) return homeMobile(); homeWhat(); }
   function homeWhat() {
     resume = homeWhat;
-    bot(t('home_intro', { km: KM }));
+    bot(t('home_intro', { km: hcKm(), labs: hcLabs() }));
     choose([
       { l: t('o_offer'), i: 'tag', go: function () { pickPackage(homeMobile); } },
       { l: t('o_tests'), i: 'list', go: function () { pickTests(homeMobile); } },
@@ -489,7 +490,7 @@
   }
   function homeLocation() {
     resume = homeLocation;
-    bot(t('ask_location', { km: KM }));
+    bot(t('ask_location', { km: hcKm(), labs: hcLabs() }));
     choose([
       { l: t('share_loc'), i: 'pin', p: true, go: locate },
       { l: t('btn_visit'), i: 'visit', go: homeToVisit },
@@ -508,33 +509,41 @@
     navigator.geolocation.getCurrentPosition(function (pos) {
       if (g !== gen) return;
       B.lat = pos.coords.latitude; B.lng = pos.coords.longitude;
-      var lab = HC.lab || {};
-      var local = distanceKm(B.lat, B.lng, lab.lat, lab.lng);
+      // Browser pre-check: the nearest serving lab (the server re-checks every booking).
+      var nl = window.MR_HC && window.MR_HC.nearest(B.lat, B.lng);
+      var local = nl ? nl.d : Infinity, localKm = nl ? nl.km : hcKm();
+      B.labCode = nl ? nl.code : null;
       var decide = function (covered, d) {
         B.distance = Math.round(d * 10) / 10;
         if (!covered) {
           var near = nearestCentre(B.lat, B.lng);
           if (near) {
-            bot(t('loc_far_near', { d: B.distance, km: KM, c: esc(cname(near.c)), n: Math.max(1, Math.round(near.km)) }));
+            bot(t('loc_far_near', { d: B.distance, km: hcKm(), labs: hcLabs(), c: esc(cname(near.c)), n: Math.max(1, Math.round(near.km)) }));
             return choose([
               { l: t('visit_nearest', { c: cname(near.c) }), i: 'visit', p: true, go: function () { homeToVisit(near.c.id); } },
               { l: t('btn_visit'), i: 'visit', go: homeToVisit },
               { l: t('m_call'), i: 'phone', go: call }
             ]);
           }
-          bot(t('loc_far', { d: B.distance, km: KM }));
+          bot(t('loc_far', { d: B.distance, km: hcKm(), labs: hcLabs() }));
           return choose([{ l: t('btn_visit'), i: 'visit', p: true, go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]);
         }
-        bot(t('loc_ok', { d: B.distance }));
+        bot(t('loc_ok', { d: B.distance, c: window.MR_HC && B.labCode ? esc(window.MR_HC.name(B.labCode)) : hcLabs() }));
         homeAfterCoverage();
       };
-      if (!API) return decide(local <= KM, local);
+      if (!API) return decide(local <= localKm, local);
       fetch(API + '/public/home-collection/coverage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lat: B.lat, lng: B.lng }) })
         .then(function (r) { return r.ok ? r.json() : null; })
         // Only a real yes/no from the server overrides the browser's check (an old
         // backend without this endpoint answers 404 — that is not "out of area").
-        .then(function (r) { if (r && typeof r.covered === 'boolean') decide(r.covered, r.distance_km != null ? r.distance_km : local); else decide(local <= KM, local); })
-        .catch(function () { decide(local <= KM, local); });
+        .then(function (r) {
+          if (r && typeof r.covered === 'boolean') {
+            if (r.centre && r.centre.code) B.labCode = r.centre.code;   // the lab the server matched
+            return decide(r.covered, r.distance_km != null ? r.distance_km : local);
+          }
+          decide(local <= localKm, local);
+        })
+        .catch(function () { decide(local <= localKm, local); });
     }, function (err) {
       if (g !== gen) return;
       locFail(err && err.code === 1 ? 'loc_denied' : 'loc_denied');
@@ -654,7 +663,7 @@
       if (Math.round(r.total_inr) !== Math.round(estimate())) bot(t('price_changed', { amt: inr(r.total_inr) }));
       checkout();
     }).catch(function (e) {
-      if (e && e.error === 'OUT_OF_COVERAGE') { bot(t('out_of_coverage', { km: KM })); return choose([{ l: t('btn_visit'), i: 'visit', go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]); }
+      if (e && e.error === 'OUT_OF_COVERAGE') { bot(t('out_of_coverage', { km: hcKm(), labs: hcLabs() })); return choose([{ l: t('btn_visit'), i: 'visit', go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]); }
       bot(t('order_fail')); handoff(true);
     });
   }
@@ -827,7 +836,7 @@
     { q: 'faq_q2', a: function () { bot(t('faq_a2')); } },
     { q: 'faq_q3', a: function () { bot(t('faq_a3')); } },
     { q: 'faq_q4', a: function () { bot(t(ONLINE ? 'faq_a4' : 'faq_a4_call')); } },
-    { q: 'faq_q5', a: function () { bot(t('faq_a5', { km: KM })); } },
+    { q: 'faq_q5', a: function () { bot(t('faq_a5', { km: hcKm(), labs: hcLabs() })); } },
     { q: 'faq_q6', a: function () { bot(t('faq_a6')); } }
   ];
   function faq() {
