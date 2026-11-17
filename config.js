@@ -52,8 +52,10 @@ window.MR_CONFIG = {
   paymentHosts: ['medrelief.co.in', 'www.medrelief.co.in', 'app.medlab.noshtek.ai'],
 
   apps: {
-    patientAndroid: 'https://app.medlab.noshtek.ai/install.html?app=patient&auto=1',
-    patientIos: '',                                  // '' = "coming soon"
+    // Store listings (Khalid 2026-11-17: every link scans to prod). Android = the Play listing
+    // (in.medrelief.patient, 1.2.0 live); iPhone = MedRelief Patient on the App Store.
+    patientAndroid: 'https://play.google.com/store/apps/details?id=in.medrelief.patient',
+    patientIos: 'https://apps.apple.com/in/app/medrelief-patient/id6801772718', // '' = "coming soon"
     patientWeb: 'https://patient.medlab.noshtek.ai',
     partnerPortal: 'https://doctor.medlab.noshtek.ai'
   },
