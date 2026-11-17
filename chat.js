@@ -945,7 +945,10 @@
           Object.keys(keep).forEach(function (k) { if (keep[k] != null) B[k] = keep[k]; });
         } };
         if (r.new_customer && r.offer) {
-          bot(t(r.already_registered ? 'su_done_again' : 'su_done', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(c)), m: B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2') }));
+          // The live promotion's numbers (Admin → Promotions), falling back to config.js.
+          var tp = r.offer.test_pct != null ? r.offer.test_pct : AO.testPct;
+          var pp = r.offer.package_pct != null ? r.offer.package_pct : AO.packagePct;
+          bot(t(r.already_registered ? 'su_done_again' : 'su_done', { tp: tp, pp: pp, c: esc(cname(c)), m: B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2') }));
           return choose([visitHere, { l: t('m_app'), i: 'app', go: app }, { l: t('m_menu'), i: 'back', go: menuAgain }]);
         }
         if (r.new_customer) { bot(t('su_done_no_offer')); return choose(aoChoices([visitHere])); }
