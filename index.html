@@ -16,7 +16,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 <!-- chat.js wires every booking button; start downloading it now, not when the parser reaches the end. -->
-<link rel="preload" as="script" href="chat.js?v=20261117a">
+<link rel="preload" as="script" href="chat.js?v=20261117b">
 <script>
 /* Early taps (2026-11-14): on 3G the buttons paint at ~1.2 s but chat.js wires them at ~7.5 s.
    Keep the last tap on a chat button (or the chat bar) and replay it when chat.js is ready.
@@ -568,7 +568,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 
 <script src="config.js?v=20261117a"></script>
 <script src="i18n.js?v=20261117a"></script>
-<script src="analytics.js?v=20261114a"></script>
+<script src="analytics.js?v=20261117b"></script>
 <script>
 (function(){
   var C = window.MR_CONFIG || {}, t = window.MR_T;
@@ -655,7 +655,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
       var home = window.MR_HC.serves(x);   // this centre runs home collection (from the API's serving list)
       // Not taking bookings yet (config bookFrom): a Hindi + English note until that day (India time).
       var note = window.MR_BOOK_FROM && window.MR_BOOK_FROM(x) && x.bookFromNote;
-      return '<article class="card loc"><div class="loc-top"><h3>' + esc(x.name) + '</h3>' + '' + '</div>' +
+      return '<article class="card loc" data-centre="' + esc(x.id) + '"><div class="loc-top"><h3>' + esc(x.name) + '</h3>' + '' + '</div>' +
         (note ? '<div class="loc-note">' + cal + '<span>' + esc(note) + '</span></div>' : '') +
         '<div class="loc-row">' + pin + '<span>' + esc((hi() && x.address_hi) || x.address) + '</span></div>' +
         '<div class="loc-row">' + ph + '<span class="mono">' + x.phones.map(esc).join(' · ') + '</span></div>' +
@@ -733,6 +733,6 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   document.querySelector('[data-tab-back]').addEventListener('click', function(){ document.querySelector('.mc-tab[data-tab="chat"]').click(); });
 })();
 </script>
-<script src="chat.js?v=20261117a"></script>
+<script src="chat.js?v=20261117b"></script>
 </body>
 </html>

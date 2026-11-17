@@ -640,6 +640,9 @@
   // ── PAY (home collection) ──────────────────────────────────────────────────
   // Campaign measurement: amounts and the opaque order ref only, never patient or test details.
   function measure(name, params) { try { if (window.mrTrack) window.mrTrack(name, params); } catch (e) {} }
+  // Anonymous funnel step (2026-11-17): the step's name + a target (the centre or the chat's
+  // intent) + the visit's utm tags via mrCount. NEVER the number, name or anything typed.
+  function step(action, target) { try { if (window.mrCount) window.mrCount(action, target || ''); } catch (e) {} }
   function post(path, body) {
     return fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }  /* only CORS-allowed headers: the API rejects others at preflight */, body: JSON.stringify(body) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); });
@@ -863,6 +866,7 @@
     // shows up as the WhatsApp-code error instead.
     if (!aoLive()) { bot(t('su_closed')); return choose(aoChoices()); }
     measure('signup_start', {});
+    step('signup_start', AO.centre);
     signupMobile(true);
   }
   // Sign-up asks for the number in one short line (Khalid 2026-11-17: the booking
@@ -873,14 +877,15 @@
     resume = function () { signupMobile(true); };
     if (intro) bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
     bot(t('su_ask_mobile'));
-    ask({ placeholder: t('ph_mobile'), type: 'tel', validate: vMobile, then: function (v) { B.mobile = normMobile(v); signupOtp(); } });
+    ask({ placeholder: t('ph_mobile'), type: 'tel', validate: vMobile, then: function (v) { B.mobile = normMobile(v); step('mobile_entered', AO.centre); signupOtp(); } });
   }
   function signupOtp() {
     var g = gen;
     fetch(API + '/public/home-collection/lookup/request-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile }) })
-      .then(function (r) { if (g !== gen) return; if (!r.ok) throw r; signupCode(0); })
+      .then(function (r) { if (g !== gen) return; if (!r.ok) throw r; step('otp_requested', AO.centre); signupCode(0); })
       .catch(function (e) {
         if (g !== gen) return;
+        step('otp_failed', e && e.status === 429 ? 'rate-limited' : 'send-failed');
         bot(e && e.status === 429 ? t('su_otp_wait') : t('su_otp_fail'));
         choose(aoChoices());
       });
@@ -895,6 +900,7 @@
         .then(function (r) {
           if (g !== gen) return;
           B.token = r.token;
+          step('otp_verified', AO.centre);
           var list = r.patients || [];
           if (!list.length) return signupName();
           pickPatient(list, signupName, signupConfirm);
@@ -955,7 +961,7 @@
       linkBtn(t('su_btn_call', { phone: String(phone).replace(/^\+91\s?/, '') }), 'phone', 'tel:' + String(phone).replace(/\s/g, '')),
       linkBtn(t('su_btn_share'), 'msg', 'https://wa.me/?text=' + encodeURIComponent(t('su_share_text', { url: share })))
     ];
-    wide(h('div', { class: 'mc-card' }, [h('div', { class: 'mc-actions mc-actions-col' }, acts)]));
+    wide(h('div', { class: 'mc-card', 'data-funnel': 'signup', 'data-centre': c.id }, [h('div', { class: 'mc-actions mc-actions-col' }, acts)]));
   }
   function signupSend() {
     var u = {};
@@ -974,6 +980,7 @@
       .then(function (r) {
         if (g !== gen) return;
         measure('signup_done', { new_customer: !!r.new_customer, offer: !!r.offer });
+        step('signup_done', r.new_customer ? (r.offer ? 'new-offer' : 'new') : 'existing');
         var c = aoCentre();
         var visitHere = { l: t('su_book_visit', { c: cname(c) }), i: 'visit', go: function () {
           var keep = { mobile: B.mobile, token: B.token, patientRef: r.patient_ref || B.patientRef, name: B.name, gender: B.gender, age: B.age };
@@ -1124,6 +1131,7 @@
   // ── open / close / tabs / audience / language ──────────────────────────────
   function reset() { gen++; pendingAsks = 0; log.innerHTML = ''; expect = null; setPlaceholder(); queue = Promise.resolve(); }
   function open(intent) {
+    step('chat_open', String(intent || 'menu').split(':')[0]);
     root.classList.add('open'); document.documentElement.classList.add('mc-locked');
     showChat();
     intent = intent || 'menu';
@@ -1165,7 +1173,7 @@
   root.querySelectorAll('.mc-tab').forEach(function (x) { x.addEventListener('click', function () { x.getAttribute('data-tab') === 'call' ? showCall() : showChat(); }); });
   root.querySelector('.mc-restart').addEventListener('click', function () { reset(); aud === 'b2b' ? partnerMenu() : menu(); showChat(); });
   root.querySelector('.mc-close').addEventListener('click', close);
-  root.querySelector('.mc-launch-open').addEventListener('click', function () { if (!log.children.length) open(aud === 'b2b' ? 'partner' : 'menu'); else { root.classList.add('open'); document.documentElement.classList.add('mc-locked'); } });
+  root.querySelector('.mc-launch-open').addEventListener('click', function () { if (!log.children.length) open(aud === 'b2b' ? 'partner' : 'menu'); else { step('chat_open', 'resume'); root.classList.add('open'); document.documentElement.classList.add('mc-locked'); } });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && root.classList.contains('open')) close(); });
   document.addEventListener('click', function (e) {
     var x = e.target.closest && e.target.closest('[data-chat]');

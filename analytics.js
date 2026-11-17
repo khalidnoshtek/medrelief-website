@@ -52,11 +52,11 @@
   // ── anonymous tap count (2026-11-14), same rules as the visit count below: no consent
   // needed because nothing personal is sent — the page, which button (action), its centre
   // or app, and the visit's UTM tags (POST /public/web-events). Fails silently. ──
-  window.mrCount = function (action, centre) {
+  window.mrCount = function (action, centre, page) {
     var api = (window.MR_CONFIG && window.MR_CONFIG.api && window.MR_CONFIG.api.baseUrl) || '';
     if (!api || !action) return;
     var body = JSON.stringify({
-      page: location.pathname, action: String(action), centre: String(centre || ''),
+      page: page || location.pathname, action: String(action), centre: String(centre || ''),
       utm_source: utm.utm_source || '', utm_medium: utm.utm_medium || '',
       utm_campaign: utm.utm_campaign || '', utm_content: utm.utm_content || '',
     });
@@ -144,6 +144,33 @@
       }
     } catch (e) {}
   };
+
+  // Anonymous tap counts on the home page and in the chat (2026-11-17, funnel): Call, WhatsApp
+  // and Directions, with the centre the link belongs to (matched by its phone number or map
+  // link in config.js) — never who tapped. The /links page counts its own taps.
+  var digits10 = function (v) { return String(v || '').replace(/\D/g, '').slice(-10); };
+  function centreOf(href) {
+    var cs = (window.MR_CONFIG && window.MR_CONFIG.centres) || [], C = window.MR_CONFIG || {};
+    var d = digits10(href.split('?')[0]);
+    if (/wa\.me\/\?|wa\.me\/$/.test(href)) return 'share';
+    for (var i = 0; i < cs.length; i++) {
+      var c = cs[i];
+      if (d.length === 10 && [].concat(c.phones || [], c.whatsapp || []).some(function (p) { return digits10(p) === d; })) return c.id;
+      if (c.maps && href.indexOf(c.maps) === 0) return c.id;
+      if (/maps/.test(href) && c.name && decodeURIComponent(href).indexOf(c.name) >= 0) return c.id;
+    }
+    return d.length === 10 && d === digits10(C.phone) ? 'brand' : '';
+  }
+  document.addEventListener('click', function (e) {
+    if (!window.mrCount) return;
+    var el = e.target && e.target.closest && e.target.closest('a[href^="tel:"], a[href*="wa.me/"], a[href*="google.com/maps"], a[href*="maps.app.goo.gl"], a[href*="goo.gl/maps"]');
+    if (!el || el.closest('[data-where]')) return;   // the /links page counts its own
+    var href = el.getAttribute('href') || '';
+    var action = href.indexOf('tel:') === 0 ? 'call' : href.indexOf('wa.me/') >= 0 ? 'whatsapp' : 'maps';
+    var page = el.closest('[data-funnel="signup"]') ? '/signup' : el.closest('#mr-chat') ? '/chat' : '';
+    var holder = el.closest('[data-centre]');
+    try { window.mrCount(action, (holder && holder.getAttribute('data-centre')) || centreOf(href), page); } catch (err) {}
+  }, true);
 
   // Taps anywhere on the page (page links and the chat's buttons alike).
   document.addEventListener('click', function (e) {
