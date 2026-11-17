@@ -75,21 +75,21 @@ window.MR_CONFIG = {
     { id: 'rajgir', name: 'Rajgir', name_hi: 'राजगीर', tag: 'Collection centre',
       address: 'Rajgir, Nalanda district, Bihar', address_hi: 'राजगीर, नालंदा ज़िला, बिहार',
       phones: ['+91 92638 40556'], maps: '', whatsapp: '',
-      lat: 25.0283, lng: 85.4206 },     // CONFIRM: approximate (town centre)
+      lat: 25.0283, lng: 85.4206 },     // approximate (town centre); Khalid OK'd as is 2026-11-17
     { id: 'ekangarsarai', name: 'Ekangarsarai', name_hi: 'एकंगरसराय', tag: 'Centre',
       address: 'SAK Tower, Near Railway Fatak, Ekangarsarai (Nalanda) — 801301',
       address_hi: 'SAK टावर, रेलवे फाटक के पास, एकंगरसराय (नालंदा) — 801301',
       phones: ['+91 88935 13340'], maps: '',
       // On WhatsApp Business (Khalid 2026-11-14): the visit hand-off offers a WhatsApp button.
       whatsapp: '+91 88935 13340',
-      lat: 25.2238, lng: 85.2340,       // CONFIRM: approximate (near the railway crossing)
+      lat: 25.2238, lng: 85.2340,       // approximate (near the railway crossing); Khalid OK'd as is 2026-11-17
       bookFrom: '2026-11-11',
       bookFromNote: 'एकंगरसराय में बुकिंग 11 नवंबर से / Ekangarsarai bookings start from 11 November' },
     { id: 'madhubani', name: 'Madhubani', tag: 'Centre',
       address: 'Ground Floor, Bhramdev Complex, In front of Watson High School (Behind Bazar India Mall / Domino\'s Pizza), Madhubani, Bihar 847211',
       address_hi: 'ग्राउंड फ़्लोर, ब्रह्मदेव कॉम्प्लेक्स, वॉटसन हाई स्कूल के सामने (बाज़ार इंडिया मॉल / डोमिनोज़ पिज़्ज़ा के पीछे), मधुबनी, बिहार 847211',
       phones: ['+91 91421 55427'], maps: '', whatsapp: '',
-      lat: 26.3537, lng: 86.0718 }      // CONFIRM: approximate (town centre)
+      lat: 26.3537, lng: 86.0718 }      // approximate (town centre); Khalid OK'd as is 2026-11-17
   ],
 
   // CONFIRM: operating windows. Placeholders until the centres confirm their hours.
