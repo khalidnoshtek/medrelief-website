@@ -1103,7 +1103,7 @@
     else if (k === 'campaign') showCampaign(arg);
     else if (k === 'faq') faq();
     else if (k === 'app') app();
-    else if (k === 'register') signupStart();
+    else if (k === 'register') { if (aoLive()) signupStart(); else menu(); }
     else if (k === 'call') { menu(); showCall(); }
     else menu();
   }
