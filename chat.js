@@ -853,14 +853,16 @@
     // Not gated on API_OK: a QR scan opens this before the status check answers; a down API
     // shows up as the WhatsApp-code error instead.
     if (!aoLive()) { bot(t('su_closed')); return choose(aoChoices()); }
-    bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
     measure('signup_start', {});
-    signupMobile();
+    signupMobile(true);
   }
   // Sign-up asks for the number in one short line (Khalid 2026-11-17: the booking
   // prompt's "if you've visited us before… report on WhatsApp" was clutter here).
-  function signupMobile() {
-    resume = signupMobile;
+  // `intro`: also show the offer line. A language switch re-runs `resume`, so the offer is
+  // repeated in the new language too (MR Tester 2026-11-17).
+  function signupMobile(intro) {
+    resume = function () { signupMobile(true); };
+    if (intro) bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
     bot(t('su_ask_mobile'));
     ask({ placeholder: t('ph_mobile'), type: 'tel', validate: vMobile, then: function (v) { B.mobile = normMobile(v); signupOtp(); } });
   }
