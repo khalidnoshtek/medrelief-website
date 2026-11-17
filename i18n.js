@@ -66,6 +66,10 @@ window.MR_I18N = {
     m_signup: 'Register online: {tp}% off tests',
     su_intro: '<b>{tp}% off lab tests</b> and <b>{pp}% off health packages</b> at {c}, till 31 Dec. For new customers.',
     su_ask_mobile: 'Your <b>mobile number</b>? We’ll send a WhatsApp code.',
+    su_btn_maps: 'Directions',
+    su_btn_call: 'Call {phone}',
+    su_btn_share: 'Send to family / friends',
+    su_share_text: 'Med Relief Ekangarsarai: register online and get 60% off lab tests and 20% off health packages (new customers, till 31 Dec): {url}',
     su_closed: 'Online registration isn’t available right now. Please call us and we’ll help.',
     su_otp_fail: 'We couldn’t send the WhatsApp code just now. Please try again in a moment, or call us.',
     su_otp_wait: 'Too many tries. Please wait a few minutes and try again, or call us.',
@@ -265,6 +269,10 @@ window.MR_I18N = {
     m_signup: 'ऑनलाइन रजिस्टर करें: जाँच पर {tp}% छूट',
     su_intro: '{c} पर <b>लैब जाँच पर {tp}% छूट</b> और <b>हेल्थ पैकेज पर {pp}% छूट</b>, 31 दिसंबर तक। सिर्फ़ नए ग्राहकों के लिए।',
     su_ask_mobile: 'आपका <b>मोबाइल नंबर</b>? हम WhatsApp पर कोड भेजेंगे।',
+    su_btn_maps: 'रास्ता देखें',
+    su_btn_call: 'कॉल करें {phone}',
+    su_btn_share: 'परिवार/दोस्तों को भेजें',
+    su_share_text: 'Med Relief एकंगरसराय: ऑनलाइन रजिस्टर करें और लैब जाँच पर 60% व हेल्थ पैकेज पर 20% छूट पाएँ (नए ग्राहक, 31 दिसंबर तक): {url}',
     su_closed: 'अभी ऑनलाइन रजिस्ट्रेशन उपलब्ध नहीं है। कृपया हमें कॉल करें, हम मदद करेंगे।',
     su_otp_fail: 'अभी WhatsApp कोड नहीं भेज पाए। थोड़ी देर में फिर कोशिश करें, या हमें कॉल करें।',
     su_otp_wait: 'बहुत बार कोशिश हो गई। कुछ मिनट बाद फिर कोशिश करें, या हमें कॉल करें।',
@@ -406,7 +414,15 @@ window.MR_I18N = {
   var lang = 'en';
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (saved === 'hi') lang = 'hi';
+  // A link may say ?lang=hi|en (ads, QR: 2026-11-17); it sets this visit only, so a later
+  // tap on EN / हिं (remembered) still wins on the next page load without the parameter.
+  var qs = null;
+  try { qs = new URLSearchParams(location.search); } catch (e) {}
+  var asked = qs && qs.get('lang');
+  if (asked === 'hi' || asked === 'en') lang = asked;
+  else if (saved === 'hi') lang = 'hi';
+  // The EKS sign-up offer (ads, print) is in Hindi: open it in Hindi unless the visitor chose.
+  else if (saved !== 'en' && qs && qs.get('utm_campaign') === 'eks-app-offer') lang = 'hi';
   // No choice made yet: a phone set to Hindi gets Hindi (2026-11-14). The visitor's tap on
   // EN / हिं is remembered and always wins.
   else if (saved !== 'en') {

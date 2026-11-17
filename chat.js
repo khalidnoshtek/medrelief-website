@@ -853,14 +853,16 @@
     // Not gated on API_OK: a QR scan opens this before the status check answers; a down API
     // shows up as the WhatsApp-code error instead.
     if (!aoLive()) { bot(t('su_closed')); return choose(aoChoices()); }
-    bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
     measure('signup_start', {});
-    signupMobile();
+    signupMobile(true);
   }
   // Sign-up asks for the number in one short line (Khalid 2026-11-17: the booking
   // prompt's "if you've visited us before… report on WhatsApp" was clutter here).
-  function signupMobile() {
-    resume = signupMobile;
+  // `intro`: also show the offer line. A language switch re-runs `resume`, so the offer is
+  // repeated in the new language too (MR Tester 2026-11-17).
+  function signupMobile(intro) {
+    resume = function () { signupMobile(true); };
+    if (intro) bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
     bot(t('su_ask_mobile'));
     ask({ placeholder: t('ph_mobile'), type: 'tel', validate: vMobile, then: function (v) { B.mobile = normMobile(v); signupOtp(); } });
   }
@@ -930,6 +932,22 @@
       log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [card])); scroll();
     });
   }
+  // After a new sign-up (2026-11-17): how to get there, call, and pass the offer on.
+  // Directions use the centre's own maps link when set, else a search by name + address
+  // (its lat/lng in config are still approximate). No "get the app" here: the store
+  // patient app can't log a website sign-up straight in yet (native 2.0 not shipped).
+  function signupNext(c) {
+    if (!c) return;
+    var phone = (c.phones && c.phones[0]) || c.whatsapp || C.phone;
+    var maps = c.maps || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Med Relief Diagnostics, ' + (c.address || c.name)));
+    var share = 'https://medrelief.co.in/?book=register&utm_source=whatsapp&utm_medium=share&utm_campaign=eks-app-offer';
+    var acts = [
+      linkBtn(t('su_btn_maps'), 'pin', maps, 'mc-btn-pri'),
+      linkBtn(t('su_btn_call', { phone: String(phone).replace(/^\+91\s?/, '') }), 'phone', 'tel:' + String(phone).replace(/\s/g, '')),
+      linkBtn(t('su_btn_share'), 'msg', 'https://wa.me/?text=' + encodeURIComponent(t('su_share_text', { url: share })))
+    ];
+    wide(h('div', { class: 'mc-card' }, [h('div', { class: 'mc-actions mc-actions-col' }, acts)]));
+  }
   function signupSend() {
     var u = {};
     try { u = (window.MR_UTM && window.MR_UTM()) || {}; } catch (e) {}
@@ -958,7 +976,8 @@
           var tp = r.offer.test_pct != null ? r.offer.test_pct : AO.testPct;
           var pp = r.offer.package_pct != null ? r.offer.package_pct : AO.packagePct;
           bot(t(r.already_registered ? 'su_done_again' : 'su_done', { tp: tp, pp: pp, c: esc(cname(c)), m: B.mobile.replace(/(\d{5})(\d{5})/, '$1 $2') }));
-          return choose([visitHere, { l: t('m_app'), i: 'app', go: app }, { l: t('m_menu'), i: 'back', go: menuAgain }]);
+          signupNext(c);
+          return choose([visitHere, { l: t('m_menu'), i: 'back', go: menuAgain }]);
         }
         if (r.new_customer) { bot(t('su_done_no_offer')); return choose(aoChoices([visitHere])); }
         bot(t('su_not_new', { c: esc(cname(c)) }));
