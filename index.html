@@ -16,7 +16,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 <!-- chat.js wires every booking button; start downloading it now, not when the parser reaches the end. -->
-<link rel="preload" as="script" href="chat.js?v=20261114a">
+<link rel="preload" as="script" href="chat.js?v=20261117a">
 <script>
 /* Early taps (2026-11-14): on 3G the buttons paint at ~1.2 s but chat.js wires them at ~7.5 s.
    Keep the last tap on a chat button (or the chat bar) and replay it when chat.js is ready.
@@ -566,13 +566,54 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
 </aside>
 </div><!-- /shell -->
 
-<script src="config.js?v=20261108a"></script>
-<script src="i18n.js?v=20261114a"></script>
+<script src="config.js?v=20261117a"></script>
+<script src="i18n.js?v=20261117a"></script>
 <script src="analytics.js?v=20261114a"></script>
 <script>
 (function(){
   var C = window.MR_CONFIG || {}, t = window.MR_T;
-  var KM = (C.homeCollection && C.homeCollection.radiusKm) || 15;
+
+  // Which labs serve home collection (2026-11-17, multi-centre). The booking API's /status is the
+  // truth: chat.js passes its `centres` to MR_HC.set(). Until then, or with no API, the fallback
+  // is config.homeCollection.centres. Copy names these labs, so it never promises one the
+  // backend doesn't serve. Fires 'mr:serving' when the list changes.
+  var HCC = C.homeCollection || {};
+  var byCode = function(code){ return (C.centres || []).filter(function(x){ return x.code === code; })[0] || null; };
+  var serving = (HCC.centres || ['BSH']).map(function(code){ var c = byCode(code); return { code: code, name: c ? c.name : code, km: HCC.radiusKm || 15 }; });
+  var distKm = function(lat1, lng1, lat2, lng2){
+    var r = function(d){ return d * Math.PI / 180; };
+    var a = Math.pow(Math.sin(r(lat2 - lat1) / 2), 2) + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.pow(Math.sin(r(lng2 - lng1) / 2), 2);
+    return 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(a)));
+  };
+  window.MR_HC = {
+    // Radius to quote: the largest serving radius (all are 15 km today).
+    km: function(){ return serving.reduce(function(m, s){ return Math.max(m, s.km); }, 0) || HCC.radiusKm || 15; },
+    // "Bihar Sharif" / "Bihar Sharif or Ekangarsarai" (Hindi: "… या …"), in the current language.
+    names: function(){
+      var hiLang = window.MR_LANG && window.MR_LANG() === 'hi';
+      var ns = serving.map(function(s){ var c = byCode(s.code); return (hiLang && c && c.name_hi) || (c && c.name) || s.name; });
+      return ns.join(hiLang ? ' या ' : ' or ');
+    },
+    // Display name of one centre by API code (the lab /coverage matched).
+    name: function(code, fallback){ var c = byCode(code); var hiLang = window.MR_LANG && window.MR_LANG() === 'hi'; return (hiLang && c && c.name_hi) || (c && c.name) || fallback || code; },
+    // Nearest serving lab with a pin: { code, d (km away), km (its radius) } or null.
+    nearest: function(lat, lng){
+      var best = null;
+      serving.forEach(function(s){ var c = byCode(s.code); if (!c || c.lat == null) return; var d = distKm(lat, lng, c.lat, c.lng); if (!best || d < best.d) best = { code: s.code, d: d, km: s.km }; });
+      return best;
+    },
+    // Is this config centre inside a serving lab's area? (offer home collection after a visit there)
+    covers: function(c){ if (!c || c.lat == null) return false; var n = window.MR_HC.nearest(c.lat, c.lng); return !!n && n.d <= n.km; },
+    // The centre itself runs home collection (its card shows the radius line).
+    serves: function(c){ return !!c && serving.some(function(s){ return s.code === c.code; }); },
+    set: function(list){
+      if (!Array.isArray(list) || !list.length) return;   // keep the fallback rather than show no lab
+      var next = list.filter(function(x){ return x && x.code; }).map(function(x){ return { code: x.code, name: x.name || x.code, km: Number(x.radius_km) || HCC.radiusKm || 15 }; });
+      if (!next.length || JSON.stringify(next) === JSON.stringify(serving)) return;
+      serving = next;
+      document.dispatchEvent(new CustomEvent('mr:serving'));
+    }
+  };
   function inr(n){ return '₹' + Number(n).toLocaleString('en-IN'); }
   function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
   function hi(){ return window.MR_LANG() === 'hi'; }
@@ -611,14 +652,14 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
       : '';
     // Centres
     document.getElementById('centre-list').innerHTML = (C.centres || []).map(function(x, i){
-      var home = C.homeCollection && C.homeCollection.lab && C.homeCollection.lab.name === x.name;
+      var home = window.MR_HC.serves(x);   // this centre runs home collection (from the API's serving list)
       // Not taking bookings yet (config bookFrom): a Hindi + English note until that day (India time).
       var note = window.MR_BOOK_FROM && window.MR_BOOK_FROM(x) && x.bookFromNote;
       return '<article class="card loc"><div class="loc-top"><h3>' + esc(x.name) + '</h3>' + '' + '</div>' +
         (note ? '<div class="loc-note">' + cal + '<span>' + esc(note) + '</span></div>' : '') +
         '<div class="loc-row">' + pin + '<span>' + esc((hi() && x.address_hi) || x.address) + '</span></div>' +
         '<div class="loc-row">' + ph + '<span class="mono">' + x.phones.map(esc).join(' · ') + '</span></div>' +
-        (home ? '<div class="loc-row">' + hom + '<span>' + t('home_radius_note', { km: KM }) + '</span></div>' : '') +
+        (home ? '<div class="loc-row">' + hom + '<span>' + t('home_radius_note', { km: window.MR_HC.km() }) + '</span></div>' : '') +
         '<div class="loc-act"><button class="btn btn-pri" data-chat="centre:' + esc(x.id) + '">' + t('book_visit') + '</button>' +
         '<a class="btn btn-gho" href="tel:' + esc(x.phones[0].replace(/\s/g,'')) + '">' + t('call') + '</a></div></article>';
     }).join('');
@@ -642,7 +683,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
       if (el.closest('main[lang="en"]')) return; // partner view stays English
       // Without the booking API the site can't take payment, so copy that promises online UPI switches to its pay-at-door variant.
       var key = (!window.MR_ONLINE && el.getAttribute('data-i18n-call')) || el.getAttribute('data-i18n');
-      el.textContent = el.hasAttribute('data-km') ? t(key, { km: KM }) : t(key);
+      el.textContent = el.hasAttribute('data-km') ? t(key, { km: window.MR_HC.km(), labs: window.MR_HC.names() }) : t(key);
     });
     document.querySelectorAll('[data-i18n-html]').forEach(function(el){ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
     document.querySelectorAll('[data-i18n-aria]').forEach(function(el){ el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
@@ -663,6 +704,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   document.querySelectorAll('[data-lang]').forEach(function(b){ b.addEventListener('click', function(){ window.MR_SET_LANG(b.getAttribute('data-lang')); }); });
   document.addEventListener('mr:lang', applyLang);
   document.addEventListener('mr:online', applyLang);   // backend switched in-chat payment on
+  document.addEventListener('mr:serving', applyLang);  // backend's home-collection labs (names in the copy)
   applyLang();
 
   // Hold the ticker while a finger is on it so a tap lands on the card it aimed for.
@@ -691,6 +733,6 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   document.querySelector('[data-tab-back]').addEventListener('click', function(){ document.querySelector('.mc-tab[data-tab="chat"]').click(); });
 })();
 </script>
-<script src="chat.js?v=20261114a"></script>
+<script src="chat.js?v=20261117a"></script>
 </body>
 </html>
