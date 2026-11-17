@@ -1146,7 +1146,12 @@
   // Ad / QR deep link (2026-11-07): ?book=home | visit | offers | track | register | centre:<id> opens the chat
   // straight in that flow, e.g. https://medrelief.co.in/?book=centre:ekangarsarai&utm_source=facebook…
   try {
-    var bk = queued ? null : new URLSearchParams(location.search).get('book');
+    var qs = new URLSearchParams(location.search);
+    var bk = queued ? null : qs.get('book');
+    // The EKS print QR (rickshaw banner, A5 flyer) carries utm_campaign=eks-app-offer and no
+    // ?book: open the sign-up straight away while the offer runs, so the printed QR never
+    // has to change (2026-11-17).
+    if (!queued && !bk && qs.get('utm_campaign') === 'eks-app-offer' && aoLive()) bk = 'register';
     var okCentre = function (id) { return (C.centres || []).some(function (c) { return c.id === id; }); };
     if (bk && (/^(home|visit|offers|track|register)$/.test(bk) || (/^centre:[a-z-]+$/.test(bk) && okCentre(bk.slice(7))))) {
       later(function () { open(bk); measure('chat_open', { intent: bk.split(':')[0], where: 'link' }); });
