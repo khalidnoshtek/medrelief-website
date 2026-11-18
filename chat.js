@@ -620,12 +620,13 @@
       return { name: nm(it), price: price, was: was > price ? was : 0 };
     });
   }
+  var sumSeq = 0;   // the latest summary wins: a language switch re-runs summary() without a restart
   function summary() {
     resume = summary;
-    var home = B.kind === 'home';
+    var home = B.kind === 'home', mine = ++sumSeq;
     bot(home ? t('sum_home') : t('sum_visit'));
     later(function () { var g = gen; return quote().then(function (q) {
-      if (g !== gen) return;   // restarted while the quote was loading
+      if (g !== gen || mine !== sumSeq) return;   // restarted or re-run while the quote was loading
       if (q && q.out) { bot(t('out_of_coverage', { km: hcKm(), labs: hcLabs() })); return choose([{ l: t('btn_visit'), i: 'visit', go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]); }
       var cl = cardLines(q);
       var est = q ? q.total_inr : estimate(), mrp = cl.reduce(function (s, l) { return s + (l.was || l.price); }, 0);
