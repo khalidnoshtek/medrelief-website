@@ -170,8 +170,8 @@ window.MR_CONFIG = {
     items: [
       { name: 'Sugar (fasting / random / PP)', name_hi: 'शुगर*', mrp: 50, price: 10 },
       { name: 'Cholesterol', name_hi: 'कोलेस्ट्रॉल', mrp: 200, price: 20 },
-      { name: 'Uric Acid', name_hi: 'यूरिक एसिड', mrp: 200, price: 80 }   // sign-up price: the 60% offer (₹80) beats the ₹100 promo
-      // , { name: 'Sugar Fasting & PP', name_hi: 'शुगर फ़ास्टिंग और PP', mrp: ?, price: 20 }   // pending the Orchestrator's wording
+      { name: 'Uric Acid', name_hi: 'यूरिक एसिड', mrp: 200, price: 100 },
+      { name: 'Blood Sugar Fasting & PP', name_hi: 'ब्लड शुगर फ़ास्टिंग और PP', mrp: 100, price: 20 }   // catalogue BLOOD SUGAR
     ] },
 
   // code = mdm_packages.code, so a booking maps 1:1 onto the package the counter bills.
