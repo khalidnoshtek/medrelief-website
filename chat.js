@@ -597,16 +597,43 @@
 
   // ── SUMMARY ────────────────────────────────────────────────────────────────
   function row(k, v) { return h('div', { class: 'mc-row' }, [h('span', { text: k }), h('b', { text: v })]); }
+  // The server's price for this cart (#1582): the serving centre's plan + the sign-up offer for
+  // a verified number. Same functions as the order, so the card, the UPI amount and the bill
+  // agree. Any failure (old backend, network) → null, and the card falls back to the site prices.
+  function quote() {
+    B.quote = null;
+    if (B.kind !== 'home' || !ONLINE || B.lat == null || !(B.items || []).length) return Promise.resolve(null);
+    return post('/public/home-collection/quote', {
+      items: B.items.map(function (i) { return { type: i.type, code: i.code }; }),
+      location: { lat: B.lat, lng: B.lng },
+      patient: { mobile: B.mobile }, patient_token: B.token || null
+    }).then(function (q) { return q && Array.isArray(q.lines) && typeof q.total_inr === 'number' ? (B.quote = q) : null; },
+            function (e) { return e && e.error === 'OUT_OF_COVERAGE' ? { out: true } : null; });
+  }
+  // One card line per item: the server's price when quoted, struck over the higher of the
+  // site MRP and the plan price before the offer.
+  function cardLines(q) {
+    return (B.items || []).map(function (it) {
+      var ql = q && q.lines.filter(function (l) { return String(l.code).toUpperCase() === String(it.code).toUpperCase(); })[0];
+      var price = ql ? ql.price_inr : it.price;
+      var was = Math.max(it.mrp || 0, (ql && ql.normal_price_inr) || 0);
+      return { name: nm(it), price: price, was: was > price ? was : 0 };
+    });
+  }
   function summary() {
     resume = summary;
     var home = B.kind === 'home';
     bot(home ? t('sum_home') : t('sum_visit'));
-    later(function () {
-      var est = estimate(), mrp = (B.items || []).reduce(function (s, i) { return s + i.mrp; }, 0);
+    later(function () { var g = gen; return quote().then(function (q) {
+      if (g !== gen) return;   // restarted while the quote was loading
+      if (q && q.out) { bot(t('out_of_coverage', { km: hcKm(), labs: hcLabs() })); return choose([{ l: t('btn_visit'), i: 'visit', go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]); }
+      var cl = cardLines(q);
+      var est = q ? q.total_inr : estimate(), mrp = cl.reduce(function (s, l) { return s + (l.was || l.price); }, 0);
       var lines = h('div', { class: 'mc-lines' });
-      (B.items || []).forEach(function (it) {
-        lines.appendChild(h('div', { class: 'mc-line' }, [h('span', { text: nm(it) }), h('span', {}, [it.mrp > it.price ? h('s', { text: inr(it.mrp) }) : null, ' ', h('b', { text: inr(it.price) })])]));
+      cl.forEach(function (l) {
+        lines.appendChild(h('div', { class: 'mc-line' }, [h('span', { text: l.name }), h('span', {}, [l.was ? h('s', { text: inr(l.was) }) : null, ' ', h('b', { text: inr(l.price) })])]));
       });
+      if (q && q.offer && q.discount_inr > 0) lines.appendChild(h('div', { class: 'mc-line mc-offer' }, [h('span', { text: t('q_offer') }), h('b', { text: '−' + inr(q.discount_inr) })]));
       if (B.rx) lines.appendChild(h('div', { class: 'mc-line' }, [h('span', { text: t('s_rx_line') }), h('span', { class: 'mc-muted', text: t('s_rx_counter') })]));
       var cb = h('input', { type: 'checkbox' });
       var go, edit;
@@ -634,7 +661,7 @@
         h('div', { class: 'mc-actions mc-actions-col' }, [go, edit])
       ]);
       log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [card])); scroll();
-    });
+    }); });
   }
 
   // ── PAY (home collection) ──────────────────────────────────────────────────
@@ -658,12 +685,12 @@
       address: { line: B.address, pincode: B.pincode },
       location: { lat: B.lat, lng: B.lng },
       slot: { date: B.date, start_hour: B.slot.start, label: B.slot.label },
-      estimate_inr: estimate(),
+      estimate_inr: B.quote ? B.quote.total_inr : estimate(),
       consent: { policy: 'privacy.html', accepted_at: new Date().toISOString() }
     }).then(function (r) {
       B.order = r;
       measure('order_created', { value: r.total_inr });
-      if (Math.round(r.total_inr) !== Math.round(estimate())) bot(t('price_changed', { amt: inr(r.total_inr) }));
+      if (Math.round(r.total_inr) !== Math.round(B.quote ? B.quote.total_inr : estimate())) bot(t('price_changed', { amt: inr(r.total_inr) }));
       checkout();
     }).catch(function (e) {
       if (e && e.error === 'OUT_OF_COVERAGE') { bot(t('out_of_coverage', { km: hcKm(), labs: hcLabs() })); return choose([{ l: t('btn_visit'), i: 'visit', go: homeToVisit }, { l: t('m_call'), i: 'phone', go: call }]); }
