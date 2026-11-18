@@ -65,7 +65,7 @@ window.MR_I18N = {
     // ── chat: online sign-up offer (Ekangarsarai, 2026-11-16) ──
     m_signup: 'Register online: {tp}% off tests',
     su_intro: '<b>{tp}% off lab tests</b> and <b>{pp}% off health packages</b> at {c}, till 31 Dec. For new customers.',
-    fo_head: 'Special prices for new customers · Show the flyer or ad · Till 31 Dec',
+    fo_head: 'Special prices for new customers · Show the flyer or ad · Till 31 Dec:',
     fo_note: 'At the {c} centre, when you show the flyer or ad. Not for online bookings.',
     su_ask_mobile: 'Your <b>mobile number</b>? We’ll send a WhatsApp code.',
     su_btn_maps: 'Directions',
@@ -269,7 +269,7 @@ window.MR_I18N = {
 
     // ── chat: online sign-up offer (Ekangarsarai, 2026-11-16) ──
     m_signup: 'ऑनलाइन रजिस्टर करें: जाँच पर {tp}% छूट',
-    fo_head: 'नए ग्राहकों के लिए खास दाम · पर्चा या विज्ञापन दिखाएँ · 31 दिसंबर तक',
+    fo_head: 'नए ग्राहकों के लिए खास दाम · पर्चा या विज्ञापन दिखाएँ · 31 दिसंबर तक:',
     fo_note: '{c} सेंटर पर पर्चा या विज्ञापन दिखाने पर। ऑनलाइन बुकिंग पर लागू नहीं।',
     su_intro: '{c} पर <b>लैब जाँच पर {tp}% छूट</b> और <b>हेल्थ पैकेज पर {pp}% छूट</b>, 31 दिसंबर तक। सिर्फ़ नए ग्राहकों के लिए।',
     su_ask_mobile: 'आपका <b>मोबाइल नंबर</b>? हम WhatsApp पर कोड भेजेंगे।',
