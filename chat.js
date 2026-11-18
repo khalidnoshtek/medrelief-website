@@ -712,19 +712,47 @@
     bot(t('pay_cancel'));
     choose([{ l: t('pay_retry'), i: 'upi', p: true, go: checkout }, { l: t('m_call'), i: 'phone', go: call }]);
   }
+  // Verify contract (QS-PAY-04): 200 {status:'PAID'} = booked; 202 {status:'PAYMENT_PENDING'} =
+  // NOT booked yet (never "Pay again"; poll the status endpoint); 409 = cannot complete, call us.
   function verify(resp) {
     bot(t('verifying'));
-    var o = B.order;
+    var o = B.order, g = gen;
     var when = B.dateLabel + ' · ' + slotLabel(B.slot);
+    function booked(r) {
+      measure('purchase', { value: o.total_inr, transaction_id: (r && r.order_ref) || o.order_ref });
+      bot(t('paid_ok', { ref: esc((r && r.order_ref) || o.order_ref), when: esc(when), bill: r && r.bill_number ? t('paid_bill', { b: esc(r.bill_number) }) : '' }));
+      andThen();
+    }
+    function isPending(r) { return !!r && (r.pending === true || (r.status && r.status !== 'PAID')); }
+    function poll() {
+      var t0 = Date.now(), reverified = false;
+      function end() { bot(t('pay_wait_end', { ref: esc(o.order_ref), phone: C.phoneDisplay })); andThen(); }
+      function tick() {
+        if (g !== gen) return;
+        if (Date.now() - t0 >= 120000) return end();
+        setTimeout(function () {
+          if (g !== gen) return;
+          var again = (!reverified && Date.now() - t0 >= 30000)
+            ? (reverified = true, post('/public/home-collection/orders/' + encodeURIComponent(o.order_ref) + '/verify', resp).then(function (r) { return !isPending(r) ? { paid: true, r: r } : null; }, function () { return null; }))
+            : Promise.resolve(null);
+          again.then(function (hit) {
+            if (hit) return booked(hit.r);
+            return fetch(API + '/public/home-collection/orders/' + encodeURIComponent(o.order_ref) + '/status?razorpay_order_id=' + encodeURIComponent(resp.razorpay_order_id || (o.razorpay && o.razorpay.order_id) || ''))
+              .then(function (x) { return x.ok ? x.json() : null; })
+              .then(function (j) { if (g !== gen) return; if (j && j.paid === true) booked(j); else tick(); }, function () { if (g === gen) tick(); });
+          });
+        }, 5000);
+      }
+      tick();
+    }
     post('/public/home-collection/orders/' + encodeURIComponent(o.order_ref) + '/verify', resp)
       .then(function (r) {
-        measure('purchase', { value: o.total_inr, transaction_id: r.order_ref || o.order_ref });
-        bot(t('paid_ok', { ref: esc(r.order_ref || o.order_ref), when: esc(when), bill: r.bill_number ? t('paid_bill', { b: esc(r.bill_number) }) : '' }));
-        andThen();
+        if (isPending(r)) { bot(t('pay_confirming')); return poll(); }
+        booked(r);
       })
-      .catch(function () {
-        // The Razorpay webhook completes the booking even if this call fails.
-        measure('purchase', { value: o.total_inr, transaction_id: o.order_ref });
+      .catch(function (e) {
+        if (e && e.status === 409) { bot(t('pay_cannot', { phone: C.phoneDisplay })); return; }
+        // Network / server failure: the Razorpay webhook completes the booking if the payment was captured.
         bot(t('paid_pending', { ref: esc(o.order_ref), phone: C.phoneDisplay }));
         andThen();
       });
