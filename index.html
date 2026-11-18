@@ -594,7 +594,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
   };
   // Flyer / ad price offer block (config.flyerOffer): heading, struck usual price → offer price,
   // and "at the centre on showing the flyer/ad, not online". '' when off, expired or another centre.
-  window.MR_FLYER = function(centreId){
+  window.MR_FLYER = function(centreId, where){
     var F = C.flyerOffer;
     if (!F || !F.active || F.centre !== centreId || Date.now() > Date.parse(F.until)) return '';
     var hiL = window.MR_LANG && window.MR_LANG() === 'hi';
@@ -603,7 +603,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
     return '<div class="fo"><div class="fo-h">' + e(t('fo_head')) + '</div><ul class="fo-l">' +
       F.items.map(function(i){ return '<li><span>' + e((hiL && i.name_hi) || i.name) + '</span><span class="fo-p"><s>₹' + i.mrp + '</s> <b>₹' + i.price + '</b></span></li>'; }).join('') +
       '</ul>' + ((hiL ? F.footnote_hi : F.footnote) ? '<div class="fo-n">' + e(hiL ? F.footnote_hi : F.footnote) + '</div>' : '') +
-      '<div class="fo-n">' + e(t('fo_note', { c: (hiL && c.name_hi) || c.name || '' })) + '</div></div>';
+      '<div class="fo-n">' + e(t(where === 'chat' ? 'fo_note_chat' : 'fo_note', { c: (hiL && c.name_hi) || c.name || '' })) + '</div></div>';
   };
   window.MR_HC = {
     // Radius to quote: the largest serving radius (all are 15 km today).
