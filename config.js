@@ -166,9 +166,9 @@ window.MR_CONFIG = {
   // home-collection orders do NOT apply promotions, so the site never puts these prices in a cart.
   // Shown on the centre's landing card (ad/QR links) and in the sign-up chat. Wording = the print.
   flyerOffer: { active: true, centre: 'ekangarsarai', until: '2026-12-31T23:59:59+05:30',
-    footnote: '*Sugar: fasting / random / PP', footnote_hi: '*शुगर: फ़ास्टिंग / रैंडम / PP',   // as printed
+    footnote_hi: '*शुगर: फ़ास्टिंग / रैंडम / PP',   // HI = as printed; EN = MR Marketing's wording (sugar types inline)
     items: [
-      { name: 'Sugar*', name_hi: 'शुगर*', mrp: 50, price: 10 },
+      { name: 'Sugar (fasting / random / PP)', name_hi: 'शुगर*', mrp: 50, price: 10 },
       { name: 'Cholesterol', name_hi: 'कोलेस्ट्रॉल', mrp: 200, price: 20 },
       { name: 'Uric Acid', name_hi: 'यूरिक एसिड', mrp: 200, price: 100 }
     ] },

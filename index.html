@@ -602,7 +602,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
     var e = function(s){ return String(s).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];}); };
     return '<div class="fo"><div class="fo-h">' + e(t('fo_head')) + '</div><ul class="fo-l">' +
       F.items.map(function(i){ return '<li><span>' + e((hiL && i.name_hi) || i.name) + '</span><span class="fo-p"><s>₹' + i.mrp + '</s> <b>₹' + i.price + '</b></span></li>'; }).join('') +
-      '</ul>' + (F.footnote ? '<div class="fo-n">' + e((hiL && F.footnote_hi) || F.footnote) + '</div>' : '') +
+      '</ul>' + ((hiL ? F.footnote_hi : F.footnote) ? '<div class="fo-n">' + e(hiL ? F.footnote_hi : F.footnote) + '</div>' : '') +
       '<div class="fo-n">' + e(t('fo_note', { c: (hiL && c.name_hi) || c.name || '' })) + '</div></div>';
   };
   window.MR_HC = {
