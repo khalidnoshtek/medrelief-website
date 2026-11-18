@@ -726,7 +726,7 @@
     function isPending(r) { return !!r && (r.pending === true || (r.status && r.status !== 'PAID')); }
     function poll() {
       var t0 = Date.now(), reverified = false;
-      function end() { bot(t('pay_wait_end')); andThen(); }
+      function end() { bot(t('pay_wait_end', { ref: esc(o.order_ref), phone: C.phoneDisplay })); andThen(); }
       function tick() {
         if (g !== gen) return;
         if (Date.now() - t0 >= 120000) return end();
