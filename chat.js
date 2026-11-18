@@ -876,6 +876,8 @@
   function signupMobile(intro) {
     resume = function () { signupMobile(true); };
     if (intro) bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
+    // The flyer / ad price offer at the same centre (at the counter only; never in an online cart).
+    if (intro && window.MR_FLYER) { var fo = window.MR_FLYER(AO.centre, 'chat'); if (fo) bot(fo); }
     bot(t('su_ask_mobile'));
     ask({ placeholder: t('ph_mobile'), type: 'tel', validate: vMobile, then: function (v) { B.mobile = normMobile(v); step('mobile_entered', AO.centre); signupOtp(); } });
   }

@@ -161,6 +161,19 @@ window.MR_CONFIG = {
   // are all hidden (register falls back to the menu).
   appOffer: { active: true, centre: 'ekangarsarai', testPct: 60, packagePct: 20, until: '2026-12-31T23:59:59+05:30' },
 
+  // Flyer / ad price offer (Khalid 2026-11-18, print going out): NEW customers who came from the
+  // flyer or an ad pay these prices AT THE CENTRE when they show it. The desk applies it; online
+  // home-collection orders do NOT apply promotions, so the site never puts these prices in a cart.
+  // Shown on the centre's landing card (ad/QR links) and in the sign-up chat. Wording = the print.
+  flyerOffer: { active: true, centre: 'ekangarsarai', until: '2026-12-31T23:59:59+05:30',
+    footnote_hi: '*शुगर: फ़ास्टिंग / रैंडम / PP',   // HI = as printed; EN = MR Marketing's wording (sugar types inline)
+    items: [
+      { name: 'Sugar (fasting / random / PP)', name_hi: 'शुगर*', mrp: 50, price: 10 },
+      { name: 'Cholesterol', name_hi: 'कोलेस्ट्रॉल', mrp: 200, price: 20 },
+      { name: 'Uric Acid', name_hi: 'यूरिक एसिड', mrp: 200, price: 100 },
+      { name: 'Blood Sugar Fasting & PP', name_hi: 'ब्लड शुगर फ़ास्टिंग और PP', mrp: 100, price: 20 }   // catalogue BLOOD SUGAR
+    ] },
+
   // code = mdm_packages.code, so a booking maps 1:1 onto the package the counter bills.
   campaigns: [
     { code: 'MRD002', active: true, tag_hi: 'सबसे ज़्यादा बुक', name_hi: 'निरोग्यम स्टैंडर्ड', blurb_hi: 'पूरे शरीर की जाँच: ब्लड काउंट, शुगर, लिवर, किडनी, लिपिड, थायरॉइड और पेशाब।', tag: 'Most booked', name: 'Nirogyam Standard',

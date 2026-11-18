@@ -135,6 +135,13 @@ html[data-landing]:not([data-hero-done]) .hero [data-i18n="hero_lede"]{visibilit
 .hero-centre .hc-a{display:flex;gap:6px;color:var(--mr-muted);font-size:14.5px;line-height:1.45}
 .hero-centre .hc-rx{margin-top:10px;font-size:14.5px;line-height:1.45;color:var(--mr-primary-deep);background:var(--mr-tint);border-radius:12px;padding:9px 11px}
 html:not([data-rx]) .hero-centre .hc-rx{display:none}
+.fo{margin-top:12px;border:1.5px dashed var(--mr-primary);border-radius:14px;padding:10px 12px;background:var(--mr-tint)}
+.fo-h{font-weight:700;font-size:14.5px;line-height:1.35;color:var(--mr-primary-deep)}
+.fo-l{list-style:none;margin:8px 0 6px;padding:0;display:grid;gap:4px}
+.fo-l li{display:flex;justify-content:space-between;gap:10px;font-size:14.5px}
+.fo-p s{color:var(--mr-muted);margin-right:4px}.fo-p b{color:var(--mr-primary-deep);font-size:16px}
+.fo-n{font-size:12.5px;color:var(--mr-muted);line-height:1.4}
+.mc-msg .fo{margin-top:6px}
 .hero-centre .hc-act{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}
 .hero-centre .btn{min-height:48px}
 /* A tap made before the chat was ready: say it is coming. */
@@ -585,6 +592,19 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
     var a = Math.pow(Math.sin(r(lat2 - lat1) / 2), 2) + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.pow(Math.sin(r(lng2 - lng1) / 2), 2);
     return 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(a)));
   };
+  // Flyer / ad price offer block (config.flyerOffer): heading, struck usual price → offer price,
+  // and "at the centre on showing the flyer/ad, not online". '' when off, expired or another centre.
+  window.MR_FLYER = function(centreId, where){
+    var F = C.flyerOffer;
+    if (!F || !F.active || F.centre !== centreId || Date.now() > Date.parse(F.until)) return '';
+    var hiL = window.MR_LANG && window.MR_LANG() === 'hi';
+    var c = (C.centres || []).filter(function(x){ return x.id === centreId; })[0] || {};
+    var e = function(s){ return String(s).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];}); };
+    return '<div class="fo"><div class="fo-h">' + e(t('fo_head')) + '</div><ul class="fo-l">' +
+      F.items.map(function(i){ return '<li><span>' + e((hiL && i.name_hi) || i.name) + '</span><span class="fo-p"><s>₹' + i.mrp + '</s> <b>₹' + i.price + '</b></span></li>'; }).join('') +
+      '</ul>' + ((hiL ? F.footnote_hi : F.footnote) ? '<div class="fo-n">' + e(hiL ? F.footnote_hi : F.footnote) + '</div>' : '') +
+      '<div class="fo-n">' + e(t(where === 'chat' ? 'fo_note_chat' : 'fo_note', { c: (hiL && c.name_hi) || c.name || '' })) + '</div></div>';
+  };
   window.MR_HC = {
     // Radius to quote: the largest serving radius (all are 15 km today).
     km: function(){ return serving.reduce(function(m, s){ return Math.max(m, s.km); }, 0) || HCC.radiusKm || 15; },
@@ -674,6 +694,7 @@ html[lang="hi"] .mc-tag{text-transform:none;letter-spacing:0;font-size:12px}
         '<div class="hc-n">' + esc((hi() && lc.name_hi) || lc.name) + '</div>' +
         '<div class="hc-a">' + pin + '<span>' + esc((hi() && lc.address_hi) || lc.address) + '</span></div>' +
         '<p class="hc-rx">' + esc(t('hc_rx')) + '</p>' +
+        window.MR_FLYER(lc.id) +
         '<div class="hc-act"><button class="btn btn-pri" data-chat="centre:' + esc(lc.id) + '">' + esc(t('hc_book')) + '</button>' +
         '<a class="btn btn-gho" href="tel:' + esc(p0.replace(/\s/g,'')) + '">' + ph + ' <span>' + esc(t('hc_call')) + '</span></a></div>';
     }
