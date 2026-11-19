@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Med Relief Patient app</title>
+<!-- Smart app link: medrelief.co.in/app (2026-11-19). One QR for both phones:
+     Android → Google Play (in.medrelief.patient), iPhone/iPad → App Store (id6801772718),
+     anything else → /links. The visit's utm_* tags go to Play as the install referrer and to
+     /links as they are. The tap is counted anonymously (mrCount) as google_play / app_store
+     for the "patient" app, the same actions /links uses, with page = /app.
+     Served at /app (extensionless key, see the deploy workflow). -->
+<link rel="canonical" href="https://medrelief.co.in/links">
+<style>body{font:16px/1.5 system-ui,sans-serif;margin:40px 16px;text-align:center;color:#3b0a3d}a{color:#86198F;display:block;margin:14px 0;font-weight:600}</style>
+</head>
+<body>
+<p>Opening the Med Relief Patient app…</p>
+<p><a id="a-play" href="https://play.google.com/store/apps/details?id=in.medrelief.patient">Google Play (Android)</a>
+<a id="a-ios" href="https://apps.apple.com/in/app/medrelief-patient/id6801772718">App Store (iPhone)</a>
+<a id="a-links" href="./links">More ways to reach us</a></p>
+<script src="config.js?v=20261108a"></script>
+<script>window.MR_LANG = window.MR_LANG || function () { return 'en'; };</script>
+<script src="analytics.js?v=20261114a"></script>
+<script>
+(function () {
+  var PLAY = 'https://play.google.com/store/apps/details?id=in.medrelief.patient';
+  var IOS = 'https://apps.apple.com/in/app/medrelief-patient/id6801772718';
+  var ua = navigator.userAgent || '';
+  var os = /android/i.test(ua) ? 'android'
+    : (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) ? 'ios' : 'other';
+  var utm = {};
+  try {
+    var q = new URLSearchParams(location.search);
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) { var v = q.get(k); if (v) utm[k] = v.slice(0, 100); });
+  } catch (e) {}
+  var qs = Object.keys(utm).map(function (k) { return k + '=' + encodeURIComponent(utm[k]); }).join('&');
+  var dest = os === 'android' ? PLAY + (qs ? '&referrer=' + encodeURIComponent(qs) : '')
+    : os === 'ios' ? IOS
+    : './links' + (qs ? '?' + qs : '');
+  var play = document.getElementById('a-play');
+  if (play && qs) play.href = PLAY + '&referrer=' + encodeURIComponent(qs);
+  var lk = document.getElementById('a-links');
+  if (lk && qs) lk.href = './links?' + qs;
+  // Only the two store redirects are counted ('other' lands on /links, which counts its own visit).
+  try { if (os !== 'other' && window.mrCount) window.mrCount(os === 'android' ? 'google_play' : 'app_store', 'patient'); } catch (e) {}
+  setTimeout(function () { location.replace(dest); }, 150);
+})();
+</script>
+<noscript><p>Android: <a href="https://play.google.com/store/apps/details?id=in.medrelief.patient">Google Play</a> · iPhone: <a href="https://apps.apple.com/in/app/medrelief-patient/id6801772718">App Store</a></p></noscript>
+</body>
+</html>

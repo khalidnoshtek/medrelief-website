@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p out/assets/logo
-          cp index.html chat.js config.js i18n.js analytics.js privacy.html terms.html links.html ig.html out/
+          cp index.html chat.js config.js i18n.js analytics.js privacy.html terms.html links.html ig.html app.html out/
           # Scripts are cached for a year (2026-11-14), so every ?v= stamp in the pages becomes
           # that file's content hash: a changed script always gets a new URL, an unchanged one
           # keeps its cache. (Nobody has to remember to bump ?v= any more.)
@@ -51,6 +51,8 @@ jobs:
           cp out/links.html out/links
           # /ig = the short Instagram bio link (redirects to /links with the bio's tags).
           cp out/ig.html out/ig
+          # /app = the smart app link (one QR: Play on Android, App Store on iPhone, else /links).
+          mv out/app.html out/app   # stamped above like the other pages
           cp assets/qr-patient-app.svg out/assets/
           cp assets/logo/* out/assets/logo/
           find out -type f | sort
@@ -62,7 +64,7 @@ jobs:
           # because every deploy invalidates /* below. Scripts: content-hashed ?v= (above), so a
           # browser keeps each version for a year. Logos and the QR: a day.
           PAGE_CC="public, max-age=0, s-maxage=86400, must-revalidate"
-          aws s3 sync out/ "s3://$BUCKET/" --delete --exclude "assets/*" --exclude "links" --exclude "ig" --exclude "*.js" \
+          aws s3 sync out/ "s3://$BUCKET/" --delete --exclude "assets/*" --exclude "links" --exclude "ig" --exclude "app" --exclude "*.js" \
             --cache-control "$PAGE_CC"
           aws s3 sync out/ "s3://$BUCKET/" --exclude "*" --include "*.js" \
             --cache-control "public, max-age=31536000, immutable"
@@ -70,6 +72,7 @@ jobs:
           # Excluded from the sync above, so --delete never removes them between deploys.
           aws s3 cp out/links "s3://$BUCKET/links" --content-type "text/html; charset=utf-8" --cache-control "$PAGE_CC"
           aws s3 cp out/ig "s3://$BUCKET/ig" --content-type "text/html; charset=utf-8" --cache-control "$PAGE_CC"
+          aws s3 cp out/app "s3://$BUCKET/app" --content-type "text/html; charset=utf-8" --cache-control "$PAGE_CC"
           aws s3 sync out/assets/ "s3://$BUCKET/assets/" --delete \
             --cache-control "public, max-age=86400"
 
