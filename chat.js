@@ -219,10 +219,17 @@
 
   // ── validators ─────────────────────────────────────────────────────────────
   function vName(v) { return v.trim().length >= 2 ? null : t('v_name'); }
-  function normMobile(v) { var d = v.replace(/\D/g, ''); if (d.length === 12 && d.indexOf('91') === 0) d = d.slice(2); if (d.length === 11 && d[0] === '0') d = d.slice(1); return d; }
+  // Hindi / Urdu keyboards can type ०-९ or ٠-٩: turn them into 0-9 before any digit check
+  // (2026-11-23: normMobile used to strip them, so a Hindi-digit number was refused as empty).
+  function ascii(v) {
+    return String(v == null ? '' : v).replace(/[\u0966-\u096F]/g, function (c) { return String(c.charCodeAt(0) - 0x966); })
+      .replace(/[\u0660-\u0669]/g, function (c) { return String(c.charCodeAt(0) - 0x660); })
+      .replace(/[\u06F0-\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x6F0); });
+  }
+  function normMobile(v) { var d = ascii(v).replace(/\D/g, ''); if (d.length === 12 && d.indexOf('91') === 0) d = d.slice(2); if (d.length === 11 && d[0] === '0') d = d.slice(1); return d; }
   function vMobile(v) { return /^[6-9]\d{9}$/.test(normMobile(v)) ? null : t('v_mobile'); }
-  function vAge(v) { var n = parseInt(v, 10); return (/^\d{1,3}$/.test(v.trim()) && n >= 0 && n <= 120) ? null : t('v_age'); }
-  function vPin(v) { return /^\d{6}$/.test(v.replace(/\s/g, '')) ? null : t('v_pin'); }
+  function vAge(v) { v = ascii(v); var n = parseInt(v, 10); return (/^\d{1,3}$/.test(v.trim()) && n >= 0 && n <= 120) ? null : t('v_age'); }
+  function vPin(v) { return /^\d{6}$/.test(ascii(v).replace(/\s/g, '')) ? null : t('v_pin'); }
   function vText(min) { return function (v) { return v.trim().length >= min ? null : t('v_text'); }; }
 
   // ── dates & slots ──────────────────────────────────────────────────────────
@@ -431,9 +438,9 @@
     resume = function () { askOtp(asNew, asKnown, tries); };
     bot(t('otp_sent', { m: B.mobile.replace(/(\d{2})\d{6}(\d{2})/, '$1••••••$2') }));
     choose([{ l: t('otp_skip'), i: 'user', go: function () { expect = null; setPlaceholder(); asNew(); } }]);
-    ask({ placeholder: t('ph_otp'), type: 'number', validate: function (v) { return /^\d{4,8}$/.test(v.trim()) ? null : t('otp_bad'); }, then: function (v) {
+    ask({ placeholder: t('ph_otp'), type: 'number', validate: function (v) { return /^\d{4,8}$/.test(ascii(v).trim()) ? null : t('otp_bad'); }, then: function (v) {
       var g = gen;
-      fetch(API + '/public/home-collection/lookup/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile, code: v.trim() }) })
+      fetch(API + '/public/home-collection/lookup/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile, code: ascii(v).trim() }) })
         .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw j; return j; }); })
         .then(function (r) {
           if (g !== gen) return;
@@ -474,7 +481,7 @@
   function homeAge() {
     resume = homeAge;
     bot(t('ask_age'));
-    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(v, 10); homeAddress(); } });
+    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(ascii(v), 10); homeAddress(); } });
   }
   function mobile(next) {
     resume = function () { mobile(next); };
@@ -557,7 +564,7 @@
   function homePin() {
     resume = homePin;
     bot(t('ask_pin'));
-    ask({ placeholder: t('ph_pin'), type: 'number', validate: vPin, then: function (v) { B.pincode = v.replace(/\s/g, ''); pickDay('home', summary); } });
+    ask({ placeholder: t('ph_pin'), type: 'number', validate: vPin, then: function (v) { B.pincode = ascii(v).replace(/\s/g, ''); pickDay('home', summary); } });
   }
 
   // ── CENTRE VISIT ───────────────────────────────────────────────────────────
@@ -670,7 +677,31 @@
   function measure(name, params) { try { if (window.mrTrack) window.mrTrack(name, params); } catch (e) {} }
   // Anonymous funnel step (2026-11-17): the step's name + a target (the centre or the chat's
   // intent) + the visit's utm tags via mrCount. NEVER the number, name or anything typed.
-  function step(action, target) { try { if (window.mrCount) window.mrCount(action, target || ''); } catch (e) {} }
+  function step(action, target) {
+    if (SIGNUP_STEPS[action]) lastSignup = action;
+    try { if (window.mrCount) window.mrCount(action, target || ''); } catch (e) {}
+  }
+  // Sign-up drop-off (2026-11-23): the last step a visitor reached, sent once when they leave
+  // (page hidden / closed). Only step names, never anything typed. Actions the backend does
+  // not know yet are dropped there, so this is safe to ship ahead of its allow-list.
+  var SIGNUP_STEPS = { signup_start: 1, input_focus: 1, mobile_invalid: 1, mobile_entered: 1, otp_requested: 1, otp_failed: 1, code_invalid: 1, otp_verified: 1, name_entered: 1, gender_chosen: 1, age_entered: 1, confirm_shown: 1, signup_help: 1 };
+  var lastSignup = '', abandonSent = false;
+  function sendAbandon() {
+    if (abandonSent || !lastSignup) return;
+    abandonSent = true;
+    try { if (window.mrCount) window.mrCount('abandon', lastSignup); } catch (e) {}
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') sendAbandon(); });
+  window.addEventListener('pagehide', sendAbandon);
+  // Which browser the visitor is in (2026-11-23): Facebook / Instagram's in-app browser acts
+  // differently from Chrome or Safari. One coarse label, no version, no device id.
+  function envClass() {
+    var ua = navigator.userAgent || '';
+    var app = /FBAN|FBAV|FB_IAB|FBIOS/i.test(ua) ? 'fb' : /Instagram/i.test(ua) ? 'ig' : /Messenger|MessengerLite/i.test(ua) ? 'msgr' : '';
+    var os = /android/i.test(ua) ? 'android' : /iPhone|iPad|iPod/.test(ua) ? 'ios' : 'other';
+    var br = app || (/; wv\)|WebView/i.test(ua) ? 'webview' : /CriOS|Chrome/i.test(ua) ? 'chrome' : /Safari/i.test(ua) ? 'safari' : 'other');
+    return br + '-' + os;
+  }
   function post(path, body) {
     return fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }  /* only CORS-allowed headers: the API rejects others at preflight */, body: JSON.stringify(body) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; }); });
@@ -915,6 +946,7 @@
   function aoChoices(more) {
     return (more || []).concat([{ l: t('m_call'), i: 'phone', go: call }, { l: t('m_menu'), i: 'back', go: menuAgain }]);
   }
+  var envSent = false, focusSent = false;
   function signupStart() {
     resume = signupStart;
     B = { kind: 'signup' };
@@ -923,6 +955,7 @@
     if (!aoLive()) { bot(t('su_closed')); return choose(aoChoices()); }
     measure('signup_start', {});
     step('signup_start', AO.centre);
+    if (!envSent) { envSent = true; try { if (window.mrCount) window.mrCount('env', envClass()); } catch (e) {} }
     signupMobile(true);
   }
   // Sign-up asks for the number in one short line (Khalid 2026-11-17: the booking
@@ -935,7 +968,20 @@
     // The flyer / ad price offer at the same centre (at the counter only; never in an online cart).
     if (intro && window.MR_FLYER) { var fo = window.MR_FLYER(AO.centre, 'chat'); if (fo) bot(fo); }
     bot(t('su_ask_mobile'));
-    ask({ placeholder: t('ph_mobile'), type: 'tel', validate: vMobile, then: function (v) { B.mobile = normMobile(v); step('mobile_entered', AO.centre); signupOtp(); } });
+    ask({ placeholder: t('ph_mobile'), type: 'tel',
+      validate: function (v) {
+        var e = vMobile(v);
+        if (e) { var d = normMobile(v); step('mobile_invalid', d.length < 10 ? 'short' : d.length > 10 ? 'long' : /^[6-9]/.test(d) ? 'other' : 'start'); }
+        return e;
+      },
+      then: function (v) { B.mobile = normMobile(v); step('mobile_entered', AO.centre); signupOtp(); } });
+    // Two ways out that are not a phone number (2026-11-23): how the offer works, or a call.
+    // A stranger's first question is "what happens with my number?"; answering it keeps the
+    // visitor in the chat instead of closing it. After the answer the number is asked again.
+    if (intro) choose([
+      { l: t('su_help_btn'), i: 'list', go: function () { step('signup_help', 'how'); bot(t('su_how', { c: esc(cname(aoCentre())) })); signupMobile(false); } },
+      { l: t('m_call'), i: 'phone', go: call }
+    ]);
   }
   function signupOtp() {
     var g = gen;
@@ -951,9 +997,9 @@
   function signupCode(tries) {
     resume = function () { signupCode(tries); };
     bot(t('otp_sent', { m: B.mobile.replace(/(\d{2})\d{6}(\d{2})/, '$1••••••$2') }));
-    ask({ placeholder: t('ph_otp'), type: 'number', validate: function (v) { return /^\d{4,8}$/.test(v.trim()) ? null : t('otp_bad'); }, then: function (v) {
+    ask({ placeholder: t('ph_otp'), type: 'number', validate: function (v) { var ok = /^\d{4,8}$/.test(ascii(v).trim()); if (!ok) step('code_invalid', 'format'); return ok ? null : t('otp_bad'); }, then: function (v) {
       var g = gen;
-      fetch(API + '/public/home-collection/lookup/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile, code: v.trim() }) })
+      fetch(API + '/public/home-collection/lookup/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: B.mobile, code: ascii(v).trim() }) })
         .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw j; return j; }); })
         .then(function (r) {
           if (g !== gen) return;
@@ -965,6 +1011,7 @@
         })
         .catch(function () {
           if (g !== gen) return;
+          step('code_invalid', 'wrong');
           if (tries >= 2) { bot(t('su_otp_give_up')); return choose(aoChoices()); }
           bot(t('otp_bad')); signupCode(tries + 1);
         });
@@ -973,17 +1020,17 @@
   function signupName() {
     resume = signupName;
     bot(t('ask_name'));
-    ask({ placeholder: t('ph_name'), type: 'name', validate: vName, then: function (v) { B.name = v.trim(); B.patientRef = null; signupGender(); } });
+    ask({ placeholder: t('ph_name'), type: 'name', validate: vName, then: function (v) { B.name = v.trim(); B.patientRef = null; step('name_entered', 'signup'); signupGender(); } });
   }
   function signupGender() {
     resume = signupGender;
     bot(t('ask_gender'));
-    choose(['MALE', 'FEMALE', 'OTHER'].map(function (g) { return { l: t('g_' + g), go: function () { B.gender = g; signupAge(); } }; }));
+    choose(['MALE', 'FEMALE', 'OTHER'].map(function (g) { return { l: t('g_' + g), go: function () { B.gender = g; step('gender_chosen', 'signup'); signupAge(); } }; }));
   }
   function signupAge() {
     resume = signupAge;
     bot(t('ask_age'));
-    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(v, 10); signupConfirm(); } });
+    ask({ placeholder: t('ph_age'), type: 'number', validate: vAge, then: function (v) { B.age = parseInt(ascii(v), 10); step('age_entered', 'signup'); signupConfirm(); } });
   }
   function signupConfirm() {
     resume = signupConfirm;
@@ -1003,6 +1050,7 @@
         h('div', { class: 'mc-actions mc-actions-col' }, [go])
       ]);
       log.appendChild(h('div', { class: 'mc-msg mc-bot mc-wide' }, [card])); scroll();
+      step('confirm_shown', 'signup');
     });
   }
   // After a new sign-up (2026-11-17): how to get there, call, and pass the offer on.
@@ -1169,6 +1217,9 @@
     bot(t('didnt_get', { phone: contact().display }));
     return aud === 'b2b' ? partnerMenu('Here’s what I can help with:') : menu(t('here_is_help'));
   }
+
+  // A real tap on the box (not the page's own focus() on open) during the sign-up.
+  input.addEventListener('pointerdown', function () { if (!focusSent && B && B.kind === 'signup') { focusSent = true; step('input_focus', 'signup'); } });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
