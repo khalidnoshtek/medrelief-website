@@ -684,8 +684,18 @@
   // Sign-up drop-off (2026-11-23): the last step a visitor reached, sent once when they leave
   // (page hidden / closed). Only step names, never anything typed. Actions the backend does
   // not know yet are dropped there, so this is safe to ship ahead of its allow-list.
-  var SIGNUP_STEPS = { signup_start: 1, input_focus: 1, mobile_invalid: 1, mobile_entered: 1, otp_requested: 1, otp_failed: 1, code_invalid: 1, otp_verified: 1, name_entered: 1, gender_chosen: 1, age_entered: 1, confirm_shown: 1, signup_help: 1 };
+  var SIGNUP_STEPS = { signup_start: 1, input_focus: 1, mobile_invalid: 1, mobile_entered: 1, otp_requested: 1, otp_failed: 1, code_invalid: 1, otp_verified: 1, name_entered: 1, gender_chosen: 1, age_entered: 1, confirm_shown: 1, signup_help: 1, offer_seen: 1, ask_seen: 1 };
   var lastSignup = '', abandonSent = false;
+  // Fire `action` once, when the newest chat bubble is really on screen (60% visible), so the
+  // read can tell "never saw it" from "saw it and left". Names only.
+  function seenOnce(action, target) {
+    var el = log.lastElementChild;
+    if (!el || !window.IntersectionObserver) return step(action, target);
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); step(action, target); }
+    }, { threshold: 0.6 });
+    io.observe(el);
+  }
   function sendAbandon() {
     if (abandonSent || !lastSignup) return;
     abandonSent = true;
@@ -966,8 +976,8 @@
     resume = function () { signupMobile(true); };
     if (intro) bot(t('su_intro', { tp: AO.testPct, pp: AO.packagePct, c: esc(cname(aoCentre())) }));
     // The flyer / ad price offer at the same centre (at the counter only; never in an online cart).
-    if (intro && window.MR_FLYER) { var fo = window.MR_FLYER(AO.centre, 'chat'); if (fo) bot(fo); }
-    bot(t('su_ask_mobile'));
+    if (intro && window.MR_FLYER) { var fo = window.MR_FLYER(AO.centre, 'chat'); if (fo) bot(fo).then(function () { seenOnce('offer_seen', 'signup'); }); }
+    bot(t('su_ask_mobile')).then(function () { seenOnce('ask_seen', 'mobile'); });
     ask({ placeholder: t('ph_mobile'), type: 'tel',
       validate: function (v) {
         var e = vMobile(v);
